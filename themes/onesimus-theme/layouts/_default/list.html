@@ -1,0 +1,35 @@
+{{ define "main" }}
+<section class="section" style="padding-top: calc(64px + var(--s-section));">
+  <div class="container">
+
+    <div class="section__header" style="text-align:left;">
+      <h1 class="section__title">{{ .Title }}</h1>
+      {{ with .Params.description }}
+        <p class="section__subtitle" style="margin-left:0;">{{ . }}</p>
+      {{ end }}
+    </div>
+
+    {{ if eq .Section "blog" }}
+    <div class="blog-grid">
+      {{ range .Pages.ByDate.Reverse }}
+      <a href="{{ .RelPermalink }}" class="blog-card" style="text-decoration:none;">
+        <div class="blog-card__date">{{ .Date.Format "January 2, 2006" }}</div>
+        <h2 class="blog-card__title">{{ .Title }}</h2>
+        <p class="blog-card__excerpt">{{ .Summary | plainify | truncate 160 }}</p>
+      </a>
+      {{ end }}
+    </div>
+    {{ else }}
+    <div class="features-grid">
+      {{ range .Pages }}
+      <a href="{{ .RelPermalink }}" class="feature-card" style="text-decoration:none;">
+        <h3 class="feature-card__title">{{ .Title }}</h3>
+        <p class="feature-card__desc">{{ with .Params.description }}{{ . }}{{ else }}{{ .Summary | plainify | truncate 120 }}{{ end }}</p>
+      </a>
+      {{ end }}
+    </div>
+    {{ end }}
+
+  </div>
+</section>
+{{ end }}

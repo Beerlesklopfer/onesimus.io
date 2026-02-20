@@ -1,0 +1,73 @@
+baseURL = "https://onesimus.io/"
+languageCode = "en"
+defaultContentLanguage = "en"
+title = "Onesimus — Modern Backup Management UI"
+theme = "onesimus-theme"
+enableRobotsTXT = true
+enableEmoji = true
+
+[params]
+  description = "A modern, cross-platform management interface for Bacula and Bareos backup systems"
+  author = "Beerlesklopfer"
+  github = "https://github.com/Beerlesklopfer/Onesimus"
+  tagline = "Backup management, reimagined."
+  ogImage = "/img/og-image.png"
+
+  [params.hero]
+    title = "Backup management, reimagined."
+    subtitle = "A modern Qt6 interface for Bacula & Bareos — open source, cross-platform, built for professionals."
+    ctaPrimary = "Download"
+    ctaPrimaryURL = "/docs/getting-started/"
+    ctaSecondary = "View on GitHub"
+    ctaSecondaryURL = "https://github.com/Beerlesklopfer/Onesimus"
+
+  [params.pricing]
+    currency = "€"
+
+[languages]
+  [languages.en]
+    languageName = "English"
+    weight = 1
+  [languages.de]
+    languageName = "Deutsch"
+    weight = 2
+
+[menu]
+  [[menu.main]]
+    name = "Features"
+    url = "/#features"
+    weight = 1
+  [[menu.main]]
+    name = "Docs"
+    url = "/docs/"
+    weight = 2
+  [[menu.main]]
+    name = "Blog"
+    url = "/blog/"
+    weight = 3
+  [[menu.main]]
+    name = "Pricing"
+    url = "/pricing/"
+    weight = 4
+  [[menu.main]]
+    name = "GitHub"
+    url = "https://github.com/Beerlesklopfer/Onesimus"
+    weight = 5
+    [menu.main.params]
+      external = true
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    style = "dracula"
+    lineNos = false
+
+[outputs]
+  home = ["HTML", "RSS"]
+  section = ["HTML", "RSS"]
+
+[sitemap]
+  changefreq = "weekly"
+  priority = 0.5

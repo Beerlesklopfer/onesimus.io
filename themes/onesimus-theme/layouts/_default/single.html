@@ -1,0 +1,18 @@
+{{ define "main" }}
+<section class="section" style="padding-top: calc(64px + var(--s-section));">
+  <div class="container container--narrow">
+    <article class="prose">
+      {{ if .Params.date }}
+      <div style="color: var(--c-text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
+        {{ .Date.Format "January 2, 2006" }}
+        {{ with .Params.author }}· {{ . }}{{ end }}
+      </div>
+      {{ end }}
+
+      <h1>{{ .Title }}</h1>
+
+      {{ .Content }}
+    </article>
+  </div>
+</section>
+{{ end }}

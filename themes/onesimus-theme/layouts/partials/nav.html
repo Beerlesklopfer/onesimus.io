@@ -1,0 +1,21 @@
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="{{ .Site.BaseURL }}" class="nav__logo">
+      <span class="nav__logo-icon">O</span>
+      Onesimus
+    </a>
+
+    <button class="nav__hamburger" aria-label="Menu">☰</button>
+
+    <ul class="nav__links">
+      {{ range .Site.Menus.main }}
+        <li>
+          <a href="{{ .URL }}"
+            {{ with .Params.external }}data-external="true" target="_blank" rel="noopener"{{ end }}>
+            {{ .Name }}
+          </a>
+        </li>
+      {{ end }}
+    </ul>
+  </div>
+</nav>

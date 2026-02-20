@@ -1,0 +1,152 @@
+{{ define "main" }}
+
+<!-- ======== HERO ======== -->
+<section class="hero">
+  <div class="container">
+    <div class="hero__content">
+
+      <div class="hero__badge">Alpha Release — v0.1.0</div>
+
+      <h1 class="hero__title">
+        Backup management,<br><em>reimagined.</em>
+      </h1>
+
+      <p class="hero__subtitle">
+        A modern Qt6 interface for Bacula &amp; Bareos. Open source, cross-platform,
+        built for professionals who need clarity over complexity.
+      </p>
+
+      <div class="hero__actions">
+        <a href="/docs/getting-started/" class="btn btn--primary">
+          Get Started
+        </a>
+        <a href="{{ .Site.Params.github }}" class="btn btn--ghost" target="_blank" rel="noopener">
+          View on GitHub ↗
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ======== FEATURES ======== -->
+<section class="section section--bordered" id="features">
+  <div class="container">
+
+    <div class="section__header">
+      <div class="section__label">Features</div>
+      <h2 class="section__title">Everything you need to manage backups</h2>
+      <p class="section__subtitle">
+        Onesimus replaces clunky terminal workflows with a clean, modern interface
+        that gives you full control over your Bareos environment.
+      </p>
+    </div>
+
+    <div class="features-grid">
+
+      <div class="feature-card">
+        <div class="feature-card__icon">📊</div>
+        <h3 class="feature-card__title">Job Management</h3>
+        <p class="feature-card__desc">
+          View all backup jobs at a glance. Filter by status, level, date, or client.
+          Real-time statistics, pagination, and export to JSON or CSV.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card__icon">💻</div>
+        <h3 class="feature-card__title">Client Overview</h3>
+        <p class="feature-card__desc">
+          Monitor all backup clients with online/offline status indicators.
+          Add new clients through a guided wizard with auto-configuration.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card__icon">🗄️</div>
+        <h3 class="feature-card__title">Storage &amp; Volumes</h3>
+        <p class="feature-card__desc">
+          Manage storage daemons, pools, and volumes. Track capacity
+          and device status across your entire backup infrastructure.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card__icon">🔐</div>
+        <h3 class="feature-card__title">TLS/SSL Security</h3>
+        <p class="feature-card__desc">
+          Built-in TLS-PSK and X.509 certificate authentication with OpenSSL 3.6.
+          Connection wizard with auto-detection of server capabilities.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card__icon">📅</div>
+        <h3 class="feature-card__title">Schedule Management</h3>
+        <p class="feature-card__desc">
+          Visual overview of all backup schedules with run times, levels,
+          and pool assignments. Weekly planner for backup windows.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card__icon">🌍</div>
+        <h3 class="feature-card__title">Multi-Language</h3>
+        <p class="feature-card__desc">
+          Available in 6 languages with automatic system language detection.
+          Live language switching with native language names.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ======== CROSS-PLATFORM ======== -->
+<section class="section section--bordered">
+  <div class="container">
+    <div class="section__header">
+      <div class="section__label">Cross-Platform</div>
+      <h2 class="section__title">Runs where you work</h2>
+      <p class="section__subtitle">
+        Native builds for Windows, Linux, and macOS. One codebase, one UI, every platform.
+      </p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card" style="text-align:center;">
+        <div class="feature-card__icon" style="margin:0 auto 1.25rem;">🐧</div>
+        <h3 class="feature-card__title">Linux</h3>
+        <p class="feature-card__desc">AppImage, .deb packages, or build from source.</p>
+      </div>
+      <div class="feature-card" style="text-align:center;">
+        <div class="feature-card__icon" style="margin:0 auto 1.25rem;">🪟</div>
+        <h3 class="feature-card__title">Windows</h3>
+        <p class="feature-card__desc">Native build with Visual Studio 2022 and NSIS installer.</p>
+      </div>
+      <div class="feature-card" style="text-align:center;">
+        <div class="feature-card__icon" style="margin:0 auto 1.25rem;">🍎</div>
+        <h3 class="feature-card__title">macOS</h3>
+        <p class="feature-card__desc">Homebrew-friendly build with native Qt6 integration.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== CTA ======== -->
+<section class="section">
+  <div class="container">
+    <div class="cta-section">
+      <h2 class="cta-section__title">Ready to modernize your backup management?</h2>
+      <p class="cta-section__desc">
+        Onesimus is free and open source. Get started in minutes.
+      </p>
+      <div class="hero__actions" style="justify-content:center;">
+        <a href="/docs/getting-started/" class="btn btn--primary">Download Onesimus</a>
+        <a href="{{ .Site.Params.github }}" class="btn btn--ghost" target="_blank" rel="noopener">Star on GitHub ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{{ end }}
