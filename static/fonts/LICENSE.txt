@@ -1,0 +1,7 @@
+These font files are served from this site and are licensed under the SIL Open Font License, Version 1.1
+(https://openfontlicense.org):
+
+- DM Sans: Copyright 2014 The DM Sans Project Authors (https://github.com/googlefonts/dm-fonts)
+- IBM Plex Sans and IBM Plex Mono: Copyright (c) 2017 IBM Corp. (https://github.com/IBM/plex)
+
+Only the Latin subset is included.
