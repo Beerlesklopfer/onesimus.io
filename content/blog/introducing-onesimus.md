@@ -32,4 +32,4 @@ We're working on live job monitoring, restore wizards, and the Enterprise featur
 
 ## Get involved
 
-Onesimus is open source under the MIT license. We welcome contributions — whether it's code, translations, bug reports, or just feedback. Head over to [GitHub](https://github.com/Beerlesklopfer/Onesimus) to get started.
+Onesimus is open source under the AGPL-3.0 license. We welcome contributions — whether it's code, translations, bug reports, or just feedback. Head over to [GitHub](https://github.com/Beerlesklopfer/Onesimus) to get started.
