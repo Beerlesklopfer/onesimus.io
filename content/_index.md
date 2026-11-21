@@ -141,7 +141,7 @@ name:
   quotes:
     - text: "Formerly he was useless to you, but now he is indeed useful to you and to me."
       source: "[Philemon 11](https://www.bibleserver.com/ESV/Philemon1)"
-    - text: "For the Son of Man came to seek and to save the lost."
+    - text: "Jesus Christ says: “For the Son of Man came to seek and to save the lost.”"
       source: "[Luke 19:10](https://www.bibleserver.com/ESV/Luke19)"
   closing: "Lost, found, restored: that is what a backup is for. And it is what God offers every person in Jesus Christ. We named the software after Onesimus because we believe that. The letter to Philemon is one page long; [read it](https://www.bibleserver.com/ESV/Philemon1)."
 

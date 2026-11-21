@@ -141,7 +141,7 @@ name:
   quotes:
     - text: "… der dir früher unnütz war, jetzt aber dir und mir sehr nützlich ist."
       source: "[Philemon 11](https://www.bibleserver.com/LUT/Philemon1)"
-    - text: "Denn der Menschensohn ist gekommen, zu suchen und selig zu machen, was verloren ist."
+    - text: "Jesus Christus spricht: „Denn der Menschensohn ist gekommen, zu suchen und selig zu machen, was verloren ist.“"
       source: "[Lukas 19,10](https://www.bibleserver.com/LUT/Lukas19)"
   closing: "Verloren, gefunden, wiederhergestellt: Dafür gibt es Backups. Und genau das bietet Gott jedem Menschen in Jesus Christus an. Wir haben die Software nach Onesimus benannt, weil wir das glauben. Der Brief an Philemon ist eine Seite lang; [lies ihn](https://www.bibleserver.com/LUT/Philemon1)."
 
