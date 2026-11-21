@@ -25,7 +25,7 @@ at a time.
 
 <div class="note">
 
-Onesimus is in **early access**. Try it on a test system or next to your Bareos installation, with
+Onesimus is **not yet as established as Bareos**. Try it on a test system or next to your Bareos installation, with
 a catalog backup, before you rely on it.
 
 </div>

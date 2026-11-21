@@ -57,7 +57,7 @@ keine zusätzlichen Direktiven in `bareos-dir.d`, die den Rückweg versperren w�
 | NDMP | unterstützt | nicht unterstützt |
 | Plugins | Director- und File-Daemon-Plugins, auch in Python | keine Director-Plugins und keine Python-Plugins; Plugins für den File Daemon entstehen als signierte Rust/WebAssembly-Komponenten |
 | Pakete und Plattformen | offizielle Pakete für viele Distributionen, Clients für Windows und macOS | Debian-Pakete, aus den Quellen gebaut, für die Rust-Daemons; die Oberfläche läuft auf Linux, Windows und macOS |
-| Reife und Support | viele Jahre im Produktionseinsatz, kommerzieller Support | Early Access |
+| Reife und Support | viele Jahre im Produktionseinsatz, kommerzieller Support | junges Projekt, noch nicht so etabliert |
 
 Fehlt etwas oder stimmt etwas nicht? Eröffne ein Issue auf
 [GitHub](https://github.com/Beerlesklopfer/Onesimus/issues).

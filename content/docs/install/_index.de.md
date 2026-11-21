@@ -24,7 +24,7 @@ einzeln ersetzen.
 
 <div class="note">
 
-Onesimus ist im **Early Access**. Probier es auf einem Testsystem oder neben deiner
+Onesimus ist **noch nicht so etabliert wie Bareos**. Probier es auf einem Testsystem oder neben deiner
 Bareos-Installation aus, mit einer Sicherung des Katalogs, bevor du dich darauf verlässt.
 
 </div>
