@@ -85,9 +85,9 @@ whatever its ACLs and profiles say, even with `Command ACL = *all*`:
 
 | Refused | Why |
 |---|---|
-| `.acl` | ACL changes: the assistant could lift its own limits |
+| ACL changes (`.acl`, the catalog ACLs) | the assistant could lift its own limits |
 | `sqlquery`, `.sql`, `query` | raw SQL: the only way to contents stored in the catalog |
-| `configure add console` | an assistant creates no consoles |
+| creating or changing consoles, profiles, users (`configure add console\|profile\|user`; `configure update/delete` do not know these types) | profiles and users are configuration resources that carry ACLs; an assistant creates and changes none |
 | `RunScript`, `Run Before/After (Failed) Job`, `Client Run Before/After Job`, `Plugin`, `File = "\|…"`, `Write Bootstrap = "\|…"` in any configuration change | an assistant stores no program: a schedule would run it as the Director's user |
 
 Everything else follows the console's ACLs. You change the assistant's rights from your own console

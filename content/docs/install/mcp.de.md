@@ -86,9 +86,9 @@ diese Befehle ab, gleich was ihre ACLs und Profile sagen, auch mit `Command ACL 
 
 | Abgelehnt | Warum |
 |---|---|
-| `.acl` | ACL-Änderungen: Der Assistent könnte seine eigenen Grenzen aufheben |
+| ACL-Änderungen (`.acl`, die ACLs im Katalog) | Der Assistent könnte seine eigenen Grenzen aufheben |
 | `sqlquery`, `.sql`, `query` | rohes SQL: der einzige Weg zu Inhalten, die im Katalog gespeichert sind |
-| `configure add console` | ein Assistent legt keine Consolen an |
+| Consolen, Profile und User anlegen oder ändern (`configure add console\|profile\|user`; `configure update/delete` kennen diese Typen nicht) | Profile und User sind Konfigurationsressourcen, die ACLs tragen; ein Assistent legt keine an und ändert keine |
 | `RunScript`, `Run Before/After (Failed) Job`, `Client Run Before/After Job`, `Plugin`, `File = "\|…"`, `Write Bootstrap = "\|…"` in einer Konfigurationsänderung | Ein Assistent hinterlegt kein Programm: Ein Zeitplan würde es als Benutzer des Directors ausführen |
 
 Alles andere folgt den ACLs der Console. Die Rechte des Assistenten änderst du von deiner eigenen
