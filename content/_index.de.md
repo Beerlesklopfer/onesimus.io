@@ -3,7 +3,7 @@ title: "Onesimus — Moderne Backup-Verwaltung"
 description: "Eine moderne Qt6-Oberfläche und ein stabiler Backup-Stack in Rust: Drop-in-Ersatz für den Bareos Director, mit Bareos als Rückfallweg."
 
 hero:
-  badge: "Early Access"
+  badge: "Open Source · AGPL-3.0"
   title: "Eine moderne Backup-Oberfläche."
   titleEm: "Ein stabiler Kern in Rust."
   subtitle: "Onesimus ist eine Qt6-Desktop-Anwendung **und** ein Backup-Stack in Rust: Director, File Daemon, Storage Daemon und Konsole. Er ersetzt Bareos 25 ohne Umbau: dieselbe Konfiguration, derselbe Katalog, dieselben Clients. Und Bareos bleibt als Rückweg installiert."
@@ -136,7 +136,7 @@ stack:
 
 cta:
   title: "Probier es neben deiner Bareos-Installation aus"
-  text: "Onesimus ist im Early Access und Open Source unter der AGPL-3.0. Installiere es zuerst auf einem Testsystem; der Weg zurück zu Bareos ist ein `systemctl`-Befehl."
+  text: "Onesimus ist Open Source unter der AGPL-3.0 und noch nicht so etabliert wie Bareos. Installiere es zuerst auf einem Testsystem; der Weg zurück zu Bareos ist ein `systemctl`-Befehl."
   actions:
     - label: "Installation & Betrieb"
       url: "/docs/install/"
