@@ -106,7 +106,7 @@ features:
       text: "Neben BVFS durchsucht der Onesimus Director Backup-Inhalte mit OVFS, einer PostgreSQL-Erweiterung, und rechnet dasselbe Ergebnis selbst aus, wo die Erweiterung fehlt."
     - icon: "🤖"
       title: "MCP für KI-Assistenten"
-      text: "`oconsole --mcp` bietet den Director KI-Assistenten als typisierte Werkzeuge an. Der Assistent gilt als eigene Console mit deutlich eingeschränkten Rechten: Standardmäßig liest er und darf die Konfiguration ändern, aber keine ACLs. Den Inhalt deiner Backups kann er nicht lesen."
+      text: "`oconsole --mcp` bietet den Director KI-Assistenten als typisierte Werkzeuge an. Der Assistent meldet sich als eigene Console (`<name>-mcp`) mit eigenem Passwort an; das Profil `assistant` erlaubt ihm, zu lesen und die Konfiguration zu ändern. ACL-Änderungen, neue Consolen und direktes SQL verweigert der Director jeder Assistenten-Console, egal was konfiguriert ist. Kein Werkzeug liefert Backup-Inhalte: Ein Restore, wenn du ihn erlaubst, schreibt die Dateien auf den Client, nie zum Assistenten."
     - icon: "🌍"
       title: "Sechs Sprachen, zwei Themes"
       text: "Sprache und ein dunkles oder helles Theme wählst du in den Einstellungen."
