@@ -1,60 +1,129 @@
 baseURL = "https://onesimus.io/"
-languageCode = "en"
+locale = "en"
 defaultContentLanguage = "en"
-title = "Onesimus — Modern Backup Management UI"
+title = "Onesimus — Modern Backup Management"
 theme = "onesimus-theme"
 enableRobotsTXT = true
 enableEmoji = true
 
 [params]
-  description = "A modern, cross-platform management interface for Bacula and Bareos backup systems"
+  description = "A modern Qt6 GUI and a stable Rust backup stack: a drop-in replacement for the Bareos Director, with Bareos as the fallback."
   author = "Beerlesklopfer"
   github = "https://github.com/Beerlesklopfer/Onesimus"
   tagline = "Backup management, reimagined."
   ogImage = "/img/og-image.png"
-
-  [params.hero]
-    title = "Backup management, reimagined."
-    subtitle = "A modern Qt6 interface for Bacula & Bareos — open source, cross-platform, built for professionals."
-    ctaPrimary = "Download"
-    ctaPrimaryURL = "/docs/getting-started/"
-    ctaSecondary = "View on GitHub"
-    ctaSecondaryURL = "https://github.com/Beerlesklopfer/Onesimus"
 
   [params.pricing]
     currency = "€"
 
 [languages]
   [languages.en]
-    languageName = "English"
+    label = "English"
     weight = 1
-  [languages.de]
-    languageName = "Deutsch"
-    weight = 2
 
-[menu]
-  [[menu.main]]
-    name = "Features"
-    url = "/#features"
-    weight = 1
-  [[menu.main]]
-    name = "Docs"
-    url = "/docs/"
+    [[languages.en.menus.main]]
+      identifier = "features"
+      name = "Features"
+      url = "/#features"
+      weight = 1
+    [[languages.en.menus.main]]
+      identifier = "docs"
+      name = "Docs"
+      url = "/docs/"
+      weight = 2
+    [[languages.en.menus.main]]
+      parent = "docs"
+      name = "Manual"
+      url = "/docs/manual/"
+      weight = 1
+    [[languages.en.menus.main]]
+      parent = "docs"
+      name = "Commands"
+      url = "/docs/commands/"
+      weight = 2
+    [[languages.en.menus.main]]
+      parent = "docs"
+      name = "Install & operation"
+      url = "/docs/install/"
+      weight = 3
+    [[languages.en.menus.main]]
+      identifier = "compare"
+      name = "Compare"
+      url = "/compare/"
+      weight = 3
+    [[languages.en.menus.main]]
+      identifier = "blog"
+      name = "Blog"
+      url = "/blog/"
+      weight = 4
+    [[languages.en.menus.main]]
+      identifier = "pricing"
+      name = "Pricing"
+      url = "/pricing/"
+      weight = 5
+    [[languages.en.menus.main]]
+      identifier = "github"
+      name = "GitHub"
+      url = "https://github.com/Beerlesklopfer/Onesimus"
+      weight = 6
+      [languages.en.menus.main.params]
+        external = true
+
+  [languages.de]
+    label = "Deutsch"
+    locale = "de"
     weight = 2
-  [[menu.main]]
-    name = "Blog"
-    url = "/blog/"
-    weight = 3
-  [[menu.main]]
-    name = "Pricing"
-    url = "/pricing/"
-    weight = 4
-  [[menu.main]]
-    name = "GitHub"
-    url = "https://github.com/Beerlesklopfer/Onesimus"
-    weight = 5
-    [menu.main.params]
-      external = true
+    title = "Onesimus — Moderne Backup-Verwaltung"
+    [languages.de.params]
+      description = "Eine moderne Qt6-Oberfläche und ein stabiler Backup-Stack in Rust: Drop-in-Ersatz für den Bareos Director, mit Bareos als Rückfallweg."
+
+    [[languages.de.menus.main]]
+      identifier = "features"
+      name = "Funktionen"
+      url = "/de/#features"
+      weight = 1
+    [[languages.de.menus.main]]
+      identifier = "docs"
+      name = "Doku"
+      url = "/de/docs/"
+      weight = 2
+    [[languages.de.menus.main]]
+      parent = "docs"
+      name = "Handbuch"
+      url = "/de/docs/manual/"
+      weight = 1
+    [[languages.de.menus.main]]
+      parent = "docs"
+      name = "Befehle"
+      url = "/de/docs/commands/"
+      weight = 2
+    [[languages.de.menus.main]]
+      parent = "docs"
+      name = "Installation & Betrieb"
+      url = "/de/docs/install/"
+      weight = 3
+    [[languages.de.menus.main]]
+      identifier = "compare"
+      name = "Vergleich"
+      url = "/de/compare/"
+      weight = 3
+    [[languages.de.menus.main]]
+      identifier = "blog"
+      name = "Blog"
+      url = "/blog/"
+      weight = 4
+    [[languages.de.menus.main]]
+      identifier = "pricing"
+      name = "Preise"
+      url = "/pricing/"
+      weight = 5
+    [[languages.de.menus.main]]
+      identifier = "github"
+      name = "GitHub"
+      url = "https://github.com/Beerlesklopfer/Onesimus"
+      weight = 6
+      [languages.de.menus.main.params]
+        external = true
 
 [markup]
   [markup.goldmark]

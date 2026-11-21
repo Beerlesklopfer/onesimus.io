@@ -1,152 +1,150 @@
 {{ define "main" }}
+{{- /* The homepage text lives in the front matter of content/_index.md (and _index.<lang>.md),
+       so every language has its own copy. Links starting with "/" get the language prefix. */ -}}
+{{- $p := .Params -}}
+{{- $page := . -}}
 
+{{ with $p.hero }}
 <!-- ======== HERO ======== -->
 <section class="hero">
-  <div class="container">
+  <div class="container hero__grid">
     <div class="hero__content">
-
-      <div class="hero__badge">Alpha Release — v0.1.0</div>
-
-      <h1 class="hero__title">
-        Backup management,<br><em>reimagined.</em>
-      </h1>
-
-      <p class="hero__subtitle">
-        A modern Qt6 interface for Bacula &amp; Bareos. Open source, cross-platform,
-        built for professionals who need clarity over complexity.
-      </p>
-
+      {{ with .badge }}<div class="hero__badge">{{ . }}</div>{{ end }}
+      <h1 class="hero__title">{{ .title }}{{ with .titleEm }}<br><em>{{ . }}</em>{{ end }}</h1>
+      <p class="hero__subtitle">{{ .subtitle | markdownify }}</p>
       <div class="hero__actions">
-        <a href="/docs/getting-started/" class="btn btn--primary">
-          Get Started
-        </a>
-        <a href="{{ .Site.Params.github }}" class="btn btn--ghost" target="_blank" rel="noopener">
-          View on GitHub ↗
-        </a>
+        {{ range .actions }}
+        {{ $ext := hasPrefix .url "http" }}
+        <a href="{{ if $ext }}{{ .url }}{{ else }}{{ .url | relLangURL }}{{ end }}" class="btn {{ if .primary }}btn--primary{{ else }}btn--ghost{{ end }}"{{ if $ext }} target="_blank" rel="noopener"{{ end }}>{{ .label }}{{ if $ext }} ↗{{ end }}</a>
+        {{ end }}
       </div>
-
     </div>
+    {{ with .screenshot }}
+    <div class="hero__shot">
+      {{ partial "screenshot.html" (dict "page" $page "name" .name "alt" .alt "caption" .caption) }}
+    </div>
+    {{ end }}
   </div>
 </section>
+{{ end }}
 
-<!-- ======== FEATURES ======== -->
-<section class="section section--bordered" id="features">
-  <div class="container">
-
-    <div class="section__header">
-      <div class="section__label">Features</div>
-      <h2 class="section__title">Everything you need to manage backups</h2>
-      <p class="section__subtitle">
-        Onesimus replaces clunky terminal workflows with a clean, modern interface
-        that gives you full control over your Bareos environment.
-      </p>
-    </div>
-
-    <div class="features-grid">
-
-      <div class="feature-card">
-        <div class="feature-card__icon">📊</div>
-        <h3 class="feature-card__title">Job Management</h3>
-        <p class="feature-card__desc">
-          View all backup jobs at a glance. Filter by status, level, date, or client.
-          Real-time statistics, pagination, and export to JSON or CSV.
-        </p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-card__icon">💻</div>
-        <h3 class="feature-card__title">Client Overview</h3>
-        <p class="feature-card__desc">
-          Monitor all backup clients with online/offline status indicators.
-          Add new clients through a guided wizard with auto-configuration.
-        </p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-card__icon">🗄️</div>
-        <h3 class="feature-card__title">Storage &amp; Volumes</h3>
-        <p class="feature-card__desc">
-          Manage storage daemons, pools, and volumes. Track capacity
-          and device status across your entire backup infrastructure.
-        </p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-card__icon">🔐</div>
-        <h3 class="feature-card__title">TLS/SSL Security</h3>
-        <p class="feature-card__desc">
-          Built-in TLS-PSK and X.509 certificate authentication with OpenSSL 3.6.
-          Connection wizard with auto-detection of server capabilities.
-        </p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-card__icon">📅</div>
-        <h3 class="feature-card__title">Schedule Management</h3>
-        <p class="feature-card__desc">
-          Visual overview of all backup schedules with run times, levels,
-          and pool assignments. Weekly planner for backup windows.
-        </p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-card__icon">🌍</div>
-        <h3 class="feature-card__title">Multi-Language</h3>
-        <p class="feature-card__desc">
-          Available in 6 languages with automatic system language detection.
-          Live language switching with native language names.
-        </p>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ======== CROSS-PLATFORM ======== -->
+{{ with $p.pillars }}
+<!-- ======== THREE PILLARS ======== -->
 <section class="section section--bordered">
   <div class="container">
     <div class="section__header">
-      <div class="section__label">Cross-Platform</div>
-      <h2 class="section__title">Runs where you work</h2>
-      <p class="section__subtitle">
-        Native builds for Windows, Linux, and macOS. One codebase, one UI, every platform.
-      </p>
+      {{ with .label }}<div class="section__label">{{ . }}</div>{{ end }}
+      <h2 class="section__title">{{ .title }}</h2>
+      {{ with .subtitle }}<p class="section__subtitle">{{ . | markdownify }}</p>{{ end }}
     </div>
-
     <div class="features-grid">
-      <div class="feature-card" style="text-align:center;">
-        <div class="feature-card__icon" style="margin:0 auto 1.25rem;">🐧</div>
-        <h3 class="feature-card__title">Linux</h3>
-        <p class="feature-card__desc">AppImage, .deb packages, or build from source.</p>
+      {{ range .items }}
+      <div class="feature-card">
+        {{ with .icon }}<div class="feature-card__icon">{{ . }}</div>{{ end }}
+        <h3 class="feature-card__title">{{ .title }}</h3>
+        <p class="feature-card__desc">{{ .text | markdownify }}</p>
       </div>
-      <div class="feature-card" style="text-align:center;">
-        <div class="feature-card__icon" style="margin:0 auto 1.25rem;">🪟</div>
-        <h3 class="feature-card__title">Windows</h3>
-        <p class="feature-card__desc">Native build with Visual Studio 2022 and NSIS installer.</p>
-      </div>
-      <div class="feature-card" style="text-align:center;">
-        <div class="feature-card__icon" style="margin:0 auto 1.25rem;">🍎</div>
-        <h3 class="feature-card__title">macOS</h3>
-        <p class="feature-card__desc">Homebrew-friendly build with native Qt6 integration.</p>
-      </div>
+      {{ end }}
     </div>
   </div>
 </section>
+{{ end }}
 
+{{ with $p.showcase }}
+<!-- ======== SHOWCASE (screenshots) ======== -->
+<section class="section section--bordered" id="features">
+  <div class="container">
+    <div class="section__header">
+      {{ with .label }}<div class="section__label">{{ . }}</div>{{ end }}
+      <h2 class="section__title">{{ .title }}</h2>
+      {{ with .subtitle }}<p class="section__subtitle">{{ . | markdownify }}</p>{{ end }}
+    </div>
+    {{ range $i, $item := .items }}
+    <div class="showcase{{ if modBool $i 2 }}{{ else }} showcase--reverse{{ end }}">
+      <div class="showcase__text">
+        {{ with $item.label }}<div class="section__label">{{ . }}</div>{{ end }}
+        <h3 class="showcase__title">{{ $item.title }}</h3>
+        <p class="showcase__desc">{{ $item.text | markdownify }}</p>
+        {{ with $item.bullets }}
+        <ul class="showcase__list">
+          {{ range . }}<li>{{ . | markdownify }}</li>{{ end }}
+        </ul>
+        {{ end }}
+        {{ with $item.badge }}<span class="showcase__badge">{{ . }}</span>{{ end }}
+      </div>
+      <div class="showcase__media">
+        {{ with $item.screenshot }}
+        {{ partial "screenshot.html" (dict "page" $page "name" .name "alt" .alt "caption" .caption) }}
+        {{ end }}
+      </div>
+    </div>
+    {{ end }}
+  </div>
+</section>
+{{ end }}
+
+{{ with $p.features }}
+<!-- ======== MORE FEATURES ======== -->
+<section class="section section--bordered">
+  <div class="container">
+    <div class="section__header">
+      {{ with .label }}<div class="section__label">{{ . }}</div>{{ end }}
+      <h2 class="section__title">{{ .title }}</h2>
+      {{ with .subtitle }}<p class="section__subtitle">{{ . | markdownify }}</p>{{ end }}
+    </div>
+    <div class="features-grid">
+      {{ range .items }}
+      <div class="feature-card">
+        {{ with .icon }}<div class="feature-card__icon">{{ . }}</div>{{ end }}
+        <h3 class="feature-card__title">{{ .title }}</h3>
+        <p class="feature-card__desc">{{ .text | markdownify }}</p>
+      </div>
+      {{ end }}
+    </div>
+  </div>
+</section>
+{{ end }}
+
+{{ with $p.stack }}
+<!-- ======== THE STACK ======== -->
+<section class="section section--bordered">
+  <div class="container">
+    <div class="section__header">
+      {{ with .label }}<div class="section__label">{{ . }}</div>{{ end }}
+      <h2 class="section__title">{{ .title }}</h2>
+      {{ with .subtitle }}<p class="section__subtitle">{{ . | markdownify }}</p>{{ end }}
+    </div>
+    <div class="stack-grid">
+      {{ range .items }}
+      <div class="stack-card">
+        <div class="stack-card__name">{{ .name }}</div>
+        <div class="stack-card__role">{{ .role }}</div>
+        <p class="stack-card__desc">{{ .text | markdownify }}</p>
+        {{ with .fallback }}<div class="stack-card__fallback">{{ . | markdownify }}</div>{{ end }}
+      </div>
+      {{ end }}
+    </div>
+    {{ with .note }}<p class="stack-note">{{ . | markdownify }}</p>{{ end }}
+  </div>
+</section>
+{{ end }}
+
+{{ with $p.cta }}
 <!-- ======== CTA ======== -->
 <section class="section">
   <div class="container">
     <div class="cta-section">
-      <h2 class="cta-section__title">Ready to modernize your backup management?</h2>
-      <p class="cta-section__desc">
-        Onesimus is free and open source. Get started in minutes.
-      </p>
+      <h2 class="cta-section__title">{{ .title }}</h2>
+      <p class="cta-section__desc">{{ .text | markdownify }}</p>
       <div class="hero__actions" style="justify-content:center;">
-        <a href="/docs/getting-started/" class="btn btn--primary">Download Onesimus</a>
-        <a href="{{ .Site.Params.github }}" class="btn btn--ghost" target="_blank" rel="noopener">Star on GitHub ↗</a>
+        {{ range .actions }}
+        {{ $ext := hasPrefix .url "http" }}
+        <a href="{{ if $ext }}{{ .url }}{{ else }}{{ .url | relLangURL }}{{ end }}" class="btn {{ if .primary }}btn--primary{{ else }}btn--ghost{{ end }}"{{ if $ext }} target="_blank" rel="noopener"{{ end }}>{{ .label }}{{ if $ext }} ↗{{ end }}</a>
+        {{ end }}
       </div>
     </div>
   </div>
 </section>
+{{ end }}
 
 {{ end }}

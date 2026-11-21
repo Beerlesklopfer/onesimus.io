@@ -1,0 +1,19 @@
+{{- /* Shared by the screenshot shortcode and the homepage.
+       Context: dict "page" <page> "name" <name> "alt" <text> "caption" <text, optional>.
+       Image: static/img/screens/<lang>/<name>.png, falling back to en; a placeholder box while it does not exist. */ -}}
+{{- $name := .name -}}
+{{- $alt := .alt | default $name -}}
+{{- $caption := .caption -}}
+{{- $lang := .page.Language.Lang -}}
+{{- $path := printf "img/screens/%s/%s.png" $lang $name -}}
+{{- if not (fileExists (printf "static/%s" $path)) -}}
+  {{- $path = printf "img/screens/en/%s.png" $name -}}
+{{- end -}}
+<figure class="screenshot">
+  {{- if fileExists (printf "static/%s" $path) }}
+  <a href="{{ $path | absURL }}"><img src="{{ $path | absURL }}" alt="{{ $alt }}" loading="lazy"></a>
+  {{- else }}
+  <div class="screenshot__placeholder" role="img" aria-label="{{ $alt }}"><span>Screenshot: {{ $name }}</span></div>
+  {{- end }}
+  {{- with $caption }}<figcaption>{{ . }}</figcaption>{{ end }}
+</figure>

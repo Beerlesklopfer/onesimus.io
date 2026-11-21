@@ -1,18 +1,4 @@
 {{- /* Usage: {{< screenshot name="jobs" alt="The job list" caption="optional" >}}
-       Image: static/img/screens/<lang>/<name>.png, falling back to en; a placeholder box while it does not exist. */ -}}
-{{- $name := .Get "name" -}}
-{{- $alt := .Get "alt" | default $name -}}
-{{- $caption := .Get "caption" -}}
-{{- $lang := .Page.Language.Lang -}}
-{{- $path := printf "img/screens/%s/%s.png" $lang $name -}}
-{{- if not (fileExists (printf "static/%s" $path)) -}}
-  {{- $path = printf "img/screens/en/%s.png" $name -}}
-{{- end -}}
-<figure class="screenshot">
-  {{- if fileExists (printf "static/%s" $path) }}
-  <a href="{{ $path | absURL }}"><img src="{{ $path | absURL }}" alt="{{ $alt }}" loading="lazy"></a>
-  {{- else }}
-  <div class="screenshot__placeholder" role="img" aria-label="{{ $alt }}">Screenshot: {{ $name }}</div>
-  {{- end }}
-  {{- with $caption }}<figcaption>{{ . }}</figcaption>{{ end }}
-</figure>
+       Image: static/img/screens/<lang>/<name>.png, falling back to en; a placeholder box while it does not exist.
+       The markup lives in partials/screenshot.html so that the homepage layout shows the same figure. */ -}}
+{{- partial "screenshot.html" (dict "page" .Page "name" (.Get "name") "alt" (.Get "alt") "caption" (.Get "caption")) -}}

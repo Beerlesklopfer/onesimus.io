@@ -9,7 +9,12 @@
       {{ end }}
     </div>
 
-    {{ if eq .Section "blog" }}
+    {{ with .Content }}
+    <div class="prose prose--list">{{ . }}</div>
+    {{ end }}
+
+    {{ if .Params.hideList }}
+    {{ else if eq .Section "blog" }}
     <div class="blog-grid">
       {{ range .Pages.ByDate.Reverse }}
       <a href="{{ .RelPermalink }}" class="blog-card" style="text-decoration:none;">
