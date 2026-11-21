@@ -20,7 +20,7 @@ at a time.
 
 | Component | How you get it today |
 |---|---|
-| GUI | build from source (Linux, Windows, macOS); a `.deb` can be built with CPack. An early-access pre-release (v0.2.0) is on [GitHub](https://github.com/Beerlesklopfer/Onesimus/releases); it predates the gRPC support. |
+| GUI | build from source (Linux, Windows, macOS); a `.deb` can be built with CPack. Packages of the current version will be published through the [GitHub repository](https://github.com/Beerlesklopfer/Onesimus). |
 | `odir`, `ofd`, `oconsole`, `osd` | Debian packages built from source with `cargo deb`. There is no public package repository yet. |
 
 <div class="note">

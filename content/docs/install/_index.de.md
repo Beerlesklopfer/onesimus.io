@@ -19,7 +19,7 @@ einzeln ersetzen.
 
 | Teil | So bekommst du ihn heute |
 |---|---|
-| Oberfläche | aus den Quellen bauen (Linux, Windows, macOS); ein `.deb` lässt sich mit CPack bauen. Eine Early-Access-Vorabversion (v0.2.0) liegt auf [GitHub](https://github.com/Beerlesklopfer/Onesimus/releases); sie ist älter als die gRPC-Unterstützung. |
+| Oberfläche | aus den Quellen bauen (Linux, Windows, macOS); ein `.deb` lässt sich mit CPack bauen. Pakete der aktuellen Version werden über das [GitHub-Repository](https://github.com/Beerlesklopfer/Onesimus) veröffentlicht. |
 | `odir`, `ofd`, `oconsole`, `osd` | Debian-Pakete, aus den Quellen mit `cargo deb` gebaut. Ein öffentliches Paket-Repository gibt es noch nicht. |
 
 <div class="note">
