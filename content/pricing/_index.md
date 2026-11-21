@@ -61,7 +61,19 @@ tiers:
 
 ### What counts towards the limit?
 The bytes the Director writes in a calendar month: every Full, Differential and Incremental job with its
-whole size. Restores never count. The GUI shows the month's usage in its status bar.
+whole size. Restores never count. The GUI shows the month's usage in its status bar, together with the
+bytes of the jobs that are running now:
+
+{{< screenshot name="statusbar-usage" variant="strip" alt="Status bar of the Onesimus GUI: Usage: 73.6 GB of 1 TB (Nov), next to the connection" >}}
+
+From 80 % of the limit the usage is highlighted, so that you see it coming before the limit is reached:
+
+{{< screenshot name="statusbar-near" variant="strip" alt="Status bar with the usage highlighted: 860.6 GB of 1 TB" >}}
+
+With a licence the status bar warns from 30 days before the annual licence ends, and in red in the last
+week:
+
+{{< screenshot name="statusbar-licence" variant="strip" alt="Status bar: Licence ends in 12 days, next to the month's usage" >}}
 
 ### What happens at the limit?
 From v1.0.0 the free edition starts no new backup jobs once the month's terabyte is written; running

@@ -62,7 +62,18 @@ tiers:
 ### Was zählt zum Limit?
 Die Bytes, die der Director in einem Kalendermonat schreibt: jeder Full-, Differential- und
 Incremental-Job mit seiner ganzen Größe. Restores zählen nie. Die GUI zeigt den Verbrauch des Monats in
-ihrer Statuszeile.
+ihrer Statuszeile, zusammen mit den Bytes der Jobs, die gerade laufen:
+
+{{< screenshot name="statusbar-usage" variant="strip" alt="Statuszeile der Onesimus-GUI: Verbrauch des Monats von 1 TB, neben der Verbindung" >}}
+
+Ab 80 % des Limits ist der Verbrauch hervorgehoben, damit du ihn kommen siehst, bevor das Limit erreicht
+ist:
+
+{{< screenshot name="statusbar-near" variant="strip" alt="Statuszeile mit hervorgehobenem Verbrauch: 860.6 GB von 1 TB" >}}
+
+Mit Lizenz warnt die Statuszeile ab 30 Tagen vor dem Ende der Jahreslizenz, in der letzten Woche in Rot:
+
+{{< screenshot name="statusbar-licence" variant="strip" alt="Statuszeile: die Lizenz endet in 12 Tagen, neben dem Verbrauch des Monats" >}}
 
 ### Was passiert am Limit?
 Ab v1.0.0 startet die freie Edition keine neuen Backup-Jobs mehr, sobald das Terabyte des Monats

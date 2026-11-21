@@ -829,6 +829,18 @@ code:not(pre code) {
   font-size: 0.9rem;
 }
 
+/* A narrow cut (the status bar): its own pixel size, never enlarged, so the text stays sharp */
+.screenshot--strip {
+  width: fit-content;
+  max-width: 100%;
+  margin: 1.25rem auto 1.75rem;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+.screenshot--strip img {
+  width: auto;
+  max-width: 100%;
+}
+
 .screenshot figcaption {
   padding: 0.75rem 0.5rem 0.25rem;
   color: var(--c-text-muted);

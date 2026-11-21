@@ -1,15 +1,17 @@
 {{- /* Shared by the screenshot shortcode and the homepage.
-       Context: dict "page" <page> "name" <name> "alt" <text> "caption" <text, optional>.
+       Context: dict "page" <page> "name" <name> "alt" <text> "caption" <text, optional>
+       "variant" <optional: "strip" = a narrow cut such as the status bar, shown at its own size, never enlarged>.
        Image: static/img/screens/<lang>/<name>.png, falling back to en; a placeholder box while it does not exist. */ -}}
 {{- $name := .name -}}
 {{- $alt := .alt | default $name -}}
 {{- $caption := .caption -}}
+{{- $variant := .variant -}}
 {{- $lang := .page.Language.Lang -}}
 {{- $path := printf "img/screens/%s/%s.png" $lang $name -}}
 {{- if not (fileExists (printf "static/%s" $path)) -}}
   {{- $path = printf "img/screens/en/%s.png" $name -}}
 {{- end -}}
-<figure class="screenshot">
+<figure class="screenshot{{ with $variant }} screenshot--{{ . }}{{ end }}">
   {{- if fileExists (printf "static/%s" $path) }}
   <a href="{{ $path | absURL }}"><img src="{{ $path | absURL }}" alt="{{ $alt }}" loading="lazy"></a>
   {{- else }}

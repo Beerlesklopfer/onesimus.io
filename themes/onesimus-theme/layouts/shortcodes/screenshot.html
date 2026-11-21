@@ -1,4 +1,4 @@
-{{- /* Usage: {{< screenshot name="jobs" alt="The job list" caption="optional" >}}
+{{- /* Usage: {{< screenshot name="jobs" alt="The job list" caption="optional" variant="strip (optional)" >}}
        Image: static/img/screens/<lang>/<name>.png, falling back to en; a placeholder box while it does not exist.
        The markup lives in partials/screenshot.html so that the homepage layout shows the same figure. */ -}}
-{{- partial "screenshot.html" (dict "page" .Page "name" (.Get "name") "alt" (.Get "alt") "caption" (.Get "caption")) -}}
+{{- partial "screenshot.html" (dict "page" .Page "name" (.Get "name") "alt" (.Get "alt") "caption" (.Get "caption") "variant" (.Get "variant")) -}}
