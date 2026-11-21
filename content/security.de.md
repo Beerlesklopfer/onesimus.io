@@ -35,7 +35,7 @@ Artikel 14 des Cyber Resilience Act verlangt.
 
 ## Unterstützte Versionen
 
-Bis v1.0.0 bekommt nur der neueste Stand des Entwicklungszweigs Sicherheitskorrekturen. Ab v1.0.0 wird
-der Unterstützungszeitraum mit jedem Release genannt.
+Bis v1.0.0 bekommt nur der neueste Stand des Entwicklungszweigs Sicherheitskorrekturen. Ab v1.0.0
+bekommt jede Version 2 Jahre ab ihrem Erscheinungsdatum Sicherheitskorrekturen.
 
 Maschinenlesbarer Kontakt: [/.well-known/security.txt](/.well-known/security.txt) (RFC 9116).

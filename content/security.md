@@ -35,7 +35,7 @@ the Cyber Resilience Act requires.
 
 ## Supported versions
 
-Until v1.0.0 only the newest state of the development branch receives security fixes. From v1.0.0 the
-support period is stated with each release.
+Until v1.0.0 only the newest state of the development branch receives security fixes. From v1.0.0
+each version receives security fixes for 2 years from its release date.
 
 Machine-readable contact: [/.well-known/security.txt](/.well-known/security.txt) (RFC 9116).
