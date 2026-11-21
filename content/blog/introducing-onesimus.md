@@ -4,7 +4,10 @@ date: 2026-02-08
 author: "Beerlesklopfer"
 description: "Why we built a modern Qt6 management interface for Bacula and Bareos backup systems."
 tags: ["announcement", "bareos", "open-source"]
+archived: true
 ---
+
+> **Archived (February 2026).** This post describes an early version of the Onesimus GUI. Onesimus is now a GUI plus a Rust backup stack, Bacula support is deprecated, and the Onesimus Director talks gRPC with TLS. See [the relaunch post](/blog/relaunch-gui-and-rust-stack/), the [installation guide](/docs/install/) and the [manual](/docs/manual/).
 
 Managing backups with Bareos or Bacula typically means staring at bconsole output or navigating the built-in WebUI. Both get the job done, but neither feels like a tool built for 2026.
 

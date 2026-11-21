@@ -4,7 +4,10 @@ date: 2026-02-15
 author: "Beerlesklopfer"
 description: "A practical guide to configuring TLS-PSK and X.509 certificate authentication in Onesimus."
 tags: ["tutorial", "tls", "security", "bareos"]
+archived: true
 ---
+
+> **Archived (February 2026).** This post describes an early version of the Onesimus GUI. Onesimus is now a GUI plus a Rust backup stack, Bacula support is deprecated, and the Onesimus Director talks gRPC with TLS. See [the relaunch post](/blog/relaunch-gui-and-rust-stack/), the [installation guide](/docs/install/) and the [manual](/docs/manual/).
 
 Securing your Bareos Director connection is essential — especially when managing backups across networks. Onesimus supports both TLS-PSK (Pre-Shared Key) and full X.509 certificate authentication out of the box.
 
