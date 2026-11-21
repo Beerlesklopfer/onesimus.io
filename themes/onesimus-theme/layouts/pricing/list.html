@@ -1,0 +1,38 @@
+{{ define "main" }}
+{{- $p := .Params -}}
+<section class="section" style="padding-top: calc(64px + var(--s-section));">
+  <div class="container">
+
+    <div class="section__header">
+      <div class="section__label">{{ $p.label }}</div>
+      <h1 class="section__title">{{ $p.headline | markdownify }}</h1>
+      <p class="section__subtitle">{{ $p.subtitle | markdownify }}</p>
+    </div>
+
+    <div class="pricing-note">{{ $p.earlybird | markdownify }}</div>
+
+    <div class="pricing-grid">
+      {{- range $p.tiers }}
+      <div class="pricing-card{{ if .featured }} pricing-card--featured{{ end }}"{{ if .featured }} data-badge="{{ $p.badge }}"{{ end }}>
+        <div class="pricing-card__name">{{ .name }}</div>
+        <div class="pricing-card__price">{{ .price }}{{ with .per }} <span>{{ . }}</span>{{ end }}</div>
+        {{- with .regular }}<div class="pricing-card__regular">{{ . | markdownify }}</div>{{ end }}
+        <div class="pricing-card__limit">{{ .limit }}</div>
+        <div class="pricing-card__desc">{{ .desc }}</div>
+        <ul class="pricing-card__features">
+          {{- range .features }}<li>{{ . | markdownify }}</li>{{ end }}
+        </ul>
+        <a href="{{ .url }}" class="btn {{ if .featured }}btn--primary{{ else }}btn--ghost{{ end }}" style="width:100%; justify-content:center;">{{ .button }}</a>
+      </div>
+      {{- end }}
+    </div>
+
+    <div class="container--narrow" style="margin-top: var(--s-section);">
+      <div class="prose">
+        {{ .Content }}
+      </div>
+    </div>
+
+  </div>
+</section>
+{{ end }}

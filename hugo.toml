@@ -55,6 +55,11 @@ enableEmoji = true
       url = "/blog/"
       weight = 4
     [[languages.en.menus.main]]
+      identifier = "pricing"
+      name = "Pricing"
+      url = "/pricing/"
+      weight = 5
+    [[languages.en.menus.main]]
       identifier = "github"
       name = "GitHub"
       url = "https://github.com/Beerlesklopfer/Onesimus"
@@ -105,6 +110,11 @@ enableEmoji = true
       name = "Blog"
       url = "/blog/"
       weight = 4
+    [[languages.de.menus.main]]
+      identifier = "pricing"
+      name = "Preise"
+      url = "/de/pricing/"
+      weight = 5
     [[languages.de.menus.main]]
       identifier = "github"
       name = "GitHub"
