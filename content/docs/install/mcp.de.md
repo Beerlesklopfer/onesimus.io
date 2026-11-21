@@ -36,7 +36,7 @@ Fehlt diese Console in `oconsole.conf` (oder steht dort nur `*UserAgent*`), star
 Rechte fällt es nie zurück. Ohne `--mcp` meldet sich oconsole wie bisher mit deiner Console an, auch
 wenn die `-mcp`-Console in der Datei zuerst steht.
 
-`--name <x>-mcp --password …` wählt eine Assistenten-Console ausdrücklich.
+`--name <x>-mcp --password …` wählt eine Assistenten-Console ausdrücklich. oconsole erkennt die Endung nur kleingeschrieben: `--name X-MCP` gilt als dein eigener Name und meldet sich als `X-MCP-mcp` an.
 
 ## Was der Assistent darf
 
@@ -48,7 +48,8 @@ diese Console gibt es das Profil **`assistant`**:
   Durchsuchen der Dateien mit `.bvfs_*` und `.ovfs_*`.
 - **Konfiguration ändern:** `configure`, also Job-, JobDefs-, Schedule-, Client-, FileSet-, Pool- und
   Storage-Ressourcen anlegen, ändern und löschen. Jede Änderung durchläuft die Prüfungen des
-  Directors, wie aus der GUI.
+  Directors, wie aus der GUI, und eine Assistenten-Console kann kein Programm hinterlegen, das der
+  Director ausführen würde (siehe unten).
 - **Nicht:** `run`, `restore`, `purge`, `delete`, `cancel`, `label`, `reload`. Diese Befehle stehen
   nicht im Profil, also lehnt der Director sie ab.
 
@@ -74,7 +75,7 @@ Console {
 Bei Restores begrenzt die **`Where ACL`**, wohin ein Restore auf dem Client schreiben darf; ein
 `where` außerhalb davon wird abgelehnt. Das Profil `assistant` hat keine `Where ACL`.
 
-Zerstörende Werkzeuge (`relabel_volume`, `prune`, `purge`, `delete`, `truncate`, `configure_delete`)
+Zerstörende Werkzeuge (`relabel_volume`, `prune`, `purge` außer im Probelauf, `delete`, `truncate`, `configure_delete`)
 verlangen zusätzlich den Parameter `confirm: true`. Ohne ihn bittet das Werkzeug den Assistenten, erst
 bei dir nachzufragen, und schickt nichts an den Director.
 
@@ -85,9 +86,10 @@ diese Befehle ab, gleich was ihre ACLs und Profile sagen, auch mit `Command ACL 
 
 | Abgelehnt | Warum |
 |---|---|
-| `.acl`, `.profile` | ACL-Änderungen: Der Assistent könnte seine eigenen Grenzen aufheben |
+| `.acl` | ACL-Änderungen: Der Assistent könnte seine eigenen Grenzen aufheben |
 | `sqlquery`, `.sql`, `query` | rohes SQL: der einzige Weg zu Inhalten, die im Katalog gespeichert sind |
 | `configure add console` | ein Assistent legt keine Consolen an |
+| `RunScript`, `Run Before/After (Failed) Job`, `Client Run Before/After Job`, `Plugin`, `File = "\|…"`, `Write Bootstrap = "\|…"` in einer Konfigurationsänderung | Ein Assistent hinterlegt kein Programm: Ein Zeitplan würde es als Benutzer des Directors ausführen |
 
 Alles andere folgt den ACLs der Console. Die Rechte des Assistenten änderst du von deiner eigenen
 Console aus oder in der Konfiguration, nie von seiner.
@@ -129,9 +131,19 @@ Das Profil `assistant` muss in der Konfiguration stehen (`bareos-dir.d/profile/a
 Assistenten, jede mit eigenem Passwort.
 
 ```text
-Director { Name = backup-dir; Address = backup.example.org; Password = "…" }
-Console  { Name = admin;     Password = "…" }
-Console  { Name = admin-mcp; Password = "ein-langes-zufaelliges-passwort" }
+Director {
+  Name = backup-dir
+  Address = backup.example.org
+  Password = "…"
+}
+Console {
+  Name = admin
+  Password = "…"
+}
+Console {
+  Name = admin-mcp
+  Password = "ein-langes-zufaelliges-passwort"
+}
 ```
 
 `oconsole --mcp` meldet sich dann als `admin-mcp` an.

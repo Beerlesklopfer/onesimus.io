@@ -35,7 +35,7 @@ start: it exits with status 2 and prints the lines you need to add. It never fal
 Without `--mcp`, oconsole logs in as your console as before, even if the `-mcp` console comes first in
 the file.
 
-`--name <x>-mcp --password …` selects an assistant console explicitly.
+`--name <x>-mcp --password …` selects an assistant console explicitly. oconsole recognises the suffix only in lower case: `--name X-MCP` counts as your own name and logs in as `X-MCP-mcp`.
 
 ## What the assistant may do
 
@@ -47,7 +47,8 @@ this console there is the profile **`assistant`**:
   file browsing with `.bvfs_*` and `.ovfs_*`.
 - **Change the configuration:** `configure`, that is add, change and delete Job, JobDefs, Schedule,
   Client, FileSet, Pool and Storage resources. Every change goes through the Director's checks, as it
-  does from the GUI.
+  does from the GUI, and an assistant console cannot store a program the Director would run (see
+  below).
 - **Not:** `run`, `restore`, `purge`, `delete`, `cancel`, `label`, `reload`. These commands are not in
   the profile, so the Director refuses them.
 
@@ -73,20 +74,21 @@ Console {
 For restores, the **`Where ACL`** limits where a restore may write on the client; a `where` outside
 it is refused. The profile `assistant` has no `Where ACL`.
 
-Destructive tools (`relabel_volume`, `prune`, `purge`, `delete`, `truncate`, `configure_delete`) also
+Destructive tools (`relabel_volume`, `prune`, `purge` except a dry run, `delete`, `truncate`, `configure_delete`) also
 need the parameter `confirm: true`. Without it the tool asks the assistant to check with you first and
 sends nothing to the Director.
 
 ## Limits no configuration lifts
 
-For every console whose name ends in `-mcp` (in any case), the Director refuses these commands,
+For every console whose name ends in `-mcp` (the Director ignores upper and lower case), the Director refuses these commands,
 whatever its ACLs and profiles say, even with `Command ACL = *all*`:
 
 | Refused | Why |
 |---|---|
-| `.acl`, `.profile` | ACL changes: the assistant could lift its own limits |
+| `.acl` | ACL changes: the assistant could lift its own limits |
 | `sqlquery`, `.sql`, `query` | raw SQL: the only way to contents stored in the catalog |
 | `configure add console` | an assistant creates no consoles |
+| `RunScript`, `Run Before/After (Failed) Job`, `Client Run Before/After Job`, `Plugin`, `File = "\|…"`, `Write Bootstrap = "\|…"` in any configuration change | an assistant stores no program: a schedule would run it as the Director's user |
 
 Everything else follows the console's ACLs. You change the assistant's rights from your own console
 or in the configuration, never from the assistant's.
@@ -126,9 +128,19 @@ profile `assistant` must be in the configuration (`bareos-dir.d/profile/assistan
 with its own password.
 
 ```text
-Director { Name = backup-dir; Address = backup.example.org; Password = "…" }
-Console  { Name = admin;     Password = "…" }
-Console  { Name = admin-mcp; Password = "a-long-random-password" }
+Director {
+  Name = backup-dir
+  Address = backup.example.org
+  Password = "…"
+}
+Console {
+  Name = admin
+  Password = "…"
+}
+Console {
+  Name = admin-mcp
+  Password = "a-long-random-password"
+}
 ```
 
 `oconsole --mcp` then logs in as `admin-mcp`.
