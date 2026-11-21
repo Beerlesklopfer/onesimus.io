@@ -1,0 +1,500 @@
+{
+  "schema": 1,
+  "resource": "Messages",
+  "key": "messages",
+  "source": "Directive tables of the Bareos 25.1.2 Director as carried by odir (crates/odir/src/commands/show_items.rs) plus Onesimus extensions (crates/odir/src/config_check.rs EXTENSIONS)",
+  "description": "A Messages resource routes the messages of jobs and daemons to destinations: the catalog (job log), mail, files, syslog or the console.",
+  "examples": [
+    {
+      "title": "Job messages to catalog, log file and mail on errors",
+      "config": "Messages {\n  Name = Standard\n  Mail Command = \"/usr/bin/bsmtp -h localhost -f \\\"Bareos <bareos@example.com>\\\" -s \\\"Bareos: %t %e of %c %l\\\" %r\"\n  Operator Command = \"/usr/bin/bsmtp -h localhost -f \\\"Bareos <bareos@example.com>\\\" -s \\\"Bareos: Intervention needed for %j\\\" %r\"\n  Mail On Error = admin@example.com = all, !skipped, !saved, !audit\n  Operator = admin@example.com = mount\n  Console = all, !skipped, !saved, !audit\n  Append = \"/var/log/bareos/bareos.log\" = all, !skipped, !saved, !audit\n  Catalog = all, !skipped, !saved, !audit\n}"
+    }
+  ],
+  "directives": [
+    {
+      "name": "Name",
+      "key": "name",
+      "aliases": [],
+      "type": "name",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Name of the Messages resource; Jobs, the Director and daemons refer to it.",
+      "examples": [
+        {
+          "config": "Messages {\n  Name = \"Standard\"\n}",
+          "console": "configure add messages name=Standard"
+        }
+      ]
+    },
+    {
+      "name": "Description",
+      "key": "description",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Free text describing the resource.",
+      "examples": [
+        {
+          "config": "Messages {\n  Name = Standard\n  Description = \"Mail errors to the admins\"\n}",
+          "console": "configure add messages name=Standard description=\"Mail errors to the admins\""
+        }
+      ]
+    },
+    {
+      "name": "Mail Command",
+      "key": "mailcommand",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Command that sends the mails of Mail, Mail On Error and Mail On Success. bsmtp is the usual choice. Variables such as %r (recipients), %j (job name), %t (job type), %e (exit status), %c (client) and %d (Director) are replaced.",
+      "examples": [
+        {
+          "config": "Messages {\n  Name = Standard\n  Mail Command = \"/usr/bin/bsmtp -h localhost -f \\\"Bareos <bareos@example.com>\\\" -s \\\"Bareos: %t %e of %c %l\\\" %r\"\n}",
+          "console": "configure add messages name=Standard mailcommand=\"/usr/bin/bsmtp -h localhost -f \\\"Bareos <bareos@example.com>\\\" -s \\\"Bareos: %t %e of %c %l\\\" %r\""
+        }
+      ]
+    },
+    {
+      "name": "Operator Command",
+      "key": "operatorcommand",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Command for Operator messages (for example mount requests); same variables as Mail Command.",
+      "examples": [
+        {
+          "config": "Messages {\n  Name = Standard\n  Operator Command = \"/usr/bin/bsmtp -h localhost -f bareos@example.com -s \\\"Bareos: Intervention needed for %j\\\" %r\"\n}",
+          "console": "configure add messages name=Standard operatorcommand=\"/usr/bin/bsmtp -h localhost -f bareos@example.com -s \\\"Bareos: Intervention needed for %j\\\" %r\""
+        }
+      ]
+    },
+    {
+      "name": "Timestamp Format",
+      "key": "timestampformat",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "strftime format of the time stamps of these messages.",
+      "examples": [
+        {
+          "config": "Messages {\n  Name = Standard\n  Timestamp Format = \"%Y-%m-%d %H:%M:%S\"\n}",
+          "console": "configure add messages name=Standard timestampformat=\"%Y-%m-%d %H:%M:%S\""
+        }
+      ]
+    },
+    {
+      "name": "Syslog",
+      "key": "syslog",
+      "aliases": [],
+      "type": "message destination",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Send messages to the system log. A destination is followed by = and a comma separated list of message types: all, debug, abort, fatal, error, warning, info, saved, notsaved, skipped, mount, terminate, restored, security, alert, volmgmt, audit. !type removes a type, so \"all, !skipped, !saved\" means everything but the file lists.",
+      "examples": [
+        {
+          "config": "Messages {\n  Name = Standard\n  Syslog = all, !skipped, !saved, !audit\n}",
+          "console": "configure add messages name=Standard syslog=\"all, !skipped, !saved, !audit\""
+        }
+      ]
+    },
+    {
+      "name": "Mail",
+      "key": "mail",
+      "aliases": [],
+      "type": "message destination",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Mail the messages to the addresses before the second = (comma separated) when the job ends, as one mail per job. A destination is followed by = and a comma separated list of message types: all, debug, abort, fatal, error, warning, info, saved, notsaved, skipped, mount, terminate, restored, security, alert, volmgmt, audit. !type removes a type, so \"all, !skipped, !saved\" means everything but the file lists.",
+      "examples": [
+        {
+          "config": "Messages {\n  Name = Standard\n  Mail = admin@example.com = all, !skipped, !saved, !audit\n}",
+          "console": "configure add messages name=Standard mail=\"admin@example.com = all, !skipped, !saved, !audit\""
+        }
+      ]
+    },
+    {
+      "name": "Mail On Error",
+      "key": "mailonerror",
+      "aliases": [],
+      "type": "message destination",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Like Mail, but the mail is only sent when the job did not terminate normally.",
+      "examples": [
+        {
+          "config": "Messages {\n  Name = Standard\n  Mail On Error = admin@example.com = all, !skipped, !saved, !audit\n}",
+          "console": "configure add messages name=Standard mailonerror=\"admin@example.com = all, !skipped, !saved, !audit\""
+        }
+      ]
+    },
+    {
+      "name": "Mail On Success",
+      "key": "mailonsuccess",
+      "aliases": [],
+      "type": "message destination",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Like Mail, but only for jobs that terminated normally.",
+      "examples": [
+        {
+          "config": "Messages {\n  Name = Standard\n  Mail On Success = reports@example.com = all, !skipped, !saved, !audit\n}",
+          "console": "configure add messages name=Standard mailonsuccess=\"reports@example.com = all, !skipped, !saved, !audit\""
+        }
+      ]
+    },
+    {
+      "name": "File",
+      "key": "file",
+      "aliases": [],
+      "type": "message destination",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Write the messages to a file, which is overwritten when the Director starts. A destination is followed by = and a comma separated list of message types: all, debug, abort, fatal, error, warning, info, saved, notsaved, skipped, mount, terminate, restored, security, alert, volmgmt, audit. !type removes a type, so \"all, !skipped, !saved\" means everything but the file lists.",
+      "examples": [
+        {
+          "config": "Messages {\n  Name = Standard\n  File = \"/var/log/bareos/last.log\" = all, !skipped\n}",
+          "console": "configure add messages name=Standard file=\"\\\"/var/log/bareos/last.log\\\" = all, !skipped\""
+        }
+      ]
+    },
+    {
+      "name": "Append",
+      "key": "append",
+      "aliases": [],
+      "type": "message destination",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Append the messages to a file. The usual log of Bareos is configured like this; rotate it with logrotate. A destination is followed by = and a comma separated list of message types: all, debug, abort, fatal, error, warning, info, saved, notsaved, skipped, mount, terminate, restored, security, alert, volmgmt, audit. !type removes a type, so \"all, !skipped, !saved\" means everything but the file lists.",
+      "examples": [
+        {
+          "config": "Messages {\n  Name = Standard\n  Append = \"/var/log/bareos/bareos.log\" = all, !skipped, !saved, !audit\n}",
+          "console": "configure add messages name=Standard append=\"\\\"/var/log/bareos/bareos.log\\\" = all, !skipped, !saved, !audit\""
+        }
+      ]
+    },
+    {
+      "name": "Stdout",
+      "key": "stdout",
+      "aliases": [],
+      "type": "message destination",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Print the messages on standard output of the daemon (mostly for debugging in the foreground).",
+      "examples": [
+        {
+          "config": "Messages {\n  Name = Standard\n  Stdout = all\n}",
+          "console": "configure add messages name=Standard stdout=all"
+        }
+      ]
+    },
+    {
+      "name": "Stderr",
+      "key": "stderr",
+      "aliases": [],
+      "type": "message destination",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Print the messages on standard error of the daemon.",
+      "examples": [
+        {
+          "config": "Messages {\n  Name = Standard\n  Stderr = all\n}",
+          "console": "configure add messages name=Standard stderr=all"
+        }
+      ]
+    },
+    {
+      "name": "Director",
+      "key": "director",
+      "aliases": [],
+      "type": "message destination",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Send the messages of a File or Storage Daemon to the Director named before the second =; only used in the daemons' own Messages resources.",
+      "examples": [
+        {
+          "config": "Messages {\n  Name = Standard\n  Director = bareos-dir = all, !skipped, !restored\n}",
+          "console": "configure add messages name=Standard director=\"bareos-dir = all, !skipped, !restored\""
+        }
+      ]
+    },
+    {
+      "name": "Console",
+      "key": "console",
+      "aliases": [],
+      "type": "message destination",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Keep the messages for the consoles: they appear with the messages command (and automatically with autodisplay on).",
+      "examples": [
+        {
+          "config": "Messages {\n  Name = Standard\n  Console = all, !skipped, !saved\n}",
+          "console": "configure add messages name=Standard console=\"all, !skipped, !saved\""
+        }
+      ]
+    },
+    {
+      "name": "Operator",
+      "key": "operator",
+      "aliases": [],
+      "type": "message destination",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Send the messages to the operator addresses through Operator Command, at once rather than at the end of the job. Typical for mount requests.",
+      "examples": [
+        {
+          "config": "Messages {\n  Name = Standard\n  Operator = admin@example.com = mount\n}",
+          "console": "configure add messages name=Standard operator=\"admin@example.com = mount\""
+        }
+      ]
+    },
+    {
+      "name": "Catalog",
+      "key": "catalog",
+      "aliases": [],
+      "type": "message destination",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Store the messages in the catalog (table Log); the job log shown by list joblog and by the GUI comes from there.",
+      "examples": [
+        {
+          "config": "Messages {\n  Name = Standard\n  Catalog = all, !skipped, !saved, !audit\n}",
+          "console": "configure add messages name=Standard catalog=\"all, !skipped, !saved, !audit\""
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Message types",
+      "key": "types",
+      "description": "The types a destination lists after =, separated by commas; !type excludes one.",
+      "directives": [
+        {
+          "name": "all",
+          "key": "all",
+          "type": "message type",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Every message type; combine with !type to exclude some.",
+          "examples": []
+        },
+        {
+          "name": "debug",
+          "key": "debug",
+          "type": "message type",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Debug messages.",
+          "examples": []
+        },
+        {
+          "name": "abort",
+          "key": "abort",
+          "type": "message type",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "A daemon aborts.",
+          "examples": []
+        },
+        {
+          "name": "fatal",
+          "key": "fatal",
+          "type": "message type",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Fatal errors: the job is terminated.",
+          "examples": []
+        },
+        {
+          "name": "error",
+          "key": "error",
+          "type": "message type",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Errors; the job goes on.",
+          "examples": []
+        },
+        {
+          "name": "warning",
+          "key": "warning",
+          "type": "message type",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Warnings.",
+          "examples": []
+        },
+        {
+          "name": "info",
+          "key": "info",
+          "type": "message type",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Informational messages.",
+          "examples": []
+        },
+        {
+          "name": "saved",
+          "key": "saved",
+          "type": "message type",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "One line per saved file (only with high verbosity).",
+          "examples": []
+        },
+        {
+          "name": "notsaved",
+          "key": "notsaved",
+          "type": "message type",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Files that could not be saved.",
+          "examples": []
+        },
+        {
+          "name": "skipped",
+          "key": "skipped",
+          "type": "message type",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Files skipped by the FileSet options (for example unchanged files).",
+          "examples": []
+        },
+        {
+          "name": "mount",
+          "key": "mount",
+          "type": "message type",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Mount requests and volume mount messages.",
+          "examples": []
+        },
+        {
+          "name": "terminate",
+          "key": "terminate",
+          "type": "message type",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "The job end report.",
+          "examples": []
+        },
+        {
+          "name": "restored",
+          "key": "restored",
+          "type": "message type",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "One line per restored file.",
+          "examples": []
+        },
+        {
+          "name": "security",
+          "key": "security",
+          "type": "message type",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Security relevant messages, such as failed authentication.",
+          "examples": []
+        },
+        {
+          "name": "alert",
+          "key": "alert",
+          "type": "message type",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Alerts, for example from tape drives.",
+          "examples": []
+        },
+        {
+          "name": "volmgmt",
+          "key": "volmgmt",
+          "type": "message type",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Volume management messages.",
+          "examples": []
+        },
+        {
+          "name": "audit",
+          "key": "audit",
+          "type": "message type",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Audit log of console commands (Auditing in the Director).",
+          "examples": []
+        }
+      ]
+    }
+  ]
+}

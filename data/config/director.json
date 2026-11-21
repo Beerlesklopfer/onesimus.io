@@ -1,0 +1,902 @@
+{
+  "schema": 1,
+  "resource": "Director",
+  "key": "director",
+  "source": "Directive tables of the Bareos 25.1.2 Director as carried by odir (crates/odir/src/commands/show_items.rs) plus Onesimus extensions (crates/odir/src/config_check.rs EXTENSIONS)",
+  "description": "The Director resource configures the Director daemon itself: its name, password, listen addresses, working directories and global limits. There is exactly one per Director.",
+  "examples": [
+    {
+      "title": "A Director with gRPC on the default port",
+      "config": "Director {\n  Name = bareos-dir\n  Password = \"secret\"\n  Messages = Daemon\n  Working Directory = /var/lib/bareos\n  Maximum Concurrent Jobs = 20\n  Query File = \"/usr/lib/bareos/scripts/query.sql\"\n}",
+      "explanation": "The Onesimus Director listens for gRPC on 9101 + 1000 = 10101 and generates its gRPC certificate in the working directory on first start."
+    }
+  ],
+  "directives": [
+    {
+      "name": "Name",
+      "key": "name",
+      "aliases": [],
+      "type": "name",
+      "default": null,
+      "values": [],
+      "required": true,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Name of the Director. Consoles, File Daemons and Storage Daemons refer to it in their own Director resources, so a change must be made there as well.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = \"bareos-dir\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Description",
+      "key": "description",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Free text shown by status director.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Description = \"Main backup server\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Messages",
+      "key": "messages",
+      "aliases": [],
+      "type": "resource",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Messages resource for messages that do not belong to a job, such as start, reload and connection errors. Without it, such messages only reach the log of the daemon.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Messages = \"Daemon\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Port",
+      "key": "port",
+      "aliases": [
+        "Dir Port"
+      ],
+      "type": "port",
+      "default": "9101",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "TCP port the Director listens on for consoles and daemons. The Onesimus Director listens for gRPC on this port plus 1000 unless Grpc Port is set.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Port = 9101\n}"
+        }
+      ]
+    },
+    {
+      "name": "Address",
+      "key": "address",
+      "aliases": [
+        "Dir Address"
+      ],
+      "type": "address",
+      "default": "9101",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "IP address or host name the Director listens on; the default is all addresses. Use Addresses for several addresses or IPv6 and IPv4 at once.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Address = \"192.0.2.10\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Addresses",
+      "key": "addresses",
+      "aliases": [
+        "Dir Addresses"
+      ],
+      "type": "address block",
+      "default": "9101",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Several listen addresses in one block, each with ipv4 or ipv6, addr and port. It replaces Address and Port.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Addresses = {\n    ipv4 = { addr = 0.0.0.0; port = 9101 }\n    ipv6 = { addr = ::; port = 9101 }\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Source Address",
+      "key": "sourceaddress",
+      "aliases": [
+        "Dir Source Address"
+      ],
+      "type": "address",
+      "default": "0",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Source address for connections the Director opens to File and Storage Daemons, useful on hosts with several interfaces.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Source Address = \"192.0.2.10\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Query File",
+      "key": "queryfile",
+      "aliases": [],
+      "type": "path",
+      "default": "/usr/lib/bareos/scripts/query.sql",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "SQL file with the predefined queries of the query command.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Query File = \"/usr/lib/bareos/scripts/query.sql\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Working Directory",
+      "key": "workingdirectory",
+      "aliases": [],
+      "type": "path",
+      "default": "/var/lib/bareos",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Directory for state files, bootstrap files and the like; it must be writable by the Director. The Onesimus Director also keeps its generated gRPC certificate here (onesimus-grpc.crt and .key) when Grpc Tls Certificate is not set.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Working Directory = \"/var/lib/bareos\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Plugin Directory",
+      "key": "plugindirectory",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Directory the Director loads its plugins from (Plugin Names selects which).",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Plugin Directory = \"/usr/lib/bareos/plugins\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Plugin Names",
+      "key": "pluginnames",
+      "aliases": [],
+      "type": "string list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Director plugins to load from Plugin Directory; without it all are loaded.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Plugin Names = \"python3\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Scripts Directory",
+      "key": "scriptsdirectory",
+      "aliases": [],
+      "type": "path",
+      "default": "/usr/lib/bareos/scripts",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Directory of the helper scripts of Bareos (for example the catalog backup scripts).",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Scripts Directory = \"/usr/lib/bareos/scripts\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Subscriptions",
+      "key": "subscriptions",
+      "aliases": [],
+      "type": "positive integer",
+      "default": "0",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Number of clients covered by a subscription; status subscriptions compares it with the clients in use. 0 means not checked. It does not limit anything.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Subscriptions = 50\n}"
+        }
+      ]
+    },
+    {
+      "name": "Maximum Concurrent Jobs",
+      "key": "maximumconcurrentjobs",
+      "aliases": [],
+      "type": "positive integer",
+      "default": "1",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "How many jobs the Director runs at the same time. Further jobs wait in the queue (status \"waiting for max Director jobs\"). Clients, storages and jobs have their own limits; the smallest one decides. The schedule view of the Onesimus GUI uses these limits to predict waits.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Maximum Concurrent Jobs = 20\n}"
+        }
+      ]
+    },
+    {
+      "name": "Maximum Console Connections",
+      "key": "maximumconsoleconnections",
+      "aliases": [],
+      "type": "positive integer",
+      "default": "20",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "How many consoles may be connected at the same time; further connections are refused.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Maximum Console Connections = 20\n}"
+        }
+      ]
+    },
+    {
+      "name": "Password",
+      "key": "password",
+      "aliases": [],
+      "type": "password",
+      "default": null,
+      "values": [],
+      "required": true,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Password that consoles without a Console resource of their own (the default console of bconsole) use to log in. Anyone with it has full access, so keep it secret and give users named consoles with ACLs instead. \"[md5]\" followed by a hash is accepted.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Password = \"secret\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "FD Connect Timeout",
+      "key": "fdconnecttimeout",
+      "aliases": [],
+      "type": "time",
+      "default": "180",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "How long the Director keeps trying to reach a File Daemon before the job fails. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  FD Connect Timeout = 3 minutes\n}"
+        }
+      ]
+    },
+    {
+      "name": "SD Connect Timeout",
+      "key": "sdconnecttimeout",
+      "aliases": [],
+      "type": "time",
+      "default": "1800",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "How long the Director keeps trying to reach a Storage Daemon before the job fails. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  SD Connect Timeout = 30 minutes\n}"
+        }
+      ]
+    },
+    {
+      "name": "Heartbeat Interval",
+      "key": "heartbeatinterval",
+      "aliases": [],
+      "type": "time",
+      "default": "0",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Interval of keep-alive packets on idle connections, so that firewalls do not drop long-running jobs. 0 switches it off. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Heartbeat Interval = 60\n}"
+        }
+      ]
+    },
+    {
+      "name": "Statistics Retention",
+      "key": "statisticsretention",
+      "aliases": [],
+      "type": "time",
+      "default": "160704000",
+      "values": [],
+      "required": false,
+      "deprecated": true,
+      "onesimus": false,
+      "description": "Deprecated: how long job statistics are kept in the catalog. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Statistics Retention = 5 years\n}"
+        }
+      ]
+    },
+    {
+      "name": "Statistics Collect Interval",
+      "key": "statisticscollectinterval",
+      "aliases": [],
+      "type": "positive integer",
+      "default": "0",
+      "values": [],
+      "required": false,
+      "deprecated": true,
+      "onesimus": false,
+      "description": "Deprecated: interval in seconds of the statistics collection; 0 switches it off.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Statistics Collect Interval = 0\n}"
+        }
+      ]
+    },
+    {
+      "name": "Ver Id",
+      "key": "verid",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Free text added to the version line of status director, for example a build or site tag.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Ver Id = \"site A\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Key Encryption Key",
+      "key": "keyencryptionkey",
+      "aliases": [],
+      "type": "password",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Key that wraps the keys of encrypted tapes (LTO hardware encryption) before they are stored in the catalog. Losing it makes such volumes unreadable. The Onesimus Director wraps with AES key wrap (RFC 3394).",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Key Encryption Key = \"long-random-string\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "NDMP Snooping",
+      "key": "ndmpsnooping",
+      "aliases": [],
+      "type": "yes|no",
+      "default": null,
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Log the NDMP protocol traffic for debugging.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  NDMP Snooping = no\n}"
+        }
+      ]
+    },
+    {
+      "name": "NDMP Log Level",
+      "key": "ndmploglevel",
+      "aliases": [],
+      "type": "positive integer",
+      "default": "4",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Detail of NDMP messages in the log, 0 to 9.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  NDMP Log Level = 4\n}"
+        }
+      ]
+    },
+    {
+      "name": "NDMP Namelist Fhinfo Set Zero For Invalid Uquad",
+      "key": "ndmpnamelistfhinfosetzeroforinvaliduquad",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Work-around for NDMP filers that reject invalid values in the fh_info field of a restore name list: send 0 instead.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  NDMP Namelist Fhinfo Set Zero For Invalid Uquad = no\n}"
+        }
+      ]
+    },
+    {
+      "name": "Absolute Job Timeout",
+      "key": "absolutejobtimeout",
+      "aliases": [],
+      "type": "positive integer",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Hard limit for the run time of any job, in seconds; 0 or unset means no limit.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Absolute Job Timeout = 0\n}"
+        }
+      ]
+    },
+    {
+      "name": "Auditing",
+      "key": "auditing",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Write every console command to the audit log (message type audit).",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Auditing = yes\n}"
+        }
+      ]
+    },
+    {
+      "name": "Audit Events",
+      "key": "auditevents",
+      "aliases": [],
+      "type": "string list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Console commands that are audited when Auditing is on; without it all are.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Audit Events = \"label, purge, delete, configure\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Secure Erase Command",
+      "key": "secureerasecommand",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Command used to erase files securely (for example bootstrap files) instead of a plain delete.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Secure Erase Command = \"/usr/bin/shred -u\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Log Timestamp Format",
+      "key": "logtimestampformat",
+      "aliases": [],
+      "type": "string",
+      "default": "%d-%b %H:%M",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "strftime format of the time stamps in job logs.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Log Timestamp Format = \"%Y-%m-%d %H:%M:%S\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Enable kTLS",
+      "key": "enablektls",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Let the kernel do the TLS encryption (kTLS) where the system supports it.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Enable kTLS = no\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS Authenticate",
+      "key": "tlsauthenticate",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Use TLS only to authenticate the peer and switch back to an unencrypted connection afterwards. The data then travels in clear text, so this is meant for networks that are protected otherwise. Bareos' default TLS-PSK setup does not need it.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  TLS Authenticate = no\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS Enable",
+      "key": "tlsenable",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "yes",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Enable TLS for this connection. Since Bareos 18.2 TLS is on by default and uses TLS-PSK with the password of the resource, so no certificates are needed; set it to no only for peers that cannot speak TLS.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  TLS Enable = yes\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS Require",
+      "key": "tlsrequire",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "yes",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Refuse connections that do not use TLS. With the default (yes) a peer without TLS cannot connect; set it to no only during a migration from very old clients.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  TLS Require = yes\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS Cipher List",
+      "key": "tlscipherlist",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "OpenSSL cipher list for TLS 1.2 and older, colon separated. Leave it empty to use the OpenSSL defaults; restrict it only when a security policy demands specific ciphers.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  TLS Cipher List = \"PSK-AES256-GCM-SHA384:PSK-AES128-GCM-SHA256\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS Cipher Suites",
+      "key": "tlsciphersuites",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "OpenSSL cipher suites for TLS 1.3, colon separated. Empty means the OpenSSL defaults.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  TLS Cipher Suites = \"TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS DH File",
+      "key": "tlsdhfile",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "PEM file with Diffie-Hellman parameters for the DH key exchange of TLS 1.2. Without it, ephemeral DH ciphers are not offered; ECDHE and PSK ciphers do not need it.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  TLS DH File = \"/etc/bareos/tls/dh2048.pem\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS Protocol",
+      "key": "tlsprotocol",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Restricts the TLS protocol versions in OpenSSL syntax, for example to forbid old versions. Empty means the OpenSSL default.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  TLS Protocol = \"-ALL, +TLSv1.2, +TLSv1.3\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS Verify Peer",
+      "key": "tlsverifypeer",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "With certificate based TLS: check the peer's certificate against the CA and, for a server, against TLS Allowed CN. It has no effect with TLS-PSK.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  TLS Verify Peer = yes\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS Ca Certificate File",
+      "key": "tlscacertificatefile",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "PEM file with the CA certificates used to verify the peer's certificate. Needed for certificate based TLS when TLS Verify Peer is on (or use TLS CA Certificate Dir).",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  TLS Ca Certificate File = \"/etc/bareos/tls/ca.pem\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS Ca Certificate Dir",
+      "key": "tlscacertificatedir",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Directory of hashed CA certificates (as made by openssl rehash), an alternative to TLS CA Certificate File.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  TLS Ca Certificate Dir = \"/etc/ssl/certs\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS Certificate Revocation List",
+      "key": "tlscertificaterevocationlist",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "PEM file with a certificate revocation list; certificates on it are refused.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  TLS Certificate Revocation List = \"/etc/bareos/tls/crl.pem\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS Certificate",
+      "key": "tlscertificate",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "PEM file with the own certificate for certificate based TLS. Goes together with TLS Key.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  TLS Certificate = \"/etc/bareos/tls/bareos-dir.pem\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS Key",
+      "key": "tlskey",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "PEM file with the private key of TLS Certificate. Keep it readable for the daemon user only.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  TLS Key = \"/etc/bareos/tls/bareos-dir.key\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS Allowed CN",
+      "key": "tlsallowedcn",
+      "aliases": [],
+      "type": "string list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Common names a peer certificate may carry; others are refused when TLS Verify Peer is on. Repeat the directive for several names.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  TLS Allowed CN = \"client1.example.com\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Grpc Port",
+      "key": "grpcport",
+      "aliases": [],
+      "type": "positive integer",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": true,
+      "description": "Onesimus extension: TCP port of the gRPC interface of the Onesimus Director. Without it the Director listens on each BNET listen port plus 1000 (9101 becomes 10101). The Onesimus GUI and oconsole connect here; gRPC is always encrypted with TLS.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Grpc Port = 10101\n}"
+        }
+      ]
+    },
+    {
+      "name": "Grpc Tls Certificate",
+      "key": "grpctlscertificate",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": true,
+      "description": "Onesimus extension: PEM certificate of the gRPC interface. Without it (and Grpc Tls Key) the Director uses onesimus-grpc.crt in the Working Directory and generates a self-signed one on first start. Clients pin the certificate by its SHA-256 fingerprint, so replacing it makes them ask again.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Grpc Tls Certificate = \"/etc/bareos/tls/grpc.pem\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Grpc Tls Key",
+      "key": "grpctlskey",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": true,
+      "description": "Onesimus extension: private key of Grpc Tls Certificate; both must be given together.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Grpc Tls Key = \"/etc/bareos/tls/grpc.key\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Mdns Advertise",
+      "key": "mdnsadvertise",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "yes",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": true,
+      "description": "Onesimus extension: announce the Director in the local network by mDNS (name, ports and gRPC fingerprint), so that the connection wizard of the GUI can find it. A Director that listens on loopback only is never announced.",
+      "examples": [
+        {
+          "config": "Director {\n  Name = bareos-dir\n  Mdns Advertise = no\n}"
+        }
+      ]
+    }
+  ],
+  "blocks": []
+}

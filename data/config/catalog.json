@@ -1,0 +1,359 @@
+{
+  "schema": 1,
+  "resource": "Catalog",
+  "key": "catalog",
+  "source": "Directive tables of the Bareos 25.1.2 Director as carried by odir (crates/odir/src/commands/show_items.rs) plus Onesimus extensions (crates/odir/src/config_check.rs EXTENSIONS)",
+  "description": "The Catalog resource describes the PostgreSQL database that holds the job, file and volume records.",
+  "examples": [
+    {
+      "title": "The catalog on the local PostgreSQL server",
+      "config": "Catalog {\n  Name = MyCatalog\n  DB Name = bareos\n  DB User = bareos\n  DB Password = \"db-secret\"\n}"
+    }
+  ],
+  "directives": [
+    {
+      "name": "Name",
+      "key": "name",
+      "aliases": [],
+      "type": "name",
+      "default": null,
+      "values": [],
+      "required": true,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Name of the catalog; Client and Pool resources and the use command refer to it.",
+      "examples": [
+        {
+          "config": "Catalog {\n  Name = \"MyCatalog\"\n}",
+          "console": "configure add catalog name=MyCatalog dbuser=bareos dbname=bareos"
+        }
+      ]
+    },
+    {
+      "name": "Description",
+      "key": "description",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Free text describing the catalog.",
+      "examples": [
+        {
+          "config": "Catalog {\n  Name = MyCatalog\n  Description = \"Main catalog\"\n}",
+          "console": "configure add catalog name=MyCatalog dbuser=bareos dbname=bareos description=\"Main catalog\""
+        }
+      ]
+    },
+    {
+      "name": "DB Address",
+      "key": "dbaddress",
+      "aliases": [
+        "Address"
+      ],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Host of the PostgreSQL server; without it (and without DB Socket) the local socket is used.",
+      "examples": [
+        {
+          "config": "Catalog {\n  Name = MyCatalog\n  DB Address = \"db.example.com\"\n}",
+          "console": "configure add catalog name=MyCatalog dbuser=bareos dbname=bareos dbaddress=db.example.com"
+        }
+      ]
+    },
+    {
+      "name": "DB Port",
+      "key": "dbport",
+      "aliases": [
+        "Port"
+      ],
+      "type": "positive integer",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "TCP port of the PostgreSQL server.",
+      "examples": [
+        {
+          "config": "Catalog {\n  Name = MyCatalog\n  DB Port = 5432\n}",
+          "console": "configure add catalog name=MyCatalog dbuser=bareos dbname=bareos dbport=5432"
+        }
+      ]
+    },
+    {
+      "name": "DB Password",
+      "key": "dbpassword",
+      "aliases": [
+        "Password"
+      ],
+      "type": "password",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Password of the database user. The Onesimus Director masks it (***) in show.",
+      "examples": [
+        {
+          "config": "Catalog {\n  Name = MyCatalog\n  DB Password = \"db-secret\"\n}",
+          "console": "configure add catalog name=MyCatalog dbuser=bareos dbname=bareos dbpassword=db-secret"
+        }
+      ]
+    },
+    {
+      "name": "DB User",
+      "key": "dbuser",
+      "aliases": [
+        "User"
+      ],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": true,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Database user the Director connects as.",
+      "examples": [
+        {
+          "config": "Catalog {\n  Name = MyCatalog\n  DB User = \"bareos\"\n}",
+          "console": "configure add catalog name=MyCatalog dbname=bareos dbuser=bareos"
+        }
+      ]
+    },
+    {
+      "name": "DB Name",
+      "key": "dbname",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": true,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Name of the catalog database.",
+      "examples": [
+        {
+          "config": "Catalog {\n  Name = MyCatalog\n  DB Name = \"bareos\"\n}",
+          "console": "configure add catalog name=MyCatalog dbuser=bareos dbname=bareos"
+        }
+      ]
+    },
+    {
+      "name": "DB Socket",
+      "key": "dbsocket",
+      "aliases": [
+        "Socket"
+      ],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Directory of the PostgreSQL Unix socket, instead of a TCP connection.",
+      "examples": [
+        {
+          "config": "Catalog {\n  Name = MyCatalog\n  DB Socket = \"/var/run/postgresql\"\n}",
+          "console": "configure add catalog name=MyCatalog dbuser=bareos dbname=bareos dbsocket=/var/run/postgresql"
+        }
+      ]
+    },
+    {
+      "name": "Multiple Connections",
+      "key": "multipleconnections",
+      "aliases": [],
+      "type": "yes|no",
+      "default": null,
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": true,
+      "onesimus": false,
+      "description": "Deprecated: use several database connections.",
+      "examples": [
+        {
+          "config": "Catalog {\n  Name = MyCatalog\n  Multiple Connections = yes\n}"
+        }
+      ]
+    },
+    {
+      "name": "Disable Batch Insert",
+      "key": "disablebatchinsert",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": true,
+      "onesimus": false,
+      "description": "Deprecated: insert file records one by one instead of in batches.",
+      "examples": [
+        {
+          "config": "Catalog {\n  Name = MyCatalog\n  Disable Batch Insert = no\n}"
+        }
+      ]
+    },
+    {
+      "name": "Reconnect",
+      "key": "reconnect",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "yes",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Reconnect automatically when the database connection breaks.",
+      "examples": [
+        {
+          "config": "Catalog {\n  Name = MyCatalog\n  Reconnect = yes\n}",
+          "console": "configure add catalog name=MyCatalog dbuser=bareos dbname=bareos reconnect=yes"
+        }
+      ]
+    },
+    {
+      "name": "Exit On Fatal",
+      "key": "exitonfatal",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Stop the Director on a fatal database error instead of carrying on.",
+      "examples": [
+        {
+          "config": "Catalog {\n  Name = MyCatalog\n  Exit On Fatal = no\n}",
+          "console": "configure add catalog name=MyCatalog dbuser=bareos dbname=bareos exitonfatal=no"
+        }
+      ]
+    },
+    {
+      "name": "Min Connections",
+      "key": "minconnections",
+      "aliases": [],
+      "type": "positive integer",
+      "default": "1",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Connections the connection pool opens at start.",
+      "examples": [
+        {
+          "config": "Catalog {\n  Name = MyCatalog\n  Min Connections = 1\n}",
+          "console": "configure add catalog name=MyCatalog dbuser=bareos dbname=bareos minconnections=1"
+        }
+      ]
+    },
+    {
+      "name": "Max Connections",
+      "key": "maxconnections",
+      "aliases": [],
+      "type": "positive integer",
+      "default": "5",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Upper limit of the connection pool.",
+      "examples": [
+        {
+          "config": "Catalog {\n  Name = MyCatalog\n  Max Connections = 5\n}",
+          "console": "configure add catalog name=MyCatalog dbuser=bareos dbname=bareos maxconnections=5"
+        }
+      ]
+    },
+    {
+      "name": "Inc Connections",
+      "key": "incconnections",
+      "aliases": [],
+      "type": "positive integer",
+      "default": "1",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "How many connections the pool opens at once when it grows.",
+      "examples": [
+        {
+          "config": "Catalog {\n  Name = MyCatalog\n  Inc Connections = 1\n}",
+          "console": "configure add catalog name=MyCatalog dbuser=bareos dbname=bareos incconnections=1"
+        }
+      ]
+    },
+    {
+      "name": "Idle Timeout",
+      "key": "idletimeout",
+      "aliases": [],
+      "type": "positive integer",
+      "default": "30",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Seconds after which an idle pooled connection is closed.",
+      "examples": [
+        {
+          "config": "Catalog {\n  Name = MyCatalog\n  Idle Timeout = 30\n}",
+          "console": "configure add catalog name=MyCatalog dbuser=bareos dbname=bareos idletimeout=30"
+        }
+      ]
+    },
+    {
+      "name": "Validate Timeout",
+      "key": "validatetimeout",
+      "aliases": [],
+      "type": "positive integer",
+      "default": "120",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Seconds after which a pooled connection is checked before use.",
+      "examples": [
+        {
+          "config": "Catalog {\n  Name = MyCatalog\n  Validate Timeout = 120\n}",
+          "console": "configure add catalog name=MyCatalog dbuser=bareos dbname=bareos validatetimeout=120"
+        }
+      ]
+    },
+    {
+      "name": "Db Driver",
+      "key": "dbdriver",
+      "aliases": [],
+      "type": "string",
+      "default": "postgresql",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": true,
+      "description": "Onesimus extension: accepted so that older configurations that still name the driver load; Bareos 25 removed the directive. The catalog is PostgreSQL.",
+      "examples": [
+        {
+          "config": "Catalog {\n  Name = MyCatalog\n  Db Driver = \"postgresql\"\n}"
+        }
+      ]
+    }
+  ],
+  "blocks": []
+}

@@ -1,0 +1,625 @@
+{
+  "schema": 1,
+  "resource": "Pool",
+  "key": "pool",
+  "source": "Directive tables of the Bareos 25.1.2 Director as carried by odir (crates/odir/src/commands/show_items.rs) plus Onesimus extensions (crates/odir/src/config_check.rs EXTENSIONS)",
+  "description": "A Pool resource groups volumes with the same rules: how long their data is kept, how big they get, how they are labeled and recycled.",
+  "examples": [
+    {
+      "title": "Full backups kept for a year on disk",
+      "config": "Pool {\n  Name = Full\n  Pool Type = Backup\n  Recycle = yes\n  Auto Prune = yes\n  Volume Retention = 365 days\n  Maximum Volume Bytes = 50G\n  Maximum Volumes = 100\n  Label Format = \"Full-\"\n  Action On Purge = Truncate\n}"
+    },
+    {
+      "title": "Incrementals: one volume per job",
+      "config": "Pool {\n  Name = Incremental\n  Pool Type = Backup\n  Volume Retention = 30 days\n  Maximum Volume Jobs = 1\n  Label Format = \"Incremental-\"\n}",
+      "explanation": "With one job per volume a volume can be recycled as soon as its single job has expired."
+    }
+  ],
+  "directives": [
+    {
+      "name": "Name",
+      "key": "name",
+      "aliases": [],
+      "type": "name",
+      "default": null,
+      "values": [],
+      "required": true,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Name of the pool.",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = \"Full\"\n}",
+          "console": "configure add pool name=Full"
+        }
+      ]
+    },
+    {
+      "name": "Description",
+      "key": "description",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Free text describing the pool.",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Description = \"Full backups, kept one year\"\n}",
+          "console": "configure add pool name=Full description=\"Full backups, kept one year\""
+        }
+      ]
+    },
+    {
+      "name": "Pool Type",
+      "key": "pooltype",
+      "aliases": [],
+      "type": "enum",
+      "default": "Backup",
+      "values": [
+        "Backup",
+        "Copy",
+        "Cloned",
+        "Archive",
+        "Migration",
+        "Scratch"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Kind of pool: Backup (the normal case), Copy, Cloned, Archive, Migration or Scratch. Only Backup pools are used for backups; a pool named Scratch serves as the default scratch pool.",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Pool Type = Backup\n}",
+          "console": "configure add pool name=Full pooltype=Backup"
+        }
+      ]
+    },
+    {
+      "name": "Label Format",
+      "key": "labelformat",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Template for the names of volumes the Director labels automatically. Without it, volumes must be labeled by hand (label). The Director appends a 4-digit number unless the format uses variables such as ${NumVols}. For disk storage the Storage Daemon's device also needs Label Media = yes.",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Label Format = \"Full-\"\n}",
+          "console": "configure add pool name=Full labelformat=Full-"
+        }
+      ]
+    },
+    {
+      "name": "Label Type",
+      "key": "labeltype",
+      "aliases": [],
+      "type": "enum",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": true,
+      "onesimus": false,
+      "description": "Deprecated: ANSI or IBM tape labels.",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Label Type = Bareos\n}"
+        }
+      ]
+    },
+    {
+      "name": "Cleaning Prefix",
+      "key": "cleaningprefix",
+      "aliases": [],
+      "type": "string",
+      "default": "CLN",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Volumes whose name starts with this prefix are cleaning tapes and are never used for data.",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Cleaning Prefix = \"CLN\"\n}",
+          "console": "configure add pool name=Full cleaningprefix=CLN"
+        }
+      ]
+    },
+    {
+      "name": "Use Catalog",
+      "key": "usecatalog",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "yes",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Keep the volumes of this pool in the catalog; should stay yes.",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Use Catalog = yes\n}",
+          "console": "configure add pool name=Full usecatalog=yes"
+        }
+      ]
+    },
+    {
+      "name": "Purge Oldest Volume",
+      "key": "purgeoldestvolume",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "When the pool needs a volume and none is free, purge the oldest volume regardless of its retention. Dangerous: data that should still be kept is lost.",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Purge Oldest Volume = no\n}",
+          "console": "configure add pool name=Full purgeoldestvolume=no"
+        }
+      ]
+    },
+    {
+      "name": "Action On Purge",
+      "key": "actiononpurge",
+      "aliases": [],
+      "type": "enum",
+      "default": null,
+      "values": [
+        "None",
+        "Truncate"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "What happens to a volume when it is purged: Truncate shrinks a disk volume to zero to free the space (done by truncate or purge ... action=truncate); None keeps it.",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Action On Purge = Truncate\n}",
+          "console": "configure add pool name=Full actiononpurge=Truncate"
+        }
+      ]
+    },
+    {
+      "name": "Recycle Oldest Volume",
+      "key": "recycleoldestvolume",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "When a volume is needed, prune the oldest volume and reuse it if its retention allows.",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Recycle Oldest Volume = no\n}",
+          "console": "configure add pool name=Full recycleoldestvolume=no"
+        }
+      ]
+    },
+    {
+      "name": "Recycle Current Volume",
+      "key": "recyclecurrentvolume",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "When a volume is needed, prune the current volume and reuse it if its retention allows.",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Recycle Current Volume = no\n}",
+          "console": "configure add pool name=Full recyclecurrentvolume=no"
+        }
+      ]
+    },
+    {
+      "name": "Maximum Volumes",
+      "key": "maximumvolumes",
+      "aliases": [],
+      "type": "positive integer",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Upper limit of volumes in the pool; automatic labeling stops there. Together with Maximum Volume Bytes it caps the disk space of the pool.",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Maximum Volumes = 30\n}",
+          "console": "configure add pool name=Full maximumvolumes=30"
+        }
+      ]
+    },
+    {
+      "name": "Maximum Volume Jobs",
+      "key": "maximumvolumejobs",
+      "aliases": [],
+      "type": "positive integer",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Number of jobs after which a volume is marked Used. With 1, each job gets its own volume, which makes recycling of disk volumes precise.",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Maximum Volume Jobs = 1\n}",
+          "console": "configure add pool name=Full maximumvolumejobs=1"
+        }
+      ]
+    },
+    {
+      "name": "Maximum Volume Files",
+      "key": "maximumvolumefiles",
+      "aliases": [],
+      "type": "positive integer",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Number of files after which a volume is marked Used.",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Maximum Volume Files = 100000\n}",
+          "console": "configure add pool name=Full maximumvolumefiles=100000"
+        }
+      ]
+    },
+    {
+      "name": "Maximum Volume Bytes",
+      "key": "maximumvolumebytes",
+      "aliases": [],
+      "type": "size",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Size after which a volume is marked Full. On disk storage this keeps volumes small enough to be recycled one by one. Sizes take the suffixes k, m, g, t (powers of 1024) or kb, mb, gb, tb (powers of 1000).",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Maximum Volume Bytes = 50 g\n}",
+          "console": "configure add pool name=Full maximumvolumebytes=\"50 g\""
+        }
+      ]
+    },
+    {
+      "name": "Catalog Files",
+      "key": "catalogfiles",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "yes",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Store the file records of the jobs in this pool. Without them no single files can be selected for restore, only whole jobs.",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Catalog Files = yes\n}",
+          "console": "configure add pool name=Full catalogfiles=yes"
+        }
+      ]
+    },
+    {
+      "name": "Volume Retention",
+      "key": "volumeretention",
+      "aliases": [],
+      "type": "time",
+      "default": "31536000",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "How long the jobs on a volume are kept after the volume was last written. When it has run out, the jobs and files on it can be pruned and the volume recycled. It is the main retention setting in Bareos 25. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Volume Retention = 1 year\n}",
+          "console": "configure add pool name=Full volumeretention=\"1 year\""
+        }
+      ]
+    },
+    {
+      "name": "Volume Use Duration",
+      "key": "volumeuseduration",
+      "aliases": [],
+      "type": "time",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "How long a volume is written to after its first write; then it is marked Used. Without it, a volume stays Append until it is full. Useful to get one volume per day or week. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Volume Use Duration = 23 hours\n}",
+          "console": "configure add pool name=Full volumeuseduration=\"23 hours\""
+        }
+      ]
+    },
+    {
+      "name": "Migration Time",
+      "key": "migrationtime",
+      "aliases": [],
+      "type": "time",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "For Migrate jobs with Selection Type PoolTime: jobs older than this are migrated. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Migration Time = 30 days\n}",
+          "console": "configure add pool name=Full migrationtime=\"30 days\""
+        }
+      ]
+    },
+    {
+      "name": "Migration High Bytes",
+      "key": "migrationhighbytes",
+      "aliases": [],
+      "type": "size",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "For Selection Type PoolOccupancy: migration starts when the pool holds more than this. Sizes take the suffixes k, m, g, t (powers of 1024) or kb, mb, gb, tb (powers of 1000).",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Migration High Bytes = 800 g\n}",
+          "console": "configure add pool name=Full migrationhighbytes=\"800 g\""
+        }
+      ]
+    },
+    {
+      "name": "Migration Low Bytes",
+      "key": "migrationlowbytes",
+      "aliases": [],
+      "type": "size",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "For Selection Type PoolOccupancy: migration stops when the pool is below this. Sizes take the suffixes k, m, g, t (powers of 1024) or kb, mb, gb, tb (powers of 1000).",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Migration Low Bytes = 600 g\n}",
+          "console": "configure add pool name=Full migrationlowbytes=\"600 g\""
+        }
+      ]
+    },
+    {
+      "name": "Next Pool",
+      "key": "nextpool",
+      "aliases": [],
+      "type": "resource",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Pool that Copy, Migrate and VirtualFull jobs write to when they read from this pool.",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Next Pool = \"Offsite\"\n}",
+          "console": "configure add pool name=Full nextpool=Offsite"
+        }
+      ]
+    },
+    {
+      "name": "Storage",
+      "key": "storage",
+      "aliases": [],
+      "type": "resource list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Storage the jobs writing to this pool use; it takes precedence over the Storage of the job.",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Storage = \"File\"\n}",
+          "console": "configure add pool name=Full storage=File"
+        }
+      ]
+    },
+    {
+      "name": "Auto Prune",
+      "key": "autoprune",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "yes",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Prune the volumes of this pool automatically when a volume is needed, according to Volume Retention.",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Auto Prune = yes\n}",
+          "console": "configure add pool name=Full autoprune=yes"
+        }
+      ]
+    },
+    {
+      "name": "Recycle",
+      "key": "recycle",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "yes",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Allow volumes of this pool to be reused once they are purged. With no, a full volume keeps its data until it is relabeled or deleted.",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Recycle = yes\n}",
+          "console": "configure add pool name=Full recycle=yes"
+        }
+      ]
+    },
+    {
+      "name": "Recycle Pool",
+      "key": "recyclepool",
+      "aliases": [],
+      "type": "resource",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Pool a volume moves to when it is recycled, for example back to the Scratch pool.",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Recycle Pool = \"Scratch\"\n}",
+          "console": "configure add pool name=Full recyclepool=Scratch"
+        }
+      ]
+    },
+    {
+      "name": "Scratch Pool",
+      "key": "scratchpool",
+      "aliases": [],
+      "type": "resource",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Pool this pool takes new volumes from when it has none; default is the pool named Scratch.",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Scratch Pool = \"Scratch\"\n}",
+          "console": "configure add pool name=Full scratchpool=Scratch"
+        }
+      ]
+    },
+    {
+      "name": "Catalog",
+      "key": "catalog",
+      "aliases": [],
+      "type": "resource",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Catalog of the pool, for installations with several catalogs.",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Catalog = \"MyCatalog\"\n}",
+          "console": "configure add pool name=Full catalog=MyCatalog"
+        }
+      ]
+    },
+    {
+      "name": "File Retention",
+      "key": "fileretention",
+      "aliases": [],
+      "type": "time",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": true,
+      "onesimus": false,
+      "description": "Deprecated: file retention of the pool. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  File Retention = 60 days\n}"
+        }
+      ]
+    },
+    {
+      "name": "Job Retention",
+      "key": "jobretention",
+      "aliases": [],
+      "type": "time",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": true,
+      "onesimus": false,
+      "description": "Deprecated: job retention of the pool. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Job Retention = 6 months\n}"
+        }
+      ]
+    },
+    {
+      "name": "Minimum Block Size",
+      "key": "minimumblocksize",
+      "aliases": [],
+      "type": "size",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Minimum block size for volumes of this pool, for tape drives with special needs. Sizes take the suffixes k, m, g, t (powers of 1024) or kb, mb, gb, tb (powers of 1000).",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Minimum Block Size = 64 k\n}",
+          "console": "configure add pool name=Full minimumblocksize=\"64 k\""
+        }
+      ]
+    },
+    {
+      "name": "Maximum Block Size",
+      "key": "maximumblocksize",
+      "aliases": [],
+      "type": "size",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Maximum block size for volumes of this pool; larger blocks speed up modern tape drives. Volumes written with one size must be read with it. Sizes take the suffixes k, m, g, t (powers of 1024) or kb, mb, gb, tb (powers of 1000).",
+      "examples": [
+        {
+          "config": "Pool {\n  Name = Full\n  Maximum Block Size = 1 m\n}",
+          "console": "configure add pool name=Full maximumblocksize=\"1 m\""
+        }
+      ]
+    }
+  ],
+  "blocks": []
+}

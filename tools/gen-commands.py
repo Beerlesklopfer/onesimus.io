@@ -12,7 +12,6 @@ Python 3 standard library only.
 """
 
 import argparse
-import html
 import json
 import os
 import re
@@ -24,67 +23,8 @@ HEADER = ("<!-- %s from the console grammar (.grammar). Do not edit by hand: "
           "change the grammar in the Director and regenerate. -->" % MARKER)
 WRAP = 78
 
-# --------------------------------------------------------------------------
-# escaping
-
-
-def md(text):
-    """Escape prose for Markdown. Raw HTML is enabled on the site, so < and > must
-    become entities; '{{<' and '{{%' would start a Hugo shortcode."""
-    text = text.replace("\\", "\\\\")
-    text = html.escape(text, quote=False)
-    for ch in "`*_[]":
-        text = text.replace(ch, "\\" + ch)
-    text = text.replace("{{", "{&#123;")
-    # A paragraph must not turn into a heading, list or quote.
-    text = re.sub(r"^(\s*)([#+\-=>]|\d+[.)])", lambda m: m.group(1) + "\\" + m.group(2), text)
-    return text
-
-
-def md_cell(text):
-    """Prose inside a table cell."""
-    return md(text).replace("|", "\\|").replace("\n", " ")
-
-
-def code(text, in_table=False):
-    """An inline code span. Backslash-escaping does not work in code spans, but a
-    GFM table needs \\| even there; '{{<' is broken up with a zero-width joiner
-    would change the text, so such spans fall back to <code>."""
-    if "{{<" in text or "{{%" in text:
-        out = "<code>%s</code>" % html.escape(text).replace("{", "&#123;")
-    else:
-        fence = "``" if "`" in text else "`"
-        pad = " " if text.startswith("`") or text.endswith("`") else ""
-        out = fence + pad + text + pad + fence
-    if in_table:
-        out = out.replace("|", "\\|")
-    return out
-
-
-def code_block(lines):
-    """A code block. Fenced unless the text contains shortcode delimiters, which
-    Hugo would expand even inside a fence."""
-    body = "\n".join(lines)
-    if "{{<" in body or "{{%" in body:
-        esc = html.escape(body).replace("{", "&#123;")
-        return '<pre class="synopsis"><code>%s</code></pre>' % esc
-    return "```text\n%s\n```" % body
-
-
-def yaml_str(text):
-    # JSON strings are valid YAML double-quoted scalars.
-    return json.dumps(text, ensure_ascii=False)
-
-
-def sentence(text):
-    text = text.strip()
-    if not text:
-        return text
-    text = text[0].upper() + text[1:]
-    if text[-1] not in ".!?:":
-        text += "."
-    return text
-
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from mdutil import md, md_cell, code, code_block, yaml_str, sentence, first_sentence  # noqa: E402
 
 # --------------------------------------------------------------------------
 # names and links
@@ -103,6 +43,38 @@ def anchor(path):
     """Explicit heading id for a subcommand path (list of words)."""
     slug = "-".join(re.sub(r"[^a-z0-9_]+", "-", w.lower()).strip("-") or "dot" for w in path)
     return "sub-" + slug
+
+
+CONFIG_DIRECTIVES = {}
+
+
+def load_config_data(path):
+    """Directive texts of data/config/*.json, by (resource key, directive key or alias)."""
+    if not path or not os.path.isdir(path):
+        return
+    for name in sorted(os.listdir(path)):
+        if not name.endswith(".json"):
+            continue
+        with open(os.path.join(path, name), encoding="utf-8") as f:
+            doc = json.load(f)
+        for d in doc.get("directives", []):
+            keys = [d["key"]] + [a.lower().replace(" ", "") for a in d.get("aliases", [])]
+            for k in keys:
+                CONFIG_DIRECTIVES.setdefault((doc["key"], k), d)
+    # the Onesimus GUI and odir accept these spellings for job resources too
+    for res in ("job", "jobdefs"):
+        if (res, "jobtoverify") in CONFIG_DIRECTIVES:
+            CONFIG_DIRECTIVES.setdefault((res, "verifyjob"), CONFIG_DIRECTIVES[(res, "jobtoverify")])
+
+
+def config_directive(chain, arg):
+    """The config reference entry of an argument of configure add/update <type>."""
+    words = [n["word"] for n in chain]
+    if len(words) == 3 and words[0] == "configure" and words[1] in ("add", "update"):
+        d = CONFIG_DIRECTIVES.get((words[2], arg["name"]))
+        if d:
+            return words[2], d
+    return None
 
 
 class Index:
@@ -341,7 +313,7 @@ def values_cell(arg, idx):
     return ""
 
 
-def arg_table(args, idx):
+def arg_table(args, idx, chain=None):
     rows = ["| Argument | Type | Values / source | Default | Flags | Description |",
             "|---|---|---|---|---|---|"]
     for a in args:
@@ -353,9 +325,20 @@ def arg_table(args, idx):
             name = a["name"] + "="
         typ = "keyword" if a.get("kind") == "keyword" else a.get("type", "")
         default = code(str(a["default"]), True) if "default" in a and a["default"] is not None else ""
+        desc = md_cell(sentence(a.get("description", "")))
+        name_cell = code(name, True)
+        hit = config_directive(chain, a) if chain else None
+        if hit:
+            res, d = hit
+            name_cell = "[%s](/docs/config/%s/#d-%s)" % (code(name, True), res, d["key"])
+            if a.get("description", "").startswith("Directive (") and d.get("description"):
+                text = first_sentence(d["description"])
+                if "empty value removes it" in a["description"]:
+                    text += " An empty value removes the directive."
+                desc = md_cell(text)
         rows.append("| %s | %s | %s | %s | %s | %s |" % (
-            code(name, True), md_cell(typ), values_cell(a, idx), default,
-            md_cell(flags(a)), md_cell(sentence(a.get("description", "")))))
+            name_cell, md_cell(typ), values_cell(a, idx), default,
+            md_cell(flags(a)), desc))
     return "\n".join(rows)
 
 
@@ -397,7 +380,7 @@ def subsection(chain, idx, level):
     if node.get("value"):
         own = [node["value"]] + own
     if own:
-        parts.append(arg_table(own, idx))
+        parts.append(arg_table(own, idx, chain))
     inherited = []
     for anc_i in range(len(chain) - 1):
         anc = chain[anc_i]
@@ -536,6 +519,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("grammar", nargs="?", default=DEFAULT_GRAMMAR)
     ap.add_argument("--out", default=os.path.join(here, "..", "content", "docs", "commands"))
+    ap.add_argument("--config-data", default=os.path.join(here, "..", "data", "config"),
+                    help="directive texts for configure add/update (data/config); '' to skip")
     opt = ap.parse_args()
 
     with open(opt.grammar, encoding="utf-8") as f:
@@ -545,6 +530,7 @@ def main():
         sys.exit("unsupported grammar schema %r" % grammar.get("schema"))
     commands = grammar["commands"]
     idx = Index(commands)
+    load_config_data(opt.config_data)
 
     regular = sorted((c for c in commands if not c.get("dot")), key=sort_key)
     dots = sorted((c for c in commands if c.get("dot")), key=sort_key)

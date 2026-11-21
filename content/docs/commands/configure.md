@@ -760,45 +760,45 @@ configure add client name=<name> [description=<description>]
 
 | Argument | Type | Values / source | Default | Flags | Description |
 |---|---|---|---|---|---|
-| `name=` | string |  |  | required | Directive (name). |
-| `description=` | string |  |  |  | Directive (string). |
-| `protocol=` | enum | `Native`, `NDMPV2`, `NDMPV3`, `NDMPV4` |  |  | Directive (auth\_protocol\_type). |
-| `authtype=` | enum | `None`, `Clear`, `MD5` |  |  | Directive (auth\_type). |
-| `address=` | string |  |  | required | Directive (string). |
-| `lanaddress=` | string |  |  |  | Directive (string). |
-| `port=` | integer |  |  |  | Directive (pint32). |
-| `username=` | string |  |  |  | Directive (string). |
-| `password=` | string |  |  | required | Directive (autopassword). |
-| `catalog=` | resource | from [`.catalogs`](../dot-catalogs/) |  |  | Directive (res). |
-| `passive=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `connectionfromdirectortoclient=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `connectionfromclienttodirector=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `enabled=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `hardquota=` | string |  |  |  | Directive (size64). |
-| `softquota=` | string |  |  |  | Directive (size64). |
-| `softquotagraceperiod=` | string |  |  |  | Directive (time). |
-| `strictquotas=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `quotaincludefailedjobs=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `heartbeatinterval=` | string |  |  |  | Directive (time). |
-| `maximumconcurrentjobs=` | integer |  |  |  | Directive (pint32). |
-| `maximumbandwidthperjob=` | string |  |  |  | Directive (speed). |
-| `ndmploglevel=` | integer |  |  |  | Directive (pint32). |
-| `ndmpblocksize=` | string |  |  |  | Directive (size32). |
-| `ndmpuselmdb=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `tlsauthenticate=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `tlsenable=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `tlsrequire=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `tlscipherlist=` | string |  |  |  | Directive (string). |
-| `tlsciphersuites=` | string |  |  |  | Directive (string). |
-| `tlsdhfile=` | string |  |  |  | Directive (directory). |
-| `tlsprotocol=` | string |  |  |  | Directive (string). |
-| `tlsverifypeer=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `tlscacertificatefile=` | string |  |  |  | Directive (directory). |
-| `tlscacertificatedir=` | string |  |  |  | Directive (directory). |
-| `tlscertificaterevocationlist=` | string |  |  |  | Directive (directory). |
-| `tlscertificate=` | string |  |  |  | Directive (directory). |
-| `tlskey=` | string |  |  |  | Directive (directory). |
-| `tlsallowedcn=` | string |  |  | repeatable | Directive (string\_list). |
+| [`name=`](/docs/config/client/#d-name) | string |  |  | required | Name of the client as jobs, the catalog and the job logs know it. |
+| [`description=`](/docs/config/client/#d-description) | string |  |  |  | Free text describing the client. |
+| [`protocol=`](/docs/config/client/#d-protocol) | enum | `Native`, `NDMPV2`, `NDMPV3`, `NDMPV4` |  |  | Protocol to talk to the client: Native (the Bareos File Daemon) or one of the NDMP versions for NAS filers. |
+| [`authtype=`](/docs/config/client/#d-authtype) | enum | `None`, `Clear`, `MD5` |  |  | Authentication for NDMP clients: None, Clear or MD5. |
+| [`address=`](/docs/config/client/#d-address) | string |  |  | required | Host name or IP address of the File Daemon. |
+| [`lanaddress=`](/docs/config/client/#d-lanaddress) | string |  |  |  | Address used instead of Address when the Storage Daemon connects to the File Daemon in passive mode, for setups where storage and client share a LAN that the Director does not see. |
+| [`port=`](/docs/config/client/#d-port) | integer |  |  |  | TCP port of the File Daemon. |
+| [`username=`](/docs/config/client/#d-username) | string |  |  |  | User name for NDMP authentication. |
+| [`password=`](/docs/config/client/#d-password) | string |  |  | required | Password shared with the File Daemon's Director resource; with TLS-PSK it is also the TLS key. |
+| [`catalog=`](/docs/config/client/#d-catalog) | resource | from [`.catalogs`](../dot-catalogs/) |  |  | Catalog the jobs of this client are stored in, for installations with several catalogs. |
+| [`passive=`](/docs/config/client/#d-passive) | bool | `yes`, `no` |  |  | Passive mode: the Storage Daemon connects to the File Daemon instead of the other way round. |
+| [`connectionfromdirectortoclient=`](/docs/config/client/#d-connectionfromdirectortoclient) | bool | `yes`, `no` |  |  | The Director opens the connection to the File Daemon (the normal case). |
+| [`connectionfromclienttodirector=`](/docs/config/client/#d-connectionfromclienttodirector) | bool | `yes`, `no` |  |  | The File Daemon connects to the Director and keeps the connection open, so a client behind NAT or a firewall can be backed up. |
+| [`enabled=`](/docs/config/client/#d-enabled) | bool | `yes`, `no` |  |  | A disabled client is not backed up by scheduled jobs; enable client and disable client change it at run time. |
+| [`hardquota=`](/docs/config/client/#d-hardquota) | string |  |  |  | Upper limit for the data of this client; a backup that would go beyond it fails. 0 means no limit. |
+| [`softquota=`](/docs/config/client/#d-softquota) | string |  |  |  | Soft limit for the data of this client: beyond it a warning is written, and after the Soft Quota Grace Period jobs fail. |
+| [`softquotagraceperiod=`](/docs/config/client/#d-softquotagraceperiod) | string |  |  |  | How long the soft quota may be exceeded before jobs fail. |
+| [`strictquotas=`](/docs/config/client/#d-strictquotas) | bool | `yes`, `no` |  |  | When the soft quota grace period has run out: yes makes the soft quota a hard limit; no lets jobs run up to the hard quota. |
+| [`quotaincludefailedjobs=`](/docs/config/client/#d-quotaincludefailedjobs) | bool | `yes`, `no` |  |  | Count the data of failed jobs into the quota. |
+| [`heartbeatinterval=`](/docs/config/client/#d-heartbeatinterval) | string |  |  |  | Interval of keep-alive packets to the File Daemon. 0 switches it off. |
+| [`maximumconcurrentjobs=`](/docs/config/client/#d-maximumconcurrentjobs) | integer |  |  |  | How many jobs may run on this client at the same time; further jobs wait. |
+| [`maximumbandwidthperjob=`](/docs/config/client/#d-maximumbandwidthperjob) | string |  |  |  | Limits the bandwidth of each job of this client. |
+| [`ndmploglevel=`](/docs/config/client/#d-ndmploglevel) | integer |  |  |  | Detail of NDMP messages of this client, 0 to 9. |
+| [`ndmpblocksize=`](/docs/config/client/#d-ndmpblocksize) | string |  |  |  | Block size of NDMP backups. |
+| [`ndmpuselmdb=`](/docs/config/client/#d-ndmpuselmdb) | bool | `yes`, `no` |  |  | Keep the NDMP file history in an LMDB database during the job instead of in memory, for filers with many files. |
+| [`tlsauthenticate=`](/docs/config/client/#d-tlsauthenticate) | bool | `yes`, `no` |  |  | Use TLS only to authenticate the peer and switch back to an unencrypted connection afterwards. |
+| [`tlsenable=`](/docs/config/client/#d-tlsenable) | bool | `yes`, `no` |  |  | Enable TLS for this connection. |
+| [`tlsrequire=`](/docs/config/client/#d-tlsrequire) | bool | `yes`, `no` |  |  | Refuse connections that do not use TLS. |
+| [`tlscipherlist=`](/docs/config/client/#d-tlscipherlist) | string |  |  |  | OpenSSL cipher list for TLS 1.2 and older, colon separated. |
+| [`tlsciphersuites=`](/docs/config/client/#d-tlsciphersuites) | string |  |  |  | OpenSSL cipher suites for TLS 1.3, colon separated. |
+| [`tlsdhfile=`](/docs/config/client/#d-tlsdhfile) | string |  |  |  | PEM file with Diffie-Hellman parameters for the DH key exchange of TLS 1.2. |
+| [`tlsprotocol=`](/docs/config/client/#d-tlsprotocol) | string |  |  |  | Restricts the TLS protocol versions in OpenSSL syntax, for example to forbid old versions. |
+| [`tlsverifypeer=`](/docs/config/client/#d-tlsverifypeer) | bool | `yes`, `no` |  |  | With certificate based TLS: check the peer's certificate against the CA and, for a server, against TLS Allowed CN. |
+| [`tlscacertificatefile=`](/docs/config/client/#d-tlscacertificatefile) | string |  |  |  | PEM file with the CA certificates used to verify the peer's certificate. |
+| [`tlscacertificatedir=`](/docs/config/client/#d-tlscacertificatedir) | string |  |  |  | Directory of hashed CA certificates (as made by openssl rehash), an alternative to TLS CA Certificate File. |
+| [`tlscertificaterevocationlist=`](/docs/config/client/#d-tlscertificaterevocationlist) | string |  |  |  | PEM file with a certificate revocation list; certificates on it are refused. |
+| [`tlscertificate=`](/docs/config/client/#d-tlscertificate) | string |  |  |  | PEM file with the own certificate for certificate based TLS. |
+| [`tlskey=`](/docs/config/client/#d-tlskey) | string |  |  |  | PEM file with the private key of TLS Certificate. |
+| [`tlsallowedcn=`](/docs/config/client/#d-tlsallowedcn) | string |  |  | repeatable | Common names a peer certificate may carry; others are refused when TLS Verify Peer is on. |
 
 #### configure add jobdefs {#sub-configure-add-jobdefs}
 
@@ -871,87 +871,87 @@ configure add jobdefs name=<name> [description=<description>] type=<type>
 
 | Argument | Type | Values / source | Default | Flags | Description |
 |---|---|---|---|---|---|
-| `name=` | string |  |  | required | Directive (name). |
-| `description=` | string |  |  |  | Directive (string). |
-| `type=` | enum | `Backup`, `Admin`, `Archive`, `Verify`, `Restore`, `Migrate`, `Copy`, `Consolidate` |  | required | Directive (job\_type). |
-| `protocol=` | enum | `Native`, `NDMP_BAREOS`, `NDMP`, `NDMP_NATIVE` |  |  | Directive (protocol\_type). |
-| `backupformat=` | string |  |  |  | Directive (string). |
-| `level=` | enum | `Full`, `Base`, `Incremental`, `Differential`, `Since`, `VirtualFull`, `Catalog`, `InitCatalog`, `VolumeToCatalog`, `DiskToCatalog`, `Data` |  |  | Directive (backup\_level). |
-| `messages=` | resource | from [`.msgs`](../dot-msgs/) |  | required | Directive (res). |
-| `storage=` | resource | from [`.storages`](../dot-storage/) |  | repeatable | Directive (resource\_list). |
-| `pool=` | resource | from [`.pools`](../dot-pools/) |  | required | Directive (res). |
-| `fullbackuppool=` | resource | from [`.pools`](../dot-pools/) |  |  | Directive (res). |
-| `virtualfullbackuppool=` | resource | from [`.pools`](../dot-pools/) |  |  | Directive (res). |
-| `incrementalbackuppool=` | resource | from [`.pools`](../dot-pools/) |  |  | Directive (res). |
-| `differentialbackuppool=` | resource | from [`.pools`](../dot-pools/) |  |  | Directive (res). |
-| `nextpool=` | resource | from [`.pools`](../dot-pools/) |  |  | Directive (res). |
-| `client=` | resource | from [`.clients`](../dot-clients/) |  |  | Directive (res). |
-| `fileset=` | resource | from [`.filesets`](../dot-filesets/) |  |  | Directive (res). |
-| `schedule=` | resource | from [`.schedule`](../dot-schedule/) |  |  | Directive (res). |
-| `jobtoverify=` | resource | from [`.jobs`](../dot-jobs/) |  |  | Directive (res). |
-| `catalog=` | resource | from [`.catalogs`](../dot-catalogs/) |  |  | Directive (res). |
-| `jobdefs=` | resource | from [`.jobdefs`](../dot-jobdefs/) |  |  | Directive (res). |
-| `run=` | string |  |  | repeatable | Directive (string\_list). |
-| `where=` | string |  |  |  | Directive (directory). |
-| `regexwhere=` | string |  |  |  | Directive (string). |
-| `stripprefix=` | string |  |  |  | Directive (string). |
-| `addprefix=` | string |  |  |  | Directive (string). |
-| `addsuffix=` | string |  |  |  | Directive (string). |
-| `bootstrap=` | string |  |  |  | Directive (directory). |
-| `writebootstrap=` | string |  |  |  | Directive (directory\_or\_command). |
-| `replace=` | enum | `Always`, `IfNewer`, `IfOlder`, `Never` |  |  | Directive (replace\_option). |
-| `maximumbandwidth=` | string |  |  |  | Directive (speed). |
-| `maxrunschedtime=` | string |  |  |  | Directive (time). |
-| `maxruntime=` | string |  |  |  | Directive (time). |
-| `fullmaxruntime=` | string |  |  |  | Directive (time). |
-| `incrementalmaxruntime=` | string |  |  |  | Directive (time). |
-| `differentialmaxruntime=` | string |  |  |  | Directive (time). |
-| `maxwaittime=` | string |  |  |  | Directive (time). |
-| `maxstartdelay=` | string |  |  |  | Directive (time). |
-| `maxfullinterval=` | string |  |  |  | Directive (time). |
-| `maxvirtualfullinterval=` | string |  |  |  | Directive (time). |
-| `maxdiffinterval=` | string |  |  |  | Directive (time). |
-| `prefixlinks=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `prunejobs=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `prunefiles=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `prunevolumes=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `purgemigrationjob=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `enabled=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `spoolattributes=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `spooldata=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `spoolsize=` | string |  |  |  | Directive (size64). |
-| `rerunfailedlevels=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `prefermountedvolumes=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `runbeforejob=` | string |  |  | repeatable | Directive (runscript\_short). |
-| `runafterjob=` | string |  |  | repeatable | Directive (runscript\_short). |
-| `runafterfailedjob=` | string |  |  | repeatable | Directive (runscript\_short). |
-| `clientrunbeforejob=` | string |  |  | repeatable | Directive (runscript\_short). |
-| `clientrunafterjob=` | string |  |  | repeatable | Directive (runscript\_short). |
-| `maximumconcurrentjobs=` | integer |  |  |  | Directive (pint32). |
-| `rescheduleonerror=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `rescheduleinterval=` | string |  |  |  | Directive (time). |
-| `rescheduletimes=` | integer |  |  |  | Directive (pint32). |
-| `priority=` | integer |  |  |  | Directive (pint32). |
-| `allowmixedpriority=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `selectionpattern=` | string |  |  |  | Directive (string). |
-| `selectiontype=` | enum | `SmallestVolume`, `OldestVolume`, `PoolOccupancy`, `PoolTime`, `PoolUncopiedJobs`, `Client`, `Volume`, `Job`, `SqlQuery` |  |  | Directive (migration\_type). |
-| `accurate=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `allowduplicatejobs=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `cancellowerlevelduplicates=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `cancelqueuedduplicates=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `cancelrunningduplicates=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `savefilehistory=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `filehistorysize=` | string |  |  |  | Directive (size64). |
-| `fdpluginoptions=` | string |  |  | repeatable | Directive (string\_list). |
-| `sdpluginoptions=` | string |  |  | repeatable | Directive (string\_list). |
-| `dirpluginoptions=` | string |  |  | repeatable | Directive (string\_list). |
-| `maxconcurrentcopies=` | integer |  |  |  | Directive (pint32). |
-| `alwaysincremental=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `alwaysincrementaljobretention=` | string |  |  |  | Directive (time). |
-| `alwaysincrementalkeepnumber=` | integer |  |  |  | Directive (pint32). |
-| `alwaysincrementalmaxfullage=` | string |  |  |  | Directive (time). |
-| `maxfullconsolidations=` | integer |  |  |  | Directive (pint32). |
-| `runonincomingconnectinterval=` | string |  |  |  | Directive (time). |
+| [`name=`](/docs/config/jobdefs/#d-name) | string |  |  | required | Name of the job. |
+| [`description=`](/docs/config/jobdefs/#d-description) | string |  |  |  | Free text describing the job. |
+| [`type=`](/docs/config/jobdefs/#d-type) | enum | `Backup`, `Admin`, `Archive`, `Verify`, `Restore`, `Migrate`, `Copy`, `Consolidate` |  | required | What the job does: Backup, Restore, Verify, Admin (runs only its scripts), Migrate, Copy, Consolidate (Always Incremental), or Archive. |
+| [`protocol=`](/docs/config/jobdefs/#d-protocol) | enum | `Native`, `NDMP_BAREOS`, `NDMP`, `NDMP_NATIVE` |  |  | Backup protocol: Native for the Bareos File Daemon; NDMP\_BAREOS or NDMP\_NATIVE for NAS filers (data stored by Bareos or by an NDMP tape server). |
+| [`backupformat=`](/docs/config/jobdefs/#d-backupformat) | string |  |  |  | Format of NDMP backups (for example dump or tar, depending on the filer); Native for normal jobs. |
+| [`level=`](/docs/config/jobdefs/#d-level) | enum | `Full`, `Base`, `Incremental`, `Differential`, `Since`, `VirtualFull`, `Catalog`, `InitCatalog`, `VolumeToCatalog`, `DiskToCatalog`, `Data` |  |  | Default level of the job: for backups Full, Incremental, Differential or VirtualFull; for verify jobs InitCatalog, Catalog, VolumeToCatalog, DiskToCatalog or Data. |
+| [`messages=`](/docs/config/jobdefs/#d-messages) | resource | from [`.msgs`](../dot-msgs/) |  | required | Messages resource that decides where the job's messages go (job log in the catalog, mail, log file). |
+| [`storage=`](/docs/config/jobdefs/#d-storage) | resource | from [`.storages`](../dot-storage/) |  | repeatable | Storage the job writes to (or reads from). |
+| [`pool=`](/docs/config/jobdefs/#d-pool) | resource | from [`.pools`](../dot-pools/) |  | required | Pool the job writes to. |
+| [`fullbackuppool=`](/docs/config/jobdefs/#d-fullbackuppool) | resource | from [`.pools`](../dot-pools/) |  |  | Pool used when the job runs at level Full, so Fulls can have their own retention. |
+| [`virtualfullbackuppool=`](/docs/config/jobdefs/#d-virtualfullbackuppool) | resource | from [`.pools`](../dot-pools/) |  |  | Pool a VirtualFull is written to. |
+| [`incrementalbackuppool=`](/docs/config/jobdefs/#d-incrementalbackuppool) | resource | from [`.pools`](../dot-pools/) |  |  | Pool used for Incremental runs. |
+| [`differentialbackuppool=`](/docs/config/jobdefs/#d-differentialbackuppool) | resource | from [`.pools`](../dot-pools/) |  |  | Pool used for Differential runs. |
+| [`nextpool=`](/docs/config/jobdefs/#d-nextpool) | resource | from [`.pools`](../dot-pools/) |  |  | Pool that Copy, Migrate and VirtualFull jobs write to. |
+| [`client=`](/docs/config/jobdefs/#d-client) | resource | from [`.clients`](../dot-clients/) |  |  | Client (File Daemon) the job backs up or, for restores, restores to by default. |
+| [`fileset=`](/docs/config/jobdefs/#d-fileset) | resource | from [`.filesets`](../dot-filesets/) |  |  | FileSet that says what is backed up. |
+| [`schedule=`](/docs/config/jobdefs/#d-schedule) | resource | from [`.schedule`](../dot-schedule/) |  |  | Schedule that starts the job automatically. |
+| [`jobtoverify=`](/docs/config/jobdefs/#d-jobtoverify) | resource | from [`.jobs`](../dot-jobs/) |  |  | For verify jobs: the backup job whose last run is verified (levels Catalog, VolumeToCatalog, Data). |
+| [`catalog=`](/docs/config/jobdefs/#d-catalog) | resource | from [`.catalogs`](../dot-catalogs/) |  |  | Catalog for this job, overriding that of the client. |
+| [`jobdefs=`](/docs/config/jobdefs/#d-jobdefs) | resource | from [`.jobdefs`](../dot-jobdefs/) |  |  | JobDefs resource whose directives this job inherits. |
+| [`run=`](/docs/config/jobdefs/#d-run) | string |  |  | repeatable | Starts another job (or a copy of this one with other settings) when this job is started, in run command syntax, for example a second backup to another storage. |
+| [`where=`](/docs/config/jobdefs/#d-where) | string |  |  |  | For restore jobs: directory prefix the files are restored under. / restores to the original place. |
+| [`regexwhere=`](/docs/config/jobdefs/#d-regexwhere) | string |  |  |  | For restore jobs: rewrites the paths of restored files with sed-like expressions (!from!to!), instead of a plain prefix. |
+| [`stripprefix=`](/docs/config/jobdefs/#d-stripprefix) | string |  |  |  | For restore jobs: removes this prefix from the paths before restoring. |
+| [`addprefix=`](/docs/config/jobdefs/#d-addprefix) | string |  |  |  | For restore jobs: adds this prefix to the paths (like Where). |
+| [`addsuffix=`](/docs/config/jobdefs/#d-addsuffix) | string |  |  |  | For restore jobs: adds this suffix to the restored file names, for example to keep existing files. |
+| [`bootstrap=`](/docs/config/jobdefs/#d-bootstrap) | string |  |  |  | Bootstrap file a restore job reads to find the data on the volumes. |
+| [`writebootstrap=`](/docs/config/jobdefs/#d-writebootstrap) | string |  |  |  | File (or, starting with \|, a command) the job writes its bootstrap to after a backup: which volumes and blocks hold this job. |
+| [`replace=`](/docs/config/jobdefs/#d-replace) | enum | `Always`, `IfNewer`, `IfOlder`, `Never` |  |  | For restore jobs: what happens to files that exist already: always (overwrite), ifnewer (only if the backup is newer), ifolder (only if it is older) or never. |
+| [`maximumbandwidth=`](/docs/config/jobdefs/#d-maximumbandwidth) | string |  |  |  | Limits the bandwidth of this job. |
+| [`maxrunschedtime=`](/docs/config/jobdefs/#d-maxrunschedtime) | string |  |  |  | Cancels the job if it has not finished this long after its scheduled time (waiting counts). |
+| [`maxruntime=`](/docs/config/jobdefs/#d-maxruntime) | string |  |  |  | Cancels the job if it runs longer than this from its actual start. |
+| [`fullmaxruntime=`](/docs/config/jobdefs/#d-fullmaxruntime) | string |  |  |  | Max Run Time for Full runs only. |
+| [`incrementalmaxruntime=`](/docs/config/jobdefs/#d-incrementalmaxruntime) | string |  |  |  | Max Run Time for Incremental runs only. |
+| [`differentialmaxruntime=`](/docs/config/jobdefs/#d-differentialmaxruntime) | string |  |  |  | Max Run Time for Differential runs only. |
+| [`maxwaittime=`](/docs/config/jobdefs/#d-maxwaittime) | string |  |  |  | Cancels the job if it waits longer than this for a resource (a volume, a device, a concurrency slot) after it started. |
+| [`maxstartdelay=`](/docs/config/jobdefs/#d-maxstartdelay) | string |  |  |  | Cancels the job if it cannot start within this time after its scheduled time, so a nightly job that missed its window does not run in the day. |
+| [`maxfullinterval=`](/docs/config/jobdefs/#d-maxfullinterval) | string |  |  |  | Upgrades an Incremental or Differential to Full when the last successful Full is older than this. |
+| [`maxvirtualfullinterval=`](/docs/config/jobdefs/#d-maxvirtualfullinterval) | string |  |  |  | Upgrades a run to VirtualFull when the last VirtualFull (or Full) is older than this. |
+| [`maxdiffinterval=`](/docs/config/jobdefs/#d-maxdiffinterval) | string |  |  |  | Upgrades an Incremental to Differential when the last Differential is older than this. |
+| [`prefixlinks=`](/docs/config/jobdefs/#d-prefixlinks) | bool | `yes`, `no` |  |  | For restores with Where: also prefix the targets of absolute symbolic links, so they point into the restore directory. |
+| [`prunejobs=`](/docs/config/jobdefs/#d-prunejobs) | bool | `yes`, `no` |  |  | Prune the job records of this job's client after the job, as if the retention had been applied by prune jobs. |
+| [`prunefiles=`](/docs/config/jobdefs/#d-prunefiles) | bool | `yes`, `no` |  |  | Prune the file records of this job's client after the job. |
+| [`prunevolumes=`](/docs/config/jobdefs/#d-prunevolumes) | bool | `yes`, `no` |  |  | Prune the volumes of the pool after the job. |
+| [`purgemigrationjob=`](/docs/config/jobdefs/#d-purgemigrationjob) | bool | `yes`, `no` |  |  | After a successful migration, purge the migrated (source) job from the catalog. |
+| [`enabled=`](/docs/config/jobdefs/#d-enabled) | bool | `yes`, `no` |  |  | A disabled job is not started by its schedule; it can still be run by hand. enable job and disable job change it at run time. |
+| [`spoolattributes=`](/docs/config/jobdefs/#d-spoolattributes) | bool | `yes`, `no` |  |  | Spool the file attributes on the Storage Daemon and insert them into the catalog at the end of the job, instead of while writing. |
+| [`spooldata=`](/docs/config/jobdefs/#d-spooldata) | bool | `yes`, `no` |  |  | Spool the data to disk on the Storage Daemon first and write it to the volume in big chunks. |
+| [`spoolsize=`](/docs/config/jobdefs/#d-spoolsize) | string |  |  |  | Upper limit of the spool file of this job. |
+| [`rerunfailedlevels=`](/docs/config/jobdefs/#d-rerunfailedlevels) | bool | `yes`, `no` |  |  | If the last Full (or Differential) failed, run the next job at that level again instead of the scheduled lower level. |
+| [`prefermountedvolumes=`](/docs/config/jobdefs/#d-prefermountedvolumes) | bool | `yes`, `no` |  |  | Prefer a drive that has a usable volume mounted. |
+| [`runbeforejob=`](/docs/config/jobdefs/#d-runbeforejob) | string |  |  | repeatable | Command the Director runs before the job; a failing command cancels the job. |
+| [`runafterjob=`](/docs/config/jobdefs/#d-runafterjob) | string |  |  | repeatable | Command the Director runs after a successful job (RunScript, RunsWhen = After, RunsOnFailure = no). |
+| [`runafterfailedjob=`](/docs/config/jobdefs/#d-runafterfailedjob) | string |  |  | repeatable | Command the Director runs after a failed job. |
+| [`clientrunbeforejob=`](/docs/config/jobdefs/#d-clientrunbeforejob) | string |  |  | repeatable | Command the File Daemon runs on the client before the backup, for example a database dump. |
+| [`clientrunafterjob=`](/docs/config/jobdefs/#d-clientrunafterjob) | string |  |  | repeatable | Command the File Daemon runs on the client after the job. |
+| [`maximumconcurrentjobs=`](/docs/config/jobdefs/#d-maximumconcurrentjobs) | integer |  |  |  | How many runs of this job may run at the same time; usually 1, so a slow run is not overtaken by the next one. |
+| [`rescheduleonerror=`](/docs/config/jobdefs/#d-rescheduleonerror) | bool | `yes`, `no` |  |  | Start the job again when it failed, after Reschedule Interval, at most Reschedule Times times. |
+| [`rescheduleinterval=`](/docs/config/jobdefs/#d-rescheduleinterval) | string |  |  |  | Wait between a failed run and its retry. |
+| [`rescheduletimes=`](/docs/config/jobdefs/#d-rescheduletimes) | integer |  |  |  | How many times a failed job is retried; 0 means without limit. |
+| [`priority=`](/docs/config/jobdefs/#d-priority) | integer |  |  |  | Priority of the job: smaller numbers first. |
+| [`allowmixedpriority=`](/docs/config/jobdefs/#d-allowmixedpriority) | bool | `yes`, `no` |  |  | Allow this job to run together with jobs of other priorities, as long as they allow it as well. |
+| [`selectionpattern=`](/docs/config/jobdefs/#d-selectionpattern) | string |  |  |  | For Copy and Migrate jobs: the pattern or SQL query used by Selection Type (a job or client name pattern, or a query returning job IDs). |
+| [`selectiontype=`](/docs/config/jobdefs/#d-selectiontype) | enum | `SmallestVolume`, `OldestVolume`, `PoolOccupancy`, `PoolTime`, `PoolUncopiedJobs`, `Client`, `Volume`, `Job`, `SqlQuery` |  |  | For Copy and Migrate jobs: how the source jobs are chosen: SmallestVolume, OldestVolume, Client, Volume, Job, SQLQuery, PoolOccupancy, PoolTime, PoolUncopiedJobs. |
+| [`accurate=`](/docs/config/jobdefs/#d-accurate) | bool | `yes`, `no` |  |  | Accurate mode: the File Daemon receives the file list of the previous backups and also records deleted and renamed files, so a restore gives exactly the state of the backup. |
+| [`allowduplicatejobs=`](/docs/config/jobdefs/#d-allowduplicatejobs) | bool | `yes`, `no` |  |  | Allow a second run of the same job while one is queued or running. |
+| [`cancellowerlevelduplicates=`](/docs/config/jobdefs/#d-cancellowerlevelduplicates) | bool | `yes`, `no` |  |  | With Allow Duplicate Jobs = no: cancel the duplicate of the lower level (an Incremental gives way to a Full). |
+| [`cancelqueuedduplicates=`](/docs/config/jobdefs/#d-cancelqueuedduplicates) | bool | `yes`, `no` |  |  | With Allow Duplicate Jobs = no: cancel a duplicate that is still waiting in the queue. |
+| [`cancelrunningduplicates=`](/docs/config/jobdefs/#d-cancelrunningduplicates) | bool | `yes`, `no` |  |  | With Allow Duplicate Jobs = no: cancel the duplicate that is already running in favour of the new one. |
+| [`savefilehistory=`](/docs/config/jobdefs/#d-savefilehistory) | bool | `yes`, `no` |  |  | For NDMP: store the file history sent by the filer, so single files can be restored. |
+| [`filehistorysize=`](/docs/config/jobdefs/#d-filehistorysize) | string |  |  |  | For NDMP: size of the file history buffer. |
+| [`fdpluginoptions=`](/docs/config/jobdefs/#d-fdpluginoptions) | string |  |  | repeatable | Options passed to the File Daemon plugins of this job. |
+| [`sdpluginoptions=`](/docs/config/jobdefs/#d-sdpluginoptions) | string |  |  | repeatable | Options passed to the Storage Daemon plugins of this job. |
+| [`dirpluginoptions=`](/docs/config/jobdefs/#d-dirpluginoptions) | string |  |  | repeatable | Options passed to the Director plugins of this job. |
+| [`maxconcurrentcopies=`](/docs/config/jobdefs/#d-maxconcurrentcopies) | integer |  |  |  | For Copy jobs: how many copy jobs are started at once from one selection. |
+| [`alwaysincremental=`](/docs/config/jobdefs/#d-alwaysincremental) | bool | `yes`, `no` |  |  | Always Incremental scheme: only Incrementals are taken, and a Consolidate job merges the old ones into a VirtualFull. |
+| [`alwaysincrementaljobretention=`](/docs/config/jobdefs/#d-alwaysincrementaljobretention) | string |  |  |  | Incrementals younger than this are not consolidated. |
+| [`alwaysincrementalkeepnumber=`](/docs/config/jobdefs/#d-alwaysincrementalkeepnumber) | integer |  |  |  | How many Incrementals are always kept unconsolidated, even when they are older than the retention. |
+| [`alwaysincrementalmaxfullage=`](/docs/config/jobdefs/#d-alwaysincrementalmaxfullage) | string |  |  |  | When the Full of an Always Incremental chain is older than this, the Consolidate job includes it, so the Full does not grow old. |
+| [`maxfullconsolidations=`](/docs/config/jobdefs/#d-maxfullconsolidations) | integer |  |  |  | How many Fulls a Consolidate job may consolidate in one run (because of Always Incremental Max Full Age); 0 means no limit. |
+| [`runonincomingconnectinterval=`](/docs/config/jobdefs/#d-runonincomingconnectinterval) | string |  |  |  | For clients that connect to the Director (Connection From Client To Director): start this job when the client connects and the last run is older than this interval. 0 switches it off. |
 
 #### configure add job {#sub-configure-add-job}
 
@@ -1019,87 +1019,87 @@ configure add job name=<name> [description=<description>] type=<type>
 
 | Argument | Type | Values / source | Default | Flags | Description |
 |---|---|---|---|---|---|
-| `name=` | string |  |  | required | Directive (name). |
-| `description=` | string |  |  |  | Directive (string). |
-| `type=` | enum | `Backup`, `Admin`, `Archive`, `Verify`, `Restore`, `Migrate`, `Copy`, `Consolidate` |  | required | Directive (job\_type). |
-| `protocol=` | enum | `Native`, `NDMP_BAREOS`, `NDMP`, `NDMP_NATIVE` |  |  | Directive (protocol\_type). |
-| `backupformat=` | string |  |  |  | Directive (string). |
-| `level=` | enum | `Full`, `Base`, `Incremental`, `Differential`, `Since`, `VirtualFull`, `Catalog`, `InitCatalog`, `VolumeToCatalog`, `DiskToCatalog`, `Data` |  |  | Directive (backup\_level). |
-| `messages=` | resource | from [`.msgs`](../dot-msgs/) |  | required | Directive (res). |
-| `storage=` | resource | from [`.storages`](../dot-storage/) |  | repeatable | Directive (resource\_list). |
-| `pool=` | resource | from [`.pools`](../dot-pools/) |  | required | Directive (res). |
-| `fullbackuppool=` | resource | from [`.pools`](../dot-pools/) |  |  | Directive (res). |
-| `virtualfullbackuppool=` | resource | from [`.pools`](../dot-pools/) |  |  | Directive (res). |
-| `incrementalbackuppool=` | resource | from [`.pools`](../dot-pools/) |  |  | Directive (res). |
-| `differentialbackuppool=` | resource | from [`.pools`](../dot-pools/) |  |  | Directive (res). |
-| `nextpool=` | resource | from [`.pools`](../dot-pools/) |  |  | Directive (res). |
-| `client=` | resource | from [`.clients`](../dot-clients/) |  |  | Directive (res). |
-| `fileset=` | resource | from [`.filesets`](../dot-filesets/) |  |  | Directive (res). |
-| `schedule=` | resource | from [`.schedule`](../dot-schedule/) |  |  | Directive (res). |
-| `jobtoverify=` | resource | from [`.jobs`](../dot-jobs/) |  |  | Directive (res). |
-| `catalog=` | resource | from [`.catalogs`](../dot-catalogs/) |  |  | Directive (res). |
-| `jobdefs=` | resource | from [`.jobdefs`](../dot-jobdefs/) |  |  | Directive (res). |
-| `run=` | string |  |  | repeatable | Directive (string\_list). |
-| `where=` | string |  |  |  | Directive (directory). |
-| `regexwhere=` | string |  |  |  | Directive (string). |
-| `stripprefix=` | string |  |  |  | Directive (string). |
-| `addprefix=` | string |  |  |  | Directive (string). |
-| `addsuffix=` | string |  |  |  | Directive (string). |
-| `bootstrap=` | string |  |  |  | Directive (directory). |
-| `writebootstrap=` | string |  |  |  | Directive (directory\_or\_command). |
-| `replace=` | enum | `Always`, `IfNewer`, `IfOlder`, `Never` |  |  | Directive (replace\_option). |
-| `maximumbandwidth=` | string |  |  |  | Directive (speed). |
-| `maxrunschedtime=` | string |  |  |  | Directive (time). |
-| `maxruntime=` | string |  |  |  | Directive (time). |
-| `fullmaxruntime=` | string |  |  |  | Directive (time). |
-| `incrementalmaxruntime=` | string |  |  |  | Directive (time). |
-| `differentialmaxruntime=` | string |  |  |  | Directive (time). |
-| `maxwaittime=` | string |  |  |  | Directive (time). |
-| `maxstartdelay=` | string |  |  |  | Directive (time). |
-| `maxfullinterval=` | string |  |  |  | Directive (time). |
-| `maxvirtualfullinterval=` | string |  |  |  | Directive (time). |
-| `maxdiffinterval=` | string |  |  |  | Directive (time). |
-| `prefixlinks=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `prunejobs=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `prunefiles=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `prunevolumes=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `purgemigrationjob=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `enabled=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `spoolattributes=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `spooldata=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `spoolsize=` | string |  |  |  | Directive (size64). |
-| `rerunfailedlevels=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `prefermountedvolumes=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `runbeforejob=` | string |  |  | repeatable | Directive (runscript\_short). |
-| `runafterjob=` | string |  |  | repeatable | Directive (runscript\_short). |
-| `runafterfailedjob=` | string |  |  | repeatable | Directive (runscript\_short). |
-| `clientrunbeforejob=` | string |  |  | repeatable | Directive (runscript\_short). |
-| `clientrunafterjob=` | string |  |  | repeatable | Directive (runscript\_short). |
-| `maximumconcurrentjobs=` | integer |  |  |  | Directive (pint32). |
-| `rescheduleonerror=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `rescheduleinterval=` | string |  |  |  | Directive (time). |
-| `rescheduletimes=` | integer |  |  |  | Directive (pint32). |
-| `priority=` | integer |  |  |  | Directive (pint32). |
-| `allowmixedpriority=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `selectionpattern=` | string |  |  |  | Directive (string). |
-| `selectiontype=` | enum | `SmallestVolume`, `OldestVolume`, `PoolOccupancy`, `PoolTime`, `PoolUncopiedJobs`, `Client`, `Volume`, `Job`, `SqlQuery` |  |  | Directive (migration\_type). |
-| `accurate=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `allowduplicatejobs=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `cancellowerlevelduplicates=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `cancelqueuedduplicates=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `cancelrunningduplicates=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `savefilehistory=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `filehistorysize=` | string |  |  |  | Directive (size64). |
-| `fdpluginoptions=` | string |  |  | repeatable | Directive (string\_list). |
-| `sdpluginoptions=` | string |  |  | repeatable | Directive (string\_list). |
-| `dirpluginoptions=` | string |  |  | repeatable | Directive (string\_list). |
-| `maxconcurrentcopies=` | integer |  |  |  | Directive (pint32). |
-| `alwaysincremental=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `alwaysincrementaljobretention=` | string |  |  |  | Directive (time). |
-| `alwaysincrementalkeepnumber=` | integer |  |  |  | Directive (pint32). |
-| `alwaysincrementalmaxfullage=` | string |  |  |  | Directive (time). |
-| `maxfullconsolidations=` | integer |  |  |  | Directive (pint32). |
-| `runonincomingconnectinterval=` | string |  |  |  | Directive (time). |
+| [`name=`](/docs/config/job/#d-name) | string |  |  | required | Name of the job. |
+| [`description=`](/docs/config/job/#d-description) | string |  |  |  | Free text describing the job. |
+| [`type=`](/docs/config/job/#d-type) | enum | `Backup`, `Admin`, `Archive`, `Verify`, `Restore`, `Migrate`, `Copy`, `Consolidate` |  | required | What the job does: Backup, Restore, Verify, Admin (runs only its scripts), Migrate, Copy, Consolidate (Always Incremental), or Archive. |
+| [`protocol=`](/docs/config/job/#d-protocol) | enum | `Native`, `NDMP_BAREOS`, `NDMP`, `NDMP_NATIVE` |  |  | Backup protocol: Native for the Bareos File Daemon; NDMP\_BAREOS or NDMP\_NATIVE for NAS filers (data stored by Bareos or by an NDMP tape server). |
+| [`backupformat=`](/docs/config/job/#d-backupformat) | string |  |  |  | Format of NDMP backups (for example dump or tar, depending on the filer); Native for normal jobs. |
+| [`level=`](/docs/config/job/#d-level) | enum | `Full`, `Base`, `Incremental`, `Differential`, `Since`, `VirtualFull`, `Catalog`, `InitCatalog`, `VolumeToCatalog`, `DiskToCatalog`, `Data` |  |  | Default level of the job: for backups Full, Incremental, Differential or VirtualFull; for verify jobs InitCatalog, Catalog, VolumeToCatalog, DiskToCatalog or Data. |
+| [`messages=`](/docs/config/job/#d-messages) | resource | from [`.msgs`](../dot-msgs/) |  | required | Messages resource that decides where the job's messages go (job log in the catalog, mail, log file). |
+| [`storage=`](/docs/config/job/#d-storage) | resource | from [`.storages`](../dot-storage/) |  | repeatable | Storage the job writes to (or reads from). |
+| [`pool=`](/docs/config/job/#d-pool) | resource | from [`.pools`](../dot-pools/) |  | required | Pool the job writes to. |
+| [`fullbackuppool=`](/docs/config/job/#d-fullbackuppool) | resource | from [`.pools`](../dot-pools/) |  |  | Pool used when the job runs at level Full, so Fulls can have their own retention. |
+| [`virtualfullbackuppool=`](/docs/config/job/#d-virtualfullbackuppool) | resource | from [`.pools`](../dot-pools/) |  |  | Pool a VirtualFull is written to. |
+| [`incrementalbackuppool=`](/docs/config/job/#d-incrementalbackuppool) | resource | from [`.pools`](../dot-pools/) |  |  | Pool used for Incremental runs. |
+| [`differentialbackuppool=`](/docs/config/job/#d-differentialbackuppool) | resource | from [`.pools`](../dot-pools/) |  |  | Pool used for Differential runs. |
+| [`nextpool=`](/docs/config/job/#d-nextpool) | resource | from [`.pools`](../dot-pools/) |  |  | Pool that Copy, Migrate and VirtualFull jobs write to. |
+| [`client=`](/docs/config/job/#d-client) | resource | from [`.clients`](../dot-clients/) |  |  | Client (File Daemon) the job backs up or, for restores, restores to by default. |
+| [`fileset=`](/docs/config/job/#d-fileset) | resource | from [`.filesets`](../dot-filesets/) |  |  | FileSet that says what is backed up. |
+| [`schedule=`](/docs/config/job/#d-schedule) | resource | from [`.schedule`](../dot-schedule/) |  |  | Schedule that starts the job automatically. |
+| [`jobtoverify=`](/docs/config/job/#d-jobtoverify) | resource | from [`.jobs`](../dot-jobs/) |  |  | For verify jobs: the backup job whose last run is verified (levels Catalog, VolumeToCatalog, Data). |
+| [`catalog=`](/docs/config/job/#d-catalog) | resource | from [`.catalogs`](../dot-catalogs/) |  |  | Catalog for this job, overriding that of the client. |
+| [`jobdefs=`](/docs/config/job/#d-jobdefs) | resource | from [`.jobdefs`](../dot-jobdefs/) |  |  | JobDefs resource whose directives this job inherits. |
+| [`run=`](/docs/config/job/#d-run) | string |  |  | repeatable | Starts another job (or a copy of this one with other settings) when this job is started, in run command syntax, for example a second backup to another storage. |
+| [`where=`](/docs/config/job/#d-where) | string |  |  |  | For restore jobs: directory prefix the files are restored under. / restores to the original place. |
+| [`regexwhere=`](/docs/config/job/#d-regexwhere) | string |  |  |  | For restore jobs: rewrites the paths of restored files with sed-like expressions (!from!to!), instead of a plain prefix. |
+| [`stripprefix=`](/docs/config/job/#d-stripprefix) | string |  |  |  | For restore jobs: removes this prefix from the paths before restoring. |
+| [`addprefix=`](/docs/config/job/#d-addprefix) | string |  |  |  | For restore jobs: adds this prefix to the paths (like Where). |
+| [`addsuffix=`](/docs/config/job/#d-addsuffix) | string |  |  |  | For restore jobs: adds this suffix to the restored file names, for example to keep existing files. |
+| [`bootstrap=`](/docs/config/job/#d-bootstrap) | string |  |  |  | Bootstrap file a restore job reads to find the data on the volumes. |
+| [`writebootstrap=`](/docs/config/job/#d-writebootstrap) | string |  |  |  | File (or, starting with \|, a command) the job writes its bootstrap to after a backup: which volumes and blocks hold this job. |
+| [`replace=`](/docs/config/job/#d-replace) | enum | `Always`, `IfNewer`, `IfOlder`, `Never` |  |  | For restore jobs: what happens to files that exist already: always (overwrite), ifnewer (only if the backup is newer), ifolder (only if it is older) or never. |
+| [`maximumbandwidth=`](/docs/config/job/#d-maximumbandwidth) | string |  |  |  | Limits the bandwidth of this job. |
+| [`maxrunschedtime=`](/docs/config/job/#d-maxrunschedtime) | string |  |  |  | Cancels the job if it has not finished this long after its scheduled time (waiting counts). |
+| [`maxruntime=`](/docs/config/job/#d-maxruntime) | string |  |  |  | Cancels the job if it runs longer than this from its actual start. |
+| [`fullmaxruntime=`](/docs/config/job/#d-fullmaxruntime) | string |  |  |  | Max Run Time for Full runs only. |
+| [`incrementalmaxruntime=`](/docs/config/job/#d-incrementalmaxruntime) | string |  |  |  | Max Run Time for Incremental runs only. |
+| [`differentialmaxruntime=`](/docs/config/job/#d-differentialmaxruntime) | string |  |  |  | Max Run Time for Differential runs only. |
+| [`maxwaittime=`](/docs/config/job/#d-maxwaittime) | string |  |  |  | Cancels the job if it waits longer than this for a resource (a volume, a device, a concurrency slot) after it started. |
+| [`maxstartdelay=`](/docs/config/job/#d-maxstartdelay) | string |  |  |  | Cancels the job if it cannot start within this time after its scheduled time, so a nightly job that missed its window does not run in the day. |
+| [`maxfullinterval=`](/docs/config/job/#d-maxfullinterval) | string |  |  |  | Upgrades an Incremental or Differential to Full when the last successful Full is older than this. |
+| [`maxvirtualfullinterval=`](/docs/config/job/#d-maxvirtualfullinterval) | string |  |  |  | Upgrades a run to VirtualFull when the last VirtualFull (or Full) is older than this. |
+| [`maxdiffinterval=`](/docs/config/job/#d-maxdiffinterval) | string |  |  |  | Upgrades an Incremental to Differential when the last Differential is older than this. |
+| [`prefixlinks=`](/docs/config/job/#d-prefixlinks) | bool | `yes`, `no` |  |  | For restores with Where: also prefix the targets of absolute symbolic links, so they point into the restore directory. |
+| [`prunejobs=`](/docs/config/job/#d-prunejobs) | bool | `yes`, `no` |  |  | Prune the job records of this job's client after the job, as if the retention had been applied by prune jobs. |
+| [`prunefiles=`](/docs/config/job/#d-prunefiles) | bool | `yes`, `no` |  |  | Prune the file records of this job's client after the job. |
+| [`prunevolumes=`](/docs/config/job/#d-prunevolumes) | bool | `yes`, `no` |  |  | Prune the volumes of the pool after the job. |
+| [`purgemigrationjob=`](/docs/config/job/#d-purgemigrationjob) | bool | `yes`, `no` |  |  | After a successful migration, purge the migrated (source) job from the catalog. |
+| [`enabled=`](/docs/config/job/#d-enabled) | bool | `yes`, `no` |  |  | A disabled job is not started by its schedule; it can still be run by hand. enable job and disable job change it at run time. |
+| [`spoolattributes=`](/docs/config/job/#d-spoolattributes) | bool | `yes`, `no` |  |  | Spool the file attributes on the Storage Daemon and insert them into the catalog at the end of the job, instead of while writing. |
+| [`spooldata=`](/docs/config/job/#d-spooldata) | bool | `yes`, `no` |  |  | Spool the data to disk on the Storage Daemon first and write it to the volume in big chunks. |
+| [`spoolsize=`](/docs/config/job/#d-spoolsize) | string |  |  |  | Upper limit of the spool file of this job. |
+| [`rerunfailedlevels=`](/docs/config/job/#d-rerunfailedlevels) | bool | `yes`, `no` |  |  | If the last Full (or Differential) failed, run the next job at that level again instead of the scheduled lower level. |
+| [`prefermountedvolumes=`](/docs/config/job/#d-prefermountedvolumes) | bool | `yes`, `no` |  |  | Prefer a drive that has a usable volume mounted. |
+| [`runbeforejob=`](/docs/config/job/#d-runbeforejob) | string |  |  | repeatable | Command the Director runs before the job; a failing command cancels the job. |
+| [`runafterjob=`](/docs/config/job/#d-runafterjob) | string |  |  | repeatable | Command the Director runs after a successful job (RunScript, RunsWhen = After, RunsOnFailure = no). |
+| [`runafterfailedjob=`](/docs/config/job/#d-runafterfailedjob) | string |  |  | repeatable | Command the Director runs after a failed job. |
+| [`clientrunbeforejob=`](/docs/config/job/#d-clientrunbeforejob) | string |  |  | repeatable | Command the File Daemon runs on the client before the backup, for example a database dump. |
+| [`clientrunafterjob=`](/docs/config/job/#d-clientrunafterjob) | string |  |  | repeatable | Command the File Daemon runs on the client after the job. |
+| [`maximumconcurrentjobs=`](/docs/config/job/#d-maximumconcurrentjobs) | integer |  |  |  | How many runs of this job may run at the same time; usually 1, so a slow run is not overtaken by the next one. |
+| [`rescheduleonerror=`](/docs/config/job/#d-rescheduleonerror) | bool | `yes`, `no` |  |  | Start the job again when it failed, after Reschedule Interval, at most Reschedule Times times. |
+| [`rescheduleinterval=`](/docs/config/job/#d-rescheduleinterval) | string |  |  |  | Wait between a failed run and its retry. |
+| [`rescheduletimes=`](/docs/config/job/#d-rescheduletimes) | integer |  |  |  | How many times a failed job is retried; 0 means without limit. |
+| [`priority=`](/docs/config/job/#d-priority) | integer |  |  |  | Priority of the job: smaller numbers first. |
+| [`allowmixedpriority=`](/docs/config/job/#d-allowmixedpriority) | bool | `yes`, `no` |  |  | Allow this job to run together with jobs of other priorities, as long as they allow it as well. |
+| [`selectionpattern=`](/docs/config/job/#d-selectionpattern) | string |  |  |  | For Copy and Migrate jobs: the pattern or SQL query used by Selection Type (a job or client name pattern, or a query returning job IDs). |
+| [`selectiontype=`](/docs/config/job/#d-selectiontype) | enum | `SmallestVolume`, `OldestVolume`, `PoolOccupancy`, `PoolTime`, `PoolUncopiedJobs`, `Client`, `Volume`, `Job`, `SqlQuery` |  |  | For Copy and Migrate jobs: how the source jobs are chosen: SmallestVolume, OldestVolume, Client, Volume, Job, SQLQuery, PoolOccupancy, PoolTime, PoolUncopiedJobs. |
+| [`accurate=`](/docs/config/job/#d-accurate) | bool | `yes`, `no` |  |  | Accurate mode: the File Daemon receives the file list of the previous backups and also records deleted and renamed files, so a restore gives exactly the state of the backup. |
+| [`allowduplicatejobs=`](/docs/config/job/#d-allowduplicatejobs) | bool | `yes`, `no` |  |  | Allow a second run of the same job while one is queued or running. |
+| [`cancellowerlevelduplicates=`](/docs/config/job/#d-cancellowerlevelduplicates) | bool | `yes`, `no` |  |  | With Allow Duplicate Jobs = no: cancel the duplicate of the lower level (an Incremental gives way to a Full). |
+| [`cancelqueuedduplicates=`](/docs/config/job/#d-cancelqueuedduplicates) | bool | `yes`, `no` |  |  | With Allow Duplicate Jobs = no: cancel a duplicate that is still waiting in the queue. |
+| [`cancelrunningduplicates=`](/docs/config/job/#d-cancelrunningduplicates) | bool | `yes`, `no` |  |  | With Allow Duplicate Jobs = no: cancel the duplicate that is already running in favour of the new one. |
+| [`savefilehistory=`](/docs/config/job/#d-savefilehistory) | bool | `yes`, `no` |  |  | For NDMP: store the file history sent by the filer, so single files can be restored. |
+| [`filehistorysize=`](/docs/config/job/#d-filehistorysize) | string |  |  |  | For NDMP: size of the file history buffer. |
+| [`fdpluginoptions=`](/docs/config/job/#d-fdpluginoptions) | string |  |  | repeatable | Options passed to the File Daemon plugins of this job. |
+| [`sdpluginoptions=`](/docs/config/job/#d-sdpluginoptions) | string |  |  | repeatable | Options passed to the Storage Daemon plugins of this job. |
+| [`dirpluginoptions=`](/docs/config/job/#d-dirpluginoptions) | string |  |  | repeatable | Options passed to the Director plugins of this job. |
+| [`maxconcurrentcopies=`](/docs/config/job/#d-maxconcurrentcopies) | integer |  |  |  | For Copy jobs: how many copy jobs are started at once from one selection. |
+| [`alwaysincremental=`](/docs/config/job/#d-alwaysincremental) | bool | `yes`, `no` |  |  | Always Incremental scheme: only Incrementals are taken, and a Consolidate job merges the old ones into a VirtualFull. |
+| [`alwaysincrementaljobretention=`](/docs/config/job/#d-alwaysincrementaljobretention) | string |  |  |  | Incrementals younger than this are not consolidated. |
+| [`alwaysincrementalkeepnumber=`](/docs/config/job/#d-alwaysincrementalkeepnumber) | integer |  |  |  | How many Incrementals are always kept unconsolidated, even when they are older than the retention. |
+| [`alwaysincrementalmaxfullage=`](/docs/config/job/#d-alwaysincrementalmaxfullage) | string |  |  |  | When the Full of an Always Incremental chain is older than this, the Consolidate job includes it, so the Full does not grow old. |
+| [`maxfullconsolidations=`](/docs/config/job/#d-maxfullconsolidations) | integer |  |  |  | How many Fulls a Consolidate job may consolidate in one run (because of Always Incremental Max Full Age); 0 means no limit. |
+| [`runonincomingconnectinterval=`](/docs/config/job/#d-runonincomingconnectinterval) | string |  |  |  | For clients that connect to the Director (Connection From Client To Director): start this job when the client connects and the last run is older than this interval. 0 switches it off. |
 
 #### configure add storage {#sub-configure-add-storage}
 
@@ -1135,41 +1135,41 @@ configure add storage name=<name> [description=<description>]
 
 | Argument | Type | Values / source | Default | Flags | Description |
 |---|---|---|---|---|---|
-| `name=` | string |  |  | required | Directive (name). |
-| `description=` | string |  |  |  | Directive (string). |
-| `protocol=` | enum | `Native`, `NDMPV2`, `NDMPV3`, `NDMPV4` |  |  | Directive (auth\_protocol\_type). |
-| `authtype=` | enum | `None`, `Clear`, `MD5` |  |  | Directive (auth\_type). |
-| `address=` | string |  |  | required | Directive (string). |
-| `lanaddress=` | string |  |  |  | Directive (string). |
-| `port=` | integer |  |  |  | Directive (pint32). |
-| `username=` | string |  |  |  | Directive (string). |
-| `password=` | string |  |  | required | Directive (autopassword). |
-| `device=` | string |  |  | required | Directive (device). |
-| `mediatype=` | string |  |  | required | Directive (strname). |
-| `autochanger=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `enabled=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `allowcompression=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `heartbeatinterval=` | string |  |  |  | Directive (time). |
-| `cachestatusinterval=` | string |  |  |  | Directive (time). |
-| `maximumconcurrentjobs=` | integer |  |  |  | Directive (pint32). |
-| `maximumconcurrentreadjobs=` | integer |  |  |  | Directive (pint32). |
-| `pairedstorage=` | resource | from [`.storages`](../dot-storage/) |  |  | Directive (res). |
-| `maximumbandwidthperjob=` | string |  |  |  | Directive (speed). |
-| `ndmpchangerdevice=` | string |  |  |  | Directive (strname). |
-| `tlsauthenticate=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `tlsenable=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `tlsrequire=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `tlscipherlist=` | string |  |  |  | Directive (string). |
-| `tlsciphersuites=` | string |  |  |  | Directive (string). |
-| `tlsdhfile=` | string |  |  |  | Directive (directory). |
-| `tlsprotocol=` | string |  |  |  | Directive (string). |
-| `tlsverifypeer=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `tlscacertificatefile=` | string |  |  |  | Directive (directory). |
-| `tlscacertificatedir=` | string |  |  |  | Directive (directory). |
-| `tlscertificaterevocationlist=` | string |  |  |  | Directive (directory). |
-| `tlscertificate=` | string |  |  |  | Directive (directory). |
-| `tlskey=` | string |  |  |  | Directive (directory). |
-| `tlsallowedcn=` | string |  |  | repeatable | Directive (string\_list). |
+| [`name=`](/docs/config/storage/#d-name) | string |  |  | required | Name of the Storage resource as jobs and pools refer to it. |
+| [`description=`](/docs/config/storage/#d-description) | string |  |  |  | Free text describing the storage. |
+| [`protocol=`](/docs/config/storage/#d-protocol) | enum | `Native`, `NDMPV2`, `NDMPV3`, `NDMPV4` |  |  | Protocol to the storage: Native, or NDMP for NDMP tape servers. |
+| [`authtype=`](/docs/config/storage/#d-authtype) | enum | `None`, `Clear`, `MD5` |  |  | Authentication for NDMP storage: None, Clear or MD5. |
+| [`address=`](/docs/config/storage/#d-address) | string |  |  | required | Host name or IP address of the Storage Daemon, as the File Daemons must reach it: the Director passes it on to the client. |
+| [`lanaddress=`](/docs/config/storage/#d-lanaddress) | string |  |  |  | Address used instead of Address for clients in passive mode on a separate LAN. |
+| [`port=`](/docs/config/storage/#d-port) | integer |  |  |  | TCP port of the Storage Daemon. |
+| [`username=`](/docs/config/storage/#d-username) | string |  |  |  | User name for NDMP authentication. |
+| [`password=`](/docs/config/storage/#d-password) | string |  |  | required | Password shared with the Storage Daemon's Director resource (and TLS-PSK key). |
+| [`device=`](/docs/config/storage/#d-device) | string |  |  | required | Name of a Device (or Autochanger) resource in the Storage Daemon. |
+| [`mediatype=`](/docs/config/storage/#d-mediatype) | string |  |  | required | Media type of the volumes this storage writes. |
+| [`autochanger=`](/docs/config/storage/#d-autochanger) | bool | `yes`, `no` |  |  | The device is an autochanger (tape library); slots and barcodes are used for label, update slots and mount. |
+| [`enabled=`](/docs/config/storage/#d-enabled) | bool | `yes`, `no` |  |  | A disabled storage is not used for new jobs; enable/disable storage change it at run time. |
+| [`allowcompression=`](/docs/config/storage/#d-allowcompression) | bool | `yes`, `no` |  |  | Allow software compression by the File Daemon for jobs writing here. |
+| [`heartbeatinterval=`](/docs/config/storage/#d-heartbeatinterval) | string |  |  |  | Interval of keep-alive packets to the Storage Daemon. 0 switches it off. |
+| [`cachestatusinterval=`](/docs/config/storage/#d-cachestatusinterval) | string |  |  |  | How long the Director caches the status of the Storage Daemon. |
+| [`maximumconcurrentjobs=`](/docs/config/storage/#d-maximumconcurrentjobs) | integer |  |  |  | How many jobs may use this storage at the same time. |
+| [`maximumconcurrentreadjobs=`](/docs/config/storage/#d-maximumconcurrentreadjobs) | integer |  |  |  | How many of the concurrent jobs may read (restore, copy, migrate source); 0 means no own limit. |
+| [`pairedstorage=`](/docs/config/storage/#d-pairedstorage) | resource | from [`.storages`](../dot-storage/) |  |  | For NDMP: the native storage that holds the data of an NDMP backup that Bareos stores itself. |
+| [`maximumbandwidthperjob=`](/docs/config/storage/#d-maximumbandwidthperjob) | string |  |  |  | Limits the bandwidth of each job on this storage. |
+| [`ndmpchangerdevice=`](/docs/config/storage/#d-ndmpchangerdevice) | string |  |  |  | Changer device of an NDMP tape server. |
+| [`tlsauthenticate=`](/docs/config/storage/#d-tlsauthenticate) | bool | `yes`, `no` |  |  | Use TLS only to authenticate the peer and switch back to an unencrypted connection afterwards. |
+| [`tlsenable=`](/docs/config/storage/#d-tlsenable) | bool | `yes`, `no` |  |  | Enable TLS for this connection. |
+| [`tlsrequire=`](/docs/config/storage/#d-tlsrequire) | bool | `yes`, `no` |  |  | Refuse connections that do not use TLS. |
+| [`tlscipherlist=`](/docs/config/storage/#d-tlscipherlist) | string |  |  |  | OpenSSL cipher list for TLS 1.2 and older, colon separated. |
+| [`tlsciphersuites=`](/docs/config/storage/#d-tlsciphersuites) | string |  |  |  | OpenSSL cipher suites for TLS 1.3, colon separated. |
+| [`tlsdhfile=`](/docs/config/storage/#d-tlsdhfile) | string |  |  |  | PEM file with Diffie-Hellman parameters for the DH key exchange of TLS 1.2. |
+| [`tlsprotocol=`](/docs/config/storage/#d-tlsprotocol) | string |  |  |  | Restricts the TLS protocol versions in OpenSSL syntax, for example to forbid old versions. |
+| [`tlsverifypeer=`](/docs/config/storage/#d-tlsverifypeer) | bool | `yes`, `no` |  |  | With certificate based TLS: check the peer's certificate against the CA and, for a server, against TLS Allowed CN. |
+| [`tlscacertificatefile=`](/docs/config/storage/#d-tlscacertificatefile) | string |  |  |  | PEM file with the CA certificates used to verify the peer's certificate. |
+| [`tlscacertificatedir=`](/docs/config/storage/#d-tlscacertificatedir) | string |  |  |  | Directory of hashed CA certificates (as made by openssl rehash), an alternative to TLS CA Certificate File. |
+| [`tlscertificaterevocationlist=`](/docs/config/storage/#d-tlscertificaterevocationlist) | string |  |  |  | PEM file with a certificate revocation list; certificates on it are refused. |
+| [`tlscertificate=`](/docs/config/storage/#d-tlscertificate) | string |  |  |  | PEM file with the own certificate for certificate based TLS. |
+| [`tlskey=`](/docs/config/storage/#d-tlskey) | string |  |  |  | PEM file with the private key of TLS Certificate. |
+| [`tlsallowedcn=`](/docs/config/storage/#d-tlsallowedcn) | string |  |  | repeatable | Common names a peer certificate may carry; others are refused when TLS Verify Peer is on. |
 
 #### configure add catalog {#sub-configure-add-catalog}
 
@@ -1190,21 +1190,21 @@ configure add catalog name=<name> [description=<description>]
 
 | Argument | Type | Values / source | Default | Flags | Description |
 |---|---|---|---|---|---|
-| `name=` | string |  |  | required | Directive (name). |
-| `description=` | string |  |  |  | Directive (string). |
-| `dbaddress=` | string |  |  |  | Directive (string). |
-| `dbport=` | integer |  |  |  | Directive (pint32). |
-| `dbpassword=` | string |  |  |  | Directive (autopassword). |
-| `dbuser=` | string |  |  | required | Directive (string). |
-| `dbname=` | string |  |  | required | Directive (string). |
-| `dbsocket=` | string |  |  |  | Directive (string). |
-| `reconnect=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `exitonfatal=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `minconnections=` | integer |  |  |  | Directive (pint32). |
-| `maxconnections=` | integer |  |  |  | Directive (pint32). |
-| `incconnections=` | integer |  |  |  | Directive (pint32). |
-| `idletimeout=` | integer |  |  |  | Directive (pint32). |
-| `validatetimeout=` | integer |  |  |  | Directive (pint32). |
+| [`name=`](/docs/config/catalog/#d-name) | string |  |  | required | Name of the catalog; Client and Pool resources and the use command refer to it. |
+| [`description=`](/docs/config/catalog/#d-description) | string |  |  |  | Free text describing the catalog. |
+| [`dbaddress=`](/docs/config/catalog/#d-dbaddress) | string |  |  |  | Host of the PostgreSQL server; without it (and without DB Socket) the local socket is used. |
+| [`dbport=`](/docs/config/catalog/#d-dbport) | integer |  |  |  | TCP port of the PostgreSQL server. |
+| [`dbpassword=`](/docs/config/catalog/#d-dbpassword) | string |  |  |  | Password of the database user. |
+| [`dbuser=`](/docs/config/catalog/#d-dbuser) | string |  |  | required | Database user the Director connects as. |
+| [`dbname=`](/docs/config/catalog/#d-dbname) | string |  |  | required | Name of the catalog database. |
+| [`dbsocket=`](/docs/config/catalog/#d-dbsocket) | string |  |  |  | Directory of the PostgreSQL Unix socket, instead of a TCP connection. |
+| [`reconnect=`](/docs/config/catalog/#d-reconnect) | bool | `yes`, `no` |  |  | Reconnect automatically when the database connection breaks. |
+| [`exitonfatal=`](/docs/config/catalog/#d-exitonfatal) | bool | `yes`, `no` |  |  | Stop the Director on a fatal database error instead of carrying on. |
+| [`minconnections=`](/docs/config/catalog/#d-minconnections) | integer |  |  |  | Connections the connection pool opens at start. |
+| [`maxconnections=`](/docs/config/catalog/#d-maxconnections) | integer |  |  |  | Upper limit of the connection pool. |
+| [`incconnections=`](/docs/config/catalog/#d-incconnections) | integer |  |  |  | How many connections the pool opens at once when it grows. |
+| [`idletimeout=`](/docs/config/catalog/#d-idletimeout) | integer |  |  |  | Seconds after which an idle pooled connection is closed. |
+| [`validatetimeout=`](/docs/config/catalog/#d-validatetimeout) | integer |  |  |  | Seconds after which a pooled connection is checked before use. |
 
 #### configure add schedule {#sub-configure-add-schedule}
 
@@ -1217,10 +1217,10 @@ configure add schedule name=<name> [description=<description>] [run=<run> ...]
 
 | Argument | Type | Values / source | Default | Flags | Description |
 |---|---|---|---|---|---|
-| `name=` | string |  |  | required | Directive (name). |
-| `description=` | string |  |  |  | Directive (string). |
-| `run=` | string |  |  | repeatable | Directive (schedule\_run\_command). |
-| `enabled=` | bool | `yes`, `no` |  |  | Directive (boolean). |
+| [`name=`](/docs/config/schedule/#d-name) | string |  |  | required | Name of the schedule; jobs refer to it with Schedule. |
+| [`description=`](/docs/config/schedule/#d-description) | string |  |  |  | Free text describing the schedule. |
+| [`run=`](/docs/config/schedule/#d-run) | string |  |  | repeatable | When the jobs of this schedule run, one directive per rule: optional level and overrides, then the date and time specification. |
+| [`enabled=`](/docs/config/schedule/#d-enabled) | bool | `yes`, `no` |  |  | A disabled schedule starts no job; enable schedule and disable schedule change it at run time. |
 
 #### configure add fileset {#sub-configure-add-fileset}
 
@@ -1233,10 +1233,10 @@ configure add fileset name=<name> [description=<description>]
 
 | Argument | Type | Values / source | Default | Flags | Description |
 |---|---|---|---|---|---|
-| `name=` | string |  |  | required | Directive (name). |
-| `description=` | string |  |  |  | Directive (string). |
-| `ignorefilesetchanges=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `enablevss=` | bool | `yes`, `no` |  |  | Directive (boolean). |
+| [`name=`](/docs/config/fileset/#d-name) | string |  |  | required | Name of the FileSet. |
+| [`description=`](/docs/config/fileset/#d-description) | string |  |  |  | Free text describing the FileSet. |
+| [`ignorefilesetchanges=`](/docs/config/fileset/#d-ignorefilesetchanges) | bool | `yes`, `no` |  |  | Normally a change of the FileSet makes the next Incremental or Differential a Full, since the old backups do not contain the new files. |
+| [`enablevss=`](/docs/config/fileset/#d-enablevss) | bool | `yes`, `no` |  |  | On Windows clients: back up from a Volume Shadow Copy snapshot, so open files are consistent. |
 
 #### configure add pool {#sub-configure-add-pool}
 
@@ -1268,35 +1268,35 @@ configure add pool name=<name> [description=<description>]
 
 | Argument | Type | Values / source | Default | Flags | Description |
 |---|---|---|---|---|---|
-| `name=` | string |  |  | required | Directive (name). |
-| `description=` | string |  |  |  | Directive (string). |
-| `pooltype=` | enum | `Backup`, `Copy`, `Cloned`, `Archive`, `Migration`, `Scratch` |  |  | Directive (pooltype). |
-| `labelformat=` | string |  |  |  | Directive (strname). |
-| `cleaningprefix=` | string |  |  |  | Directive (strname). |
-| `usecatalog=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `purgeoldestvolume=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `actiononpurge=` | enum | `None`, `Truncate` |  |  | Directive (action\_on\_purge). |
-| `recycleoldestvolume=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `recyclecurrentvolume=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `maximumvolumes=` | integer |  |  |  | Directive (pint32). |
-| `maximumvolumejobs=` | integer |  |  |  | Directive (pint32). |
-| `maximumvolumefiles=` | integer |  |  |  | Directive (pint32). |
-| `maximumvolumebytes=` | string |  |  |  | Directive (size64). |
-| `catalogfiles=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `volumeretention=` | string |  |  |  | Directive (time). |
-| `volumeuseduration=` | string |  |  |  | Directive (time). |
-| `migrationtime=` | string |  |  |  | Directive (time). |
-| `migrationhighbytes=` | string |  |  |  | Directive (size64). |
-| `migrationlowbytes=` | string |  |  |  | Directive (size64). |
-| `nextpool=` | resource | from [`.pools`](../dot-pools/) |  |  | Directive (res). |
-| `storage=` | resource | from [`.storages`](../dot-storage/) |  | repeatable | Directive (resource\_list). |
-| `autoprune=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `recycle=` | bool | `yes`, `no` |  |  | Directive (boolean). |
-| `recyclepool=` | resource | from [`.pools`](../dot-pools/) |  |  | Directive (res). |
-| `scratchpool=` | resource | from [`.pools`](../dot-pools/) |  |  | Directive (res). |
-| `catalog=` | resource | from [`.catalogs`](../dot-catalogs/) |  |  | Directive (res). |
-| `minimumblocksize=` | string |  |  |  | Directive (size32). |
-| `maximumblocksize=` | string |  |  |  | Directive (size32). |
+| [`name=`](/docs/config/pool/#d-name) | string |  |  | required | Name of the pool. |
+| [`description=`](/docs/config/pool/#d-description) | string |  |  |  | Free text describing the pool. |
+| [`pooltype=`](/docs/config/pool/#d-pooltype) | enum | `Backup`, `Copy`, `Cloned`, `Archive`, `Migration`, `Scratch` |  |  | Kind of pool: Backup (the normal case), Copy, Cloned, Archive, Migration or Scratch. |
+| [`labelformat=`](/docs/config/pool/#d-labelformat) | string |  |  |  | Template for the names of volumes the Director labels automatically. |
+| [`cleaningprefix=`](/docs/config/pool/#d-cleaningprefix) | string |  |  |  | Volumes whose name starts with this prefix are cleaning tapes and are never used for data. |
+| [`usecatalog=`](/docs/config/pool/#d-usecatalog) | bool | `yes`, `no` |  |  | Keep the volumes of this pool in the catalog; should stay yes. |
+| [`purgeoldestvolume=`](/docs/config/pool/#d-purgeoldestvolume) | bool | `yes`, `no` |  |  | When the pool needs a volume and none is free, purge the oldest volume regardless of its retention. |
+| [`actiononpurge=`](/docs/config/pool/#d-actiononpurge) | enum | `None`, `Truncate` |  |  | What happens to a volume when it is purged: Truncate shrinks a disk volume to zero to free the space (done by truncate or purge ... action=truncate); None keeps it. |
+| [`recycleoldestvolume=`](/docs/config/pool/#d-recycleoldestvolume) | bool | `yes`, `no` |  |  | When a volume is needed, prune the oldest volume and reuse it if its retention allows. |
+| [`recyclecurrentvolume=`](/docs/config/pool/#d-recyclecurrentvolume) | bool | `yes`, `no` |  |  | When a volume is needed, prune the current volume and reuse it if its retention allows. |
+| [`maximumvolumes=`](/docs/config/pool/#d-maximumvolumes) | integer |  |  |  | Upper limit of volumes in the pool; automatic labeling stops there. |
+| [`maximumvolumejobs=`](/docs/config/pool/#d-maximumvolumejobs) | integer |  |  |  | Number of jobs after which a volume is marked Used. |
+| [`maximumvolumefiles=`](/docs/config/pool/#d-maximumvolumefiles) | integer |  |  |  | Number of files after which a volume is marked Used. |
+| [`maximumvolumebytes=`](/docs/config/pool/#d-maximumvolumebytes) | string |  |  |  | Size after which a volume is marked Full. |
+| [`catalogfiles=`](/docs/config/pool/#d-catalogfiles) | bool | `yes`, `no` |  |  | Store the file records of the jobs in this pool. |
+| [`volumeretention=`](/docs/config/pool/#d-volumeretention) | string |  |  |  | How long the jobs on a volume are kept after the volume was last written. |
+| [`volumeuseduration=`](/docs/config/pool/#d-volumeuseduration) | string |  |  |  | How long a volume is written to after its first write; then it is marked Used. |
+| [`migrationtime=`](/docs/config/pool/#d-migrationtime) | string |  |  |  | For Migrate jobs with Selection Type PoolTime: jobs older than this are migrated. |
+| [`migrationhighbytes=`](/docs/config/pool/#d-migrationhighbytes) | string |  |  |  | For Selection Type PoolOccupancy: migration starts when the pool holds more than this. |
+| [`migrationlowbytes=`](/docs/config/pool/#d-migrationlowbytes) | string |  |  |  | For Selection Type PoolOccupancy: migration stops when the pool is below this. |
+| [`nextpool=`](/docs/config/pool/#d-nextpool) | resource | from [`.pools`](../dot-pools/) |  |  | Pool that Copy, Migrate and VirtualFull jobs write to when they read from this pool. |
+| [`storage=`](/docs/config/pool/#d-storage) | resource | from [`.storages`](../dot-storage/) |  | repeatable | Storage the jobs writing to this pool use; it takes precedence over the Storage of the job. |
+| [`autoprune=`](/docs/config/pool/#d-autoprune) | bool | `yes`, `no` |  |  | Prune the volumes of this pool automatically when a volume is needed, according to Volume Retention. |
+| [`recycle=`](/docs/config/pool/#d-recycle) | bool | `yes`, `no` |  |  | Allow volumes of this pool to be reused once they are purged. |
+| [`recyclepool=`](/docs/config/pool/#d-recyclepool) | resource | from [`.pools`](../dot-pools/) |  |  | Pool a volume moves to when it is recycled, for example back to the Scratch pool. |
+| [`scratchpool=`](/docs/config/pool/#d-scratchpool) | resource | from [`.pools`](../dot-pools/) |  |  | Pool this pool takes new volumes from when it has none; default is the pool named Scratch. |
+| [`catalog=`](/docs/config/pool/#d-catalog) | resource | from [`.catalogs`](../dot-catalogs/) |  |  | Catalog of the pool, for installations with several catalogs. |
+| [`minimumblocksize=`](/docs/config/pool/#d-minimumblocksize) | string |  |  |  | Minimum block size for volumes of this pool, for tape drives with special needs. |
+| [`maximumblocksize=`](/docs/config/pool/#d-maximumblocksize) | string |  |  |  | Maximum block size for volumes of this pool; larger blocks speed up modern tape drives. |
 
 #### configure add messages {#sub-configure-add-messages}
 
@@ -1318,23 +1318,23 @@ configure add messages [name=<name>] [description=<description>]
 
 | Argument | Type | Values / source | Default | Flags | Description |
 |---|---|---|---|---|---|
-| `name=` | string |  |  |  | Directive (name). |
-| `description=` | string |  |  |  | Directive (string). |
-| `mailcommand=` | string |  |  |  | Directive (string). |
-| `operatorcommand=` | string |  |  |  | Directive (string). |
-| `timestampformat=` | string |  |  |  | Directive (string). |
-| `syslog=` | string |  |  | repeatable | Directive (messages). |
-| `mail=` | string |  |  | repeatable | Directive (messages). |
-| `mailonerror=` | string |  |  | repeatable | Directive (messages). |
-| `mailonsuccess=` | string |  |  | repeatable | Directive (messages). |
-| `file=` | string |  |  | repeatable | Directive (messages). |
-| `append=` | string |  |  | repeatable | Directive (messages). |
-| `stdout=` | string |  |  | repeatable | Directive (messages). |
-| `stderr=` | string |  |  | repeatable | Directive (messages). |
-| `director=` | string |  |  | repeatable | Directive (messages). |
-| `console=` | string |  |  | repeatable | Directive (messages). |
-| `operator=` | string |  |  | repeatable | Directive (messages). |
-| `catalog=` | string |  |  | repeatable | Directive (messages). |
+| [`name=`](/docs/config/messages/#d-name) | string |  |  |  | Name of the Messages resource; Jobs, the Director and daemons refer to it. |
+| [`description=`](/docs/config/messages/#d-description) | string |  |  |  | Free text describing the resource. |
+| [`mailcommand=`](/docs/config/messages/#d-mailcommand) | string |  |  |  | Command that sends the mails of Mail, Mail On Error and Mail On Success. bsmtp is the usual choice. |
+| [`operatorcommand=`](/docs/config/messages/#d-operatorcommand) | string |  |  |  | Command for Operator messages (for example mount requests); same variables as Mail Command. |
+| [`timestampformat=`](/docs/config/messages/#d-timestampformat) | string |  |  |  | strftime format of the time stamps of these messages. |
+| [`syslog=`](/docs/config/messages/#d-syslog) | string |  |  | repeatable | Send messages to the system log. |
+| [`mail=`](/docs/config/messages/#d-mail) | string |  |  | repeatable | Mail the messages to the addresses before the second = (comma separated) when the job ends, as one mail per job. |
+| [`mailonerror=`](/docs/config/messages/#d-mailonerror) | string |  |  | repeatable | Like Mail, but the mail is only sent when the job did not terminate normally. |
+| [`mailonsuccess=`](/docs/config/messages/#d-mailonsuccess) | string |  |  | repeatable | Like Mail, but only for jobs that terminated normally. |
+| [`file=`](/docs/config/messages/#d-file) | string |  |  | repeatable | Write the messages to a file, which is overwritten when the Director starts. |
+| [`append=`](/docs/config/messages/#d-append) | string |  |  | repeatable | Append the messages to a file. |
+| [`stdout=`](/docs/config/messages/#d-stdout) | string |  |  | repeatable | Print the messages on standard output of the daemon (mostly for debugging in the foreground). |
+| [`stderr=`](/docs/config/messages/#d-stderr) | string |  |  | repeatable | Print the messages on standard error of the daemon. |
+| [`director=`](/docs/config/messages/#d-director) | string |  |  | repeatable | Send the messages of a File or Storage Daemon to the Director named before the second =; only used in the daemons' own Messages resources. |
+| [`console=`](/docs/config/messages/#d-console) | string |  |  | repeatable | Keep the messages for the consoles: they appear with the messages command (and automatically with autodisplay on). |
+| [`operator=`](/docs/config/messages/#d-operator) | string |  |  | repeatable | Send the messages to the operator addresses through Operator Command, at once rather than at the end of the job. |
+| [`catalog=`](/docs/config/messages/#d-catalog) | string |  |  | repeatable | Store the messages in the catalog (table Log); the job log shown by list joblog and by the GUI comes from there. |
 
 #### configure add counter {#sub-configure-add-counter}
 
@@ -1348,12 +1348,12 @@ configure add counter name=<name> [description=<description>]
 
 | Argument | Type | Values / source | Default | Flags | Description |
 |---|---|---|---|---|---|
-| `name=` | string |  |  | required | Directive (name). |
-| `description=` | string |  |  |  | Directive (string). |
-| `minimum=` | integer |  |  |  | Directive (int32). |
-| `maximum=` | integer |  |  |  | Directive (pint32). |
-| `wrapcounter=` | string |  |  |  | Directive (res). |
-| `catalog=` | resource | from [`.catalogs`](../dot-catalogs/) |  |  | Directive (res). |
+| [`name=`](/docs/config/counter/#d-name) | string |  |  | required | Name of the counter, used as a variable in Label Format (for example ${Weekly}). |
+| [`description=`](/docs/config/counter/#d-description) | string |  |  |  | Free text describing the counter. |
+| [`minimum=`](/docs/config/counter/#d-minimum) | integer |  |  |  | Value the counter starts with and returns to after Maximum. |
+| [`maximum=`](/docs/config/counter/#d-maximum) | integer |  |  |  | Highest value; then the counter wraps to Minimum (and increments Wrap Counter). |
+| [`wrapcounter=`](/docs/config/counter/#d-wrapcounter) | string |  |  |  | Counter that is incremented whenever this one wraps, for nested numbering such as week within year. |
+| [`catalog=`](/docs/config/counter/#d-catalog) | resource | from [`.catalogs`](../dot-catalogs/) |  |  | Catalog the value is stored in; without it the counter lives in memory only and restarts at each Director start. |
 
 #### configure add profile {#sub-configure-add-profile}
 
@@ -1372,18 +1372,18 @@ configure add profile name=<name> [description=<description>]
 
 | Argument | Type | Values / source | Default | Flags | Description |
 |---|---|---|---|---|---|
-| `name=` | string |  |  | required | Directive (name). |
-| `description=` | string |  |  |  | Directive (string). |
-| `jobacl=` | string |  |  | repeatable | Directive (acl). |
-| `clientacl=` | string |  |  | repeatable | Directive (acl). |
-| `storageacl=` | string |  |  | repeatable | Directive (acl). |
-| `scheduleacl=` | string |  |  | repeatable | Directive (acl). |
-| `poolacl=` | string |  |  | repeatable | Directive (acl). |
-| `commandacl=` | string |  |  | repeatable | Directive (acl). |
-| `filesetacl=` | string |  |  | repeatable | Directive (acl). |
-| `catalogacl=` | string |  |  | repeatable | Directive (acl). |
-| `whereacl=` | string |  |  | repeatable | Directive (acl). |
-| `pluginoptionsacl=` | string |  |  | repeatable | Directive (acl). |
+| [`name=`](/docs/config/profile/#d-name) | string |  |  | required | Name of the profile; Console and User resources refer to it with Profile. |
+| [`description=`](/docs/config/profile/#d-description) | string |  |  |  | Free text describing what the profile is for. |
+| [`jobacl=`](/docs/config/profile/#d-jobacl) | string |  |  | repeatable | Which jobs this profile may use. |
+| [`clientacl=`](/docs/config/profile/#d-clientacl) | string |  |  | repeatable | Which clients this profile may use. |
+| [`storageacl=`](/docs/config/profile/#d-storageacl) | string |  |  | repeatable | Which storages this profile may use. |
+| [`scheduleacl=`](/docs/config/profile/#d-scheduleacl) | string |  |  | repeatable | Which schedules this profile may use. |
+| [`poolacl=`](/docs/config/profile/#d-poolacl) | string |  |  | repeatable | Which pools this profile may use. |
+| [`commandacl=`](/docs/config/profile/#d-commandacl) | string |  |  | repeatable | Which console commands this profile may use. |
+| [`filesetacl=`](/docs/config/profile/#d-filesetacl) | string |  |  | repeatable | Which FileSets this profile may use. |
+| [`catalogacl=`](/docs/config/profile/#d-catalogacl) | string |  |  | repeatable | Which catalogs this profile may use. |
+| [`whereacl=`](/docs/config/profile/#d-whereacl) | string |  |  | repeatable | Which restore target paths (the where= of a restore) this profile may use. |
+| [`pluginoptionsacl=`](/docs/config/profile/#d-pluginoptionsacl) | string |  |  | repeatable | Which plugin option strings a job may be started with this profile may use. |
 
 #### configure add console {#sub-configure-add-console}
 
@@ -1398,10 +1398,10 @@ configure add console name=<name> password=<password>
 
 | Argument | Type | Values / source | Default | Flags | Description |
 |---|---|---|---|---|---|
-| `name=` | string |  |  | required | Console name. |
-| `password=` | string |  |  | required | Password. |
-| `profile=` | resource | from [`.profiles`](../dot-profiles/) |  | required, repeatable, list | Profile; several profiles repeated or as a comma list. |
-| `description=` | string |  |  |  | Description. |
+| [`name=`](/docs/config/console/#d-name) | string |  |  | required | Console name. |
+| [`password=`](/docs/config/console/#d-password) | string |  |  | required | Password. |
+| [`profile=`](/docs/config/console/#d-profile) | resource | from [`.profiles`](../dot-profiles/) |  | required, repeatable, list | Profile; several profiles repeated or as a comma list. |
+| [`description=`](/docs/config/console/#d-description) | string |  |  |  | Description. |
 
 #### configure add user {#sub-configure-add-user}
 
@@ -1420,19 +1420,19 @@ configure add user name=<name> [description=<description>]
 
 | Argument | Type | Values / source | Default | Flags | Description |
 |---|---|---|---|---|---|
-| `name=` | string |  |  | required | Directive (name). |
-| `description=` | string |  |  |  | Directive (string). |
-| `jobacl=` | string |  |  | repeatable | Directive (acl). |
-| `clientacl=` | string |  |  | repeatable | Directive (acl). |
-| `storageacl=` | string |  |  | repeatable | Directive (acl). |
-| `scheduleacl=` | string |  |  | repeatable | Directive (acl). |
-| `poolacl=` | string |  |  | repeatable | Directive (acl). |
-| `commandacl=` | string |  |  | repeatable | Directive (acl). |
-| `filesetacl=` | string |  |  | repeatable | Directive (acl). |
-| `catalogacl=` | string |  |  | repeatable | Directive (acl). |
-| `whereacl=` | string |  |  | repeatable | Directive (acl). |
-| `pluginoptionsacl=` | string |  |  | repeatable | Directive (acl). |
-| `profile=` | resource | from [`.profiles`](../dot-profiles/) |  | repeatable | Directive (resource\_list). |
+| [`name=`](/docs/config/user/#d-name) | string |  |  | required | Name of the user, as PAM authenticated it through a PAM console. |
+| [`description=`](/docs/config/user/#d-description) | string |  |  |  | Free text describing the user. |
+| [`jobacl=`](/docs/config/user/#d-jobacl) | string |  |  | repeatable | Which jobs this user may use. |
+| [`clientacl=`](/docs/config/user/#d-clientacl) | string |  |  | repeatable | Which clients this user may use. |
+| [`storageacl=`](/docs/config/user/#d-storageacl) | string |  |  | repeatable | Which storages this user may use. |
+| [`scheduleacl=`](/docs/config/user/#d-scheduleacl) | string |  |  | repeatable | Which schedules this user may use. |
+| [`poolacl=`](/docs/config/user/#d-poolacl) | string |  |  | repeatable | Which pools this user may use. |
+| [`commandacl=`](/docs/config/user/#d-commandacl) | string |  |  | repeatable | Which console commands this user may use. |
+| [`filesetacl=`](/docs/config/user/#d-filesetacl) | string |  |  | repeatable | Which FileSets this user may use. |
+| [`catalogacl=`](/docs/config/user/#d-catalogacl) | string |  |  | repeatable | Which catalogs this user may use. |
+| [`whereacl=`](/docs/config/user/#d-whereacl) | string |  |  | repeatable | Which restore target paths (the where= of a restore) this user may use. |
+| [`pluginoptionsacl=`](/docs/config/user/#d-pluginoptionsacl) | string |  |  | repeatable | Which plugin option strings a job may be started with this user may use. |
+| [`profile=`](/docs/config/user/#d-profile) | resource | from [`.profiles`](../dot-profiles/) |  | repeatable | Profiles whose ACLs the user gets. |
 
 ### configure export {#sub-configure-export}
 
@@ -1750,47 +1750,47 @@ configure update client=<client> [yes] [description=<description> ...]
 | Argument | Type | Values / source | Default | Flags | Description |
 |---|---|---|---|---|---|
 | `client=` | resource | from [`.clients`](../dot-clients/) |  |  | Resource name. |
-| `description=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `protocol=` | enum | `Native`, `NDMPV2`, `NDMPV3`, `NDMPV4` |  | repeatable | Directive (empty value removes it). |
-| `authtype=` | enum | `None`, `Clear`, `MD5` |  | repeatable | Directive (empty value removes it). |
-| `address=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `fdaddress=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `lanaddress=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `port=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `fdport=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `username=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `password=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `fdpassword=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `catalog=` | resource | from [`.catalogs`](../dot-catalogs/) |  | repeatable | Directive (empty value removes it). |
-| `passive=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `connectionfromdirectortoclient=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `connectionfromclienttodirector=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `enabled=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `hardquota=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `softquota=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `softquotagraceperiod=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `strictquotas=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `quotaincludefailedjobs=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `heartbeatinterval=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `maximumconcurrentjobs=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `maximumbandwidthperjob=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `ndmploglevel=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `ndmpblocksize=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `ndmpuselmdb=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `tlsauthenticate=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `tlsenable=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `tlsrequire=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `tlscipherlist=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `tlsciphersuites=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `tlsdhfile=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `tlsprotocol=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `tlsverifypeer=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `tlscacertificatefile=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `tlscacertificatedir=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `tlscertificaterevocationlist=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `tlscertificate=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `tlskey=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `tlsallowedcn=` | string |  |  | repeatable | Directive (empty value removes it). |
+| [`description=`](/docs/config/client/#d-description) | string |  |  | repeatable | Free text describing the client. An empty value removes the directive. |
+| [`protocol=`](/docs/config/client/#d-protocol) | enum | `Native`, `NDMPV2`, `NDMPV3`, `NDMPV4` |  | repeatable | Protocol to talk to the client: Native (the Bareos File Daemon) or one of the NDMP versions for NAS filers. An empty value removes the directive. |
+| [`authtype=`](/docs/config/client/#d-authtype) | enum | `None`, `Clear`, `MD5` |  | repeatable | Authentication for NDMP clients: None, Clear or MD5. An empty value removes the directive. |
+| [`address=`](/docs/config/client/#d-address) | string |  |  | repeatable | Host name or IP address of the File Daemon. An empty value removes the directive. |
+| [`fdaddress=`](/docs/config/client/#d-address) | string |  |  | repeatable | Host name or IP address of the File Daemon. An empty value removes the directive. |
+| [`lanaddress=`](/docs/config/client/#d-lanaddress) | string |  |  | repeatable | Address used instead of Address when the Storage Daemon connects to the File Daemon in passive mode, for setups where storage and client share a LAN that the Director does not see. An empty value removes the directive. |
+| [`port=`](/docs/config/client/#d-port) | string |  |  | repeatable | TCP port of the File Daemon. An empty value removes the directive. |
+| [`fdport=`](/docs/config/client/#d-port) | string |  |  | repeatable | TCP port of the File Daemon. An empty value removes the directive. |
+| [`username=`](/docs/config/client/#d-username) | string |  |  | repeatable | User name for NDMP authentication. An empty value removes the directive. |
+| [`password=`](/docs/config/client/#d-password) | string |  |  | repeatable | Password shared with the File Daemon's Director resource; with TLS-PSK it is also the TLS key. An empty value removes the directive. |
+| [`fdpassword=`](/docs/config/client/#d-password) | string |  |  | repeatable | Password shared with the File Daemon's Director resource; with TLS-PSK it is also the TLS key. An empty value removes the directive. |
+| [`catalog=`](/docs/config/client/#d-catalog) | resource | from [`.catalogs`](../dot-catalogs/) |  | repeatable | Catalog the jobs of this client are stored in, for installations with several catalogs. An empty value removes the directive. |
+| [`passive=`](/docs/config/client/#d-passive) | bool | `yes`, `no` |  | repeatable | Passive mode: the Storage Daemon connects to the File Daemon instead of the other way round. An empty value removes the directive. |
+| [`connectionfromdirectortoclient=`](/docs/config/client/#d-connectionfromdirectortoclient) | bool | `yes`, `no` |  | repeatable | The Director opens the connection to the File Daemon (the normal case). An empty value removes the directive. |
+| [`connectionfromclienttodirector=`](/docs/config/client/#d-connectionfromclienttodirector) | bool | `yes`, `no` |  | repeatable | The File Daemon connects to the Director and keeps the connection open, so a client behind NAT or a firewall can be backed up. An empty value removes the directive. |
+| [`enabled=`](/docs/config/client/#d-enabled) | bool | `yes`, `no` |  | repeatable | A disabled client is not backed up by scheduled jobs; enable client and disable client change it at run time. An empty value removes the directive. |
+| [`hardquota=`](/docs/config/client/#d-hardquota) | string |  |  | repeatable | Upper limit for the data of this client; a backup that would go beyond it fails. 0 means no limit. An empty value removes the directive. |
+| [`softquota=`](/docs/config/client/#d-softquota) | string |  |  | repeatable | Soft limit for the data of this client: beyond it a warning is written, and after the Soft Quota Grace Period jobs fail. An empty value removes the directive. |
+| [`softquotagraceperiod=`](/docs/config/client/#d-softquotagraceperiod) | string |  |  | repeatable | How long the soft quota may be exceeded before jobs fail. An empty value removes the directive. |
+| [`strictquotas=`](/docs/config/client/#d-strictquotas) | bool | `yes`, `no` |  | repeatable | When the soft quota grace period has run out: yes makes the soft quota a hard limit; no lets jobs run up to the hard quota. An empty value removes the directive. |
+| [`quotaincludefailedjobs=`](/docs/config/client/#d-quotaincludefailedjobs) | bool | `yes`, `no` |  | repeatable | Count the data of failed jobs into the quota. An empty value removes the directive. |
+| [`heartbeatinterval=`](/docs/config/client/#d-heartbeatinterval) | string |  |  | repeatable | Interval of keep-alive packets to the File Daemon. 0 switches it off. An empty value removes the directive. |
+| [`maximumconcurrentjobs=`](/docs/config/client/#d-maximumconcurrentjobs) | string |  |  | repeatable | How many jobs may run on this client at the same time; further jobs wait. An empty value removes the directive. |
+| [`maximumbandwidthperjob=`](/docs/config/client/#d-maximumbandwidthperjob) | string |  |  | repeatable | Limits the bandwidth of each job of this client. An empty value removes the directive. |
+| [`ndmploglevel=`](/docs/config/client/#d-ndmploglevel) | string |  |  | repeatable | Detail of NDMP messages of this client, 0 to 9. An empty value removes the directive. |
+| [`ndmpblocksize=`](/docs/config/client/#d-ndmpblocksize) | string |  |  | repeatable | Block size of NDMP backups. An empty value removes the directive. |
+| [`ndmpuselmdb=`](/docs/config/client/#d-ndmpuselmdb) | bool | `yes`, `no` |  | repeatable | Keep the NDMP file history in an LMDB database during the job instead of in memory, for filers with many files. An empty value removes the directive. |
+| [`tlsauthenticate=`](/docs/config/client/#d-tlsauthenticate) | bool | `yes`, `no` |  | repeatable | Use TLS only to authenticate the peer and switch back to an unencrypted connection afterwards. An empty value removes the directive. |
+| [`tlsenable=`](/docs/config/client/#d-tlsenable) | bool | `yes`, `no` |  | repeatable | Enable TLS for this connection. An empty value removes the directive. |
+| [`tlsrequire=`](/docs/config/client/#d-tlsrequire) | bool | `yes`, `no` |  | repeatable | Refuse connections that do not use TLS. An empty value removes the directive. |
+| [`tlscipherlist=`](/docs/config/client/#d-tlscipherlist) | string |  |  | repeatable | OpenSSL cipher list for TLS 1.2 and older, colon separated. An empty value removes the directive. |
+| [`tlsciphersuites=`](/docs/config/client/#d-tlsciphersuites) | string |  |  | repeatable | OpenSSL cipher suites for TLS 1.3, colon separated. An empty value removes the directive. |
+| [`tlsdhfile=`](/docs/config/client/#d-tlsdhfile) | string |  |  | repeatable | PEM file with Diffie-Hellman parameters for the DH key exchange of TLS 1.2. An empty value removes the directive. |
+| [`tlsprotocol=`](/docs/config/client/#d-tlsprotocol) | string |  |  | repeatable | Restricts the TLS protocol versions in OpenSSL syntax, for example to forbid old versions. An empty value removes the directive. |
+| [`tlsverifypeer=`](/docs/config/client/#d-tlsverifypeer) | bool | `yes`, `no` |  | repeatable | With certificate based TLS: check the peer's certificate against the CA and, for a server, against TLS Allowed CN. An empty value removes the directive. |
+| [`tlscacertificatefile=`](/docs/config/client/#d-tlscacertificatefile) | string |  |  | repeatable | PEM file with the CA certificates used to verify the peer's certificate. An empty value removes the directive. |
+| [`tlscacertificatedir=`](/docs/config/client/#d-tlscacertificatedir) | string |  |  | repeatable | Directory of hashed CA certificates (as made by openssl rehash), an alternative to TLS CA Certificate File. An empty value removes the directive. |
+| [`tlscertificaterevocationlist=`](/docs/config/client/#d-tlscertificaterevocationlist) | string |  |  | repeatable | PEM file with a certificate revocation list; certificates on it are refused. An empty value removes the directive. |
+| [`tlscertificate=`](/docs/config/client/#d-tlscertificate) | string |  |  | repeatable | PEM file with the own certificate for certificate based TLS. An empty value removes the directive. |
+| [`tlskey=`](/docs/config/client/#d-tlskey) | string |  |  | repeatable | PEM file with the private key of TLS Certificate. An empty value removes the directive. |
+| [`tlsallowedcn=`](/docs/config/client/#d-tlsallowedcn) | string |  |  | repeatable | Common names a peer certificate may carry; others are refused when TLS Verify Peer is on. An empty value removes the directive. |
 
 Also accepts the arguments of [configure update](#sub-configure-update): `yes`.
 
@@ -1878,88 +1878,88 @@ configure update job=<job> [yes] [description=<description> ...]
 | Argument | Type | Values / source | Default | Flags | Description |
 |---|---|---|---|---|---|
 | `job=` | resource | from [`.jobs`](../dot-jobs/) |  |  | Resource name. |
-| `description=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `type=` | enum | `Backup`, `Admin`, `Archive`, `Verify`, `Restore`, `Migrate`, `Copy`, `Consolidate` |  | repeatable | Directive (empty value removes it). |
-| `protocol=` | enum | `Native`, `NDMP_BAREOS`, `NDMP`, `NDMP_NATIVE` |  | repeatable | Directive (empty value removes it). |
-| `backupformat=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `level=` | enum | `Full`, `Base`, `Incremental`, `Differential`, `Since`, `VirtualFull`, `Catalog`, `InitCatalog`, `VolumeToCatalog`, `DiskToCatalog`, `Data` |  | repeatable | Directive (empty value removes it). |
-| `messages=` | resource | from [`.msgs`](../dot-msgs/) |  | repeatable | Directive (empty value removes it). |
-| `storage=` | resource | from [`.storages`](../dot-storage/) |  | repeatable | Directive (empty value removes it). |
-| `pool=` | resource | from [`.pools`](../dot-pools/) |  | repeatable | Directive (empty value removes it). |
-| `fullbackuppool=` | resource | from [`.pools`](../dot-pools/) |  | repeatable | Directive (empty value removes it). |
-| `virtualfullbackuppool=` | resource | from [`.pools`](../dot-pools/) |  | repeatable | Directive (empty value removes it). |
-| `incrementalbackuppool=` | resource | from [`.pools`](../dot-pools/) |  | repeatable | Directive (empty value removes it). |
-| `differentialbackuppool=` | resource | from [`.pools`](../dot-pools/) |  | repeatable | Directive (empty value removes it). |
-| `nextpool=` | resource | from [`.pools`](../dot-pools/) |  | repeatable | Directive (empty value removes it). |
-| `client=` | resource | from [`.clients`](../dot-clients/) |  | repeatable | Directive (empty value removes it). |
-| `fileset=` | resource | from [`.filesets`](../dot-filesets/) |  | repeatable | Directive (empty value removes it). |
-| `schedule=` | resource | from [`.schedule`](../dot-schedule/) |  | repeatable | Directive (empty value removes it). |
-| `jobtoverify=` | resource | from [`.jobs`](../dot-jobs/) |  | repeatable | Directive (empty value removes it). |
-| `verifyjob=` | resource | from [`.jobs`](../dot-jobs/) |  | repeatable | Directive (empty value removes it). |
-| `catalog=` | resource | from [`.catalogs`](../dot-catalogs/) |  | repeatable | Directive (empty value removes it). |
-| `jobdefs=` | resource | from [`.jobdefs`](../dot-jobdefs/) |  | repeatable | Directive (empty value removes it). |
-| `run=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `where=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `regexwhere=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `stripprefix=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `addprefix=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `addsuffix=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `bootstrap=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `writebootstrap=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `replace=` | enum | `Always`, `IfNewer`, `IfOlder`, `Never` |  | repeatable | Directive (empty value removes it). |
-| `maximumbandwidth=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `maxrunschedtime=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `maxruntime=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `fullmaxruntime=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `incrementalmaxruntime=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `differentialmaxruntime=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `maxwaittime=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `maxstartdelay=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `maxfullinterval=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `maxvirtualfullinterval=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `maxdiffinterval=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `prefixlinks=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `prunejobs=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `prunefiles=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `prunevolumes=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `purgemigrationjob=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `enabled=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `spoolattributes=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `spooldata=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `spoolsize=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `rerunfailedlevels=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `prefermountedvolumes=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `runbeforejob=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `runafterjob=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `runafterfailedjob=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `clientrunbeforejob=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `clientrunafterjob=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `maximumconcurrentjobs=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `rescheduleonerror=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `rescheduleinterval=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `rescheduletimes=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `priority=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `allowmixedpriority=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `selectionpattern=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `runscript=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `selectiontype=` | enum | `SmallestVolume`, `OldestVolume`, `PoolOccupancy`, `PoolTime`, `PoolUncopiedJobs`, `Client`, `Volume`, `Job`, `SqlQuery` |  | repeatable | Directive (empty value removes it). |
-| `accurate=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `allowduplicatejobs=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `cancellowerlevelduplicates=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `cancelqueuedduplicates=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `cancelrunningduplicates=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `savefilehistory=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `filehistorysize=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `fdpluginoptions=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `sdpluginoptions=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `dirpluginoptions=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `maxconcurrentcopies=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `alwaysincremental=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `alwaysincrementaljobretention=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `alwaysincrementalkeepnumber=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `alwaysincrementalmaxfullage=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `maxfullconsolidations=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `runonincomingconnectinterval=` | string |  |  | repeatable | Directive (empty value removes it). |
+| [`description=`](/docs/config/job/#d-description) | string |  |  | repeatable | Free text describing the job. An empty value removes the directive. |
+| [`type=`](/docs/config/job/#d-type) | enum | `Backup`, `Admin`, `Archive`, `Verify`, `Restore`, `Migrate`, `Copy`, `Consolidate` |  | repeatable | What the job does: Backup, Restore, Verify, Admin (runs only its scripts), Migrate, Copy, Consolidate (Always Incremental), or Archive. An empty value removes the directive. |
+| [`protocol=`](/docs/config/job/#d-protocol) | enum | `Native`, `NDMP_BAREOS`, `NDMP`, `NDMP_NATIVE` |  | repeatable | Backup protocol: Native for the Bareos File Daemon; NDMP\_BAREOS or NDMP\_NATIVE for NAS filers (data stored by Bareos or by an NDMP tape server). An empty value removes the directive. |
+| [`backupformat=`](/docs/config/job/#d-backupformat) | string |  |  | repeatable | Format of NDMP backups (for example dump or tar, depending on the filer); Native for normal jobs. An empty value removes the directive. |
+| [`level=`](/docs/config/job/#d-level) | enum | `Full`, `Base`, `Incremental`, `Differential`, `Since`, `VirtualFull`, `Catalog`, `InitCatalog`, `VolumeToCatalog`, `DiskToCatalog`, `Data` |  | repeatable | Default level of the job: for backups Full, Incremental, Differential or VirtualFull; for verify jobs InitCatalog, Catalog, VolumeToCatalog, DiskToCatalog or Data. An empty value removes the directive. |
+| [`messages=`](/docs/config/job/#d-messages) | resource | from [`.msgs`](../dot-msgs/) |  | repeatable | Messages resource that decides where the job's messages go (job log in the catalog, mail, log file). An empty value removes the directive. |
+| [`storage=`](/docs/config/job/#d-storage) | resource | from [`.storages`](../dot-storage/) |  | repeatable | Storage the job writes to (or reads from). An empty value removes the directive. |
+| [`pool=`](/docs/config/job/#d-pool) | resource | from [`.pools`](../dot-pools/) |  | repeatable | Pool the job writes to. An empty value removes the directive. |
+| [`fullbackuppool=`](/docs/config/job/#d-fullbackuppool) | resource | from [`.pools`](../dot-pools/) |  | repeatable | Pool used when the job runs at level Full, so Fulls can have their own retention. An empty value removes the directive. |
+| [`virtualfullbackuppool=`](/docs/config/job/#d-virtualfullbackuppool) | resource | from [`.pools`](../dot-pools/) |  | repeatable | Pool a VirtualFull is written to. An empty value removes the directive. |
+| [`incrementalbackuppool=`](/docs/config/job/#d-incrementalbackuppool) | resource | from [`.pools`](../dot-pools/) |  | repeatable | Pool used for Incremental runs. An empty value removes the directive. |
+| [`differentialbackuppool=`](/docs/config/job/#d-differentialbackuppool) | resource | from [`.pools`](../dot-pools/) |  | repeatable | Pool used for Differential runs. An empty value removes the directive. |
+| [`nextpool=`](/docs/config/job/#d-nextpool) | resource | from [`.pools`](../dot-pools/) |  | repeatable | Pool that Copy, Migrate and VirtualFull jobs write to. An empty value removes the directive. |
+| [`client=`](/docs/config/job/#d-client) | resource | from [`.clients`](../dot-clients/) |  | repeatable | Client (File Daemon) the job backs up or, for restores, restores to by default. An empty value removes the directive. |
+| [`fileset=`](/docs/config/job/#d-fileset) | resource | from [`.filesets`](../dot-filesets/) |  | repeatable | FileSet that says what is backed up. An empty value removes the directive. |
+| [`schedule=`](/docs/config/job/#d-schedule) | resource | from [`.schedule`](../dot-schedule/) |  | repeatable | Schedule that starts the job automatically. An empty value removes the directive. |
+| [`jobtoverify=`](/docs/config/job/#d-jobtoverify) | resource | from [`.jobs`](../dot-jobs/) |  | repeatable | For verify jobs: the backup job whose last run is verified (levels Catalog, VolumeToCatalog, Data). An empty value removes the directive. |
+| [`verifyjob=`](/docs/config/job/#d-jobtoverify) | resource | from [`.jobs`](../dot-jobs/) |  | repeatable | For verify jobs: the backup job whose last run is verified (levels Catalog, VolumeToCatalog, Data). An empty value removes the directive. |
+| [`catalog=`](/docs/config/job/#d-catalog) | resource | from [`.catalogs`](../dot-catalogs/) |  | repeatable | Catalog for this job, overriding that of the client. An empty value removes the directive. |
+| [`jobdefs=`](/docs/config/job/#d-jobdefs) | resource | from [`.jobdefs`](../dot-jobdefs/) |  | repeatable | JobDefs resource whose directives this job inherits. An empty value removes the directive. |
+| [`run=`](/docs/config/job/#d-run) | string |  |  | repeatable | Starts another job (or a copy of this one with other settings) when this job is started, in run command syntax, for example a second backup to another storage. An empty value removes the directive. |
+| [`where=`](/docs/config/job/#d-where) | string |  |  | repeatable | For restore jobs: directory prefix the files are restored under. / restores to the original place. An empty value removes the directive. |
+| [`regexwhere=`](/docs/config/job/#d-regexwhere) | string |  |  | repeatable | For restore jobs: rewrites the paths of restored files with sed-like expressions (!from!to!), instead of a plain prefix. An empty value removes the directive. |
+| [`stripprefix=`](/docs/config/job/#d-stripprefix) | string |  |  | repeatable | For restore jobs: removes this prefix from the paths before restoring. An empty value removes the directive. |
+| [`addprefix=`](/docs/config/job/#d-addprefix) | string |  |  | repeatable | For restore jobs: adds this prefix to the paths (like Where). An empty value removes the directive. |
+| [`addsuffix=`](/docs/config/job/#d-addsuffix) | string |  |  | repeatable | For restore jobs: adds this suffix to the restored file names, for example to keep existing files. An empty value removes the directive. |
+| [`bootstrap=`](/docs/config/job/#d-bootstrap) | string |  |  | repeatable | Bootstrap file a restore job reads to find the data on the volumes. An empty value removes the directive. |
+| [`writebootstrap=`](/docs/config/job/#d-writebootstrap) | string |  |  | repeatable | File (or, starting with \|, a command) the job writes its bootstrap to after a backup: which volumes and blocks hold this job. An empty value removes the directive. |
+| [`replace=`](/docs/config/job/#d-replace) | enum | `Always`, `IfNewer`, `IfOlder`, `Never` |  | repeatable | For restore jobs: what happens to files that exist already: always (overwrite), ifnewer (only if the backup is newer), ifolder (only if it is older) or never. An empty value removes the directive. |
+| [`maximumbandwidth=`](/docs/config/job/#d-maximumbandwidth) | string |  |  | repeatable | Limits the bandwidth of this job. An empty value removes the directive. |
+| [`maxrunschedtime=`](/docs/config/job/#d-maxrunschedtime) | string |  |  | repeatable | Cancels the job if it has not finished this long after its scheduled time (waiting counts). An empty value removes the directive. |
+| [`maxruntime=`](/docs/config/job/#d-maxruntime) | string |  |  | repeatable | Cancels the job if it runs longer than this from its actual start. An empty value removes the directive. |
+| [`fullmaxruntime=`](/docs/config/job/#d-fullmaxruntime) | string |  |  | repeatable | Max Run Time for Full runs only. An empty value removes the directive. |
+| [`incrementalmaxruntime=`](/docs/config/job/#d-incrementalmaxruntime) | string |  |  | repeatable | Max Run Time for Incremental runs only. An empty value removes the directive. |
+| [`differentialmaxruntime=`](/docs/config/job/#d-differentialmaxruntime) | string |  |  | repeatable | Max Run Time for Differential runs only. An empty value removes the directive. |
+| [`maxwaittime=`](/docs/config/job/#d-maxwaittime) | string |  |  | repeatable | Cancels the job if it waits longer than this for a resource (a volume, a device, a concurrency slot) after it started. An empty value removes the directive. |
+| [`maxstartdelay=`](/docs/config/job/#d-maxstartdelay) | string |  |  | repeatable | Cancels the job if it cannot start within this time after its scheduled time, so a nightly job that missed its window does not run in the day. An empty value removes the directive. |
+| [`maxfullinterval=`](/docs/config/job/#d-maxfullinterval) | string |  |  | repeatable | Upgrades an Incremental or Differential to Full when the last successful Full is older than this. An empty value removes the directive. |
+| [`maxvirtualfullinterval=`](/docs/config/job/#d-maxvirtualfullinterval) | string |  |  | repeatable | Upgrades a run to VirtualFull when the last VirtualFull (or Full) is older than this. An empty value removes the directive. |
+| [`maxdiffinterval=`](/docs/config/job/#d-maxdiffinterval) | string |  |  | repeatable | Upgrades an Incremental to Differential when the last Differential is older than this. An empty value removes the directive. |
+| [`prefixlinks=`](/docs/config/job/#d-prefixlinks) | bool | `yes`, `no` |  | repeatable | For restores with Where: also prefix the targets of absolute symbolic links, so they point into the restore directory. An empty value removes the directive. |
+| [`prunejobs=`](/docs/config/job/#d-prunejobs) | bool | `yes`, `no` |  | repeatable | Prune the job records of this job's client after the job, as if the retention had been applied by prune jobs. An empty value removes the directive. |
+| [`prunefiles=`](/docs/config/job/#d-prunefiles) | bool | `yes`, `no` |  | repeatable | Prune the file records of this job's client after the job. An empty value removes the directive. |
+| [`prunevolumes=`](/docs/config/job/#d-prunevolumes) | bool | `yes`, `no` |  | repeatable | Prune the volumes of the pool after the job. An empty value removes the directive. |
+| [`purgemigrationjob=`](/docs/config/job/#d-purgemigrationjob) | bool | `yes`, `no` |  | repeatable | After a successful migration, purge the migrated (source) job from the catalog. An empty value removes the directive. |
+| [`enabled=`](/docs/config/job/#d-enabled) | bool | `yes`, `no` |  | repeatable | A disabled job is not started by its schedule; it can still be run by hand. enable job and disable job change it at run time. An empty value removes the directive. |
+| [`spoolattributes=`](/docs/config/job/#d-spoolattributes) | bool | `yes`, `no` |  | repeatable | Spool the file attributes on the Storage Daemon and insert them into the catalog at the end of the job, instead of while writing. An empty value removes the directive. |
+| [`spooldata=`](/docs/config/job/#d-spooldata) | bool | `yes`, `no` |  | repeatable | Spool the data to disk on the Storage Daemon first and write it to the volume in big chunks. An empty value removes the directive. |
+| [`spoolsize=`](/docs/config/job/#d-spoolsize) | string |  |  | repeatable | Upper limit of the spool file of this job. An empty value removes the directive. |
+| [`rerunfailedlevels=`](/docs/config/job/#d-rerunfailedlevels) | bool | `yes`, `no` |  | repeatable | If the last Full (or Differential) failed, run the next job at that level again instead of the scheduled lower level. An empty value removes the directive. |
+| [`prefermountedvolumes=`](/docs/config/job/#d-prefermountedvolumes) | bool | `yes`, `no` |  | repeatable | Prefer a drive that has a usable volume mounted. An empty value removes the directive. |
+| [`runbeforejob=`](/docs/config/job/#d-runbeforejob) | string |  |  | repeatable | Command the Director runs before the job; a failing command cancels the job. An empty value removes the directive. |
+| [`runafterjob=`](/docs/config/job/#d-runafterjob) | string |  |  | repeatable | Command the Director runs after a successful job (RunScript, RunsWhen = After, RunsOnFailure = no). An empty value removes the directive. |
+| [`runafterfailedjob=`](/docs/config/job/#d-runafterfailedjob) | string |  |  | repeatable | Command the Director runs after a failed job. An empty value removes the directive. |
+| [`clientrunbeforejob=`](/docs/config/job/#d-clientrunbeforejob) | string |  |  | repeatable | Command the File Daemon runs on the client before the backup, for example a database dump. An empty value removes the directive. |
+| [`clientrunafterjob=`](/docs/config/job/#d-clientrunafterjob) | string |  |  | repeatable | Command the File Daemon runs on the client after the job. An empty value removes the directive. |
+| [`maximumconcurrentjobs=`](/docs/config/job/#d-maximumconcurrentjobs) | string |  |  | repeatable | How many runs of this job may run at the same time; usually 1, so a slow run is not overtaken by the next one. An empty value removes the directive. |
+| [`rescheduleonerror=`](/docs/config/job/#d-rescheduleonerror) | bool | `yes`, `no` |  | repeatable | Start the job again when it failed, after Reschedule Interval, at most Reschedule Times times. An empty value removes the directive. |
+| [`rescheduleinterval=`](/docs/config/job/#d-rescheduleinterval) | string |  |  | repeatable | Wait between a failed run and its retry. An empty value removes the directive. |
+| [`rescheduletimes=`](/docs/config/job/#d-rescheduletimes) | string |  |  | repeatable | How many times a failed job is retried; 0 means without limit. An empty value removes the directive. |
+| [`priority=`](/docs/config/job/#d-priority) | string |  |  | repeatable | Priority of the job: smaller numbers first. An empty value removes the directive. |
+| [`allowmixedpriority=`](/docs/config/job/#d-allowmixedpriority) | bool | `yes`, `no` |  | repeatable | Allow this job to run together with jobs of other priorities, as long as they allow it as well. An empty value removes the directive. |
+| [`selectionpattern=`](/docs/config/job/#d-selectionpattern) | string |  |  | repeatable | For Copy and Migrate jobs: the pattern or SQL query used by Selection Type (a job or client name pattern, or a query returning job IDs). An empty value removes the directive. |
+| [`runscript=`](/docs/config/job/#d-runscript) | string |  |  | repeatable | Block that runs a command or console command before or after the job, on the Director or the client, with control over failure handling. An empty value removes the directive. |
+| [`selectiontype=`](/docs/config/job/#d-selectiontype) | enum | `SmallestVolume`, `OldestVolume`, `PoolOccupancy`, `PoolTime`, `PoolUncopiedJobs`, `Client`, `Volume`, `Job`, `SqlQuery` |  | repeatable | For Copy and Migrate jobs: how the source jobs are chosen: SmallestVolume, OldestVolume, Client, Volume, Job, SQLQuery, PoolOccupancy, PoolTime, PoolUncopiedJobs. An empty value removes the directive. |
+| [`accurate=`](/docs/config/job/#d-accurate) | bool | `yes`, `no` |  | repeatable | Accurate mode: the File Daemon receives the file list of the previous backups and also records deleted and renamed files, so a restore gives exactly the state of the backup. An empty value removes the directive. |
+| [`allowduplicatejobs=`](/docs/config/job/#d-allowduplicatejobs) | bool | `yes`, `no` |  | repeatable | Allow a second run of the same job while one is queued or running. An empty value removes the directive. |
+| [`cancellowerlevelduplicates=`](/docs/config/job/#d-cancellowerlevelduplicates) | bool | `yes`, `no` |  | repeatable | With Allow Duplicate Jobs = no: cancel the duplicate of the lower level (an Incremental gives way to a Full). An empty value removes the directive. |
+| [`cancelqueuedduplicates=`](/docs/config/job/#d-cancelqueuedduplicates) | bool | `yes`, `no` |  | repeatable | With Allow Duplicate Jobs = no: cancel a duplicate that is still waiting in the queue. An empty value removes the directive. |
+| [`cancelrunningduplicates=`](/docs/config/job/#d-cancelrunningduplicates) | bool | `yes`, `no` |  | repeatable | With Allow Duplicate Jobs = no: cancel the duplicate that is already running in favour of the new one. An empty value removes the directive. |
+| [`savefilehistory=`](/docs/config/job/#d-savefilehistory) | bool | `yes`, `no` |  | repeatable | For NDMP: store the file history sent by the filer, so single files can be restored. An empty value removes the directive. |
+| [`filehistorysize=`](/docs/config/job/#d-filehistorysize) | string |  |  | repeatable | For NDMP: size of the file history buffer. An empty value removes the directive. |
+| [`fdpluginoptions=`](/docs/config/job/#d-fdpluginoptions) | string |  |  | repeatable | Options passed to the File Daemon plugins of this job. An empty value removes the directive. |
+| [`sdpluginoptions=`](/docs/config/job/#d-sdpluginoptions) | string |  |  | repeatable | Options passed to the Storage Daemon plugins of this job. An empty value removes the directive. |
+| [`dirpluginoptions=`](/docs/config/job/#d-dirpluginoptions) | string |  |  | repeatable | Options passed to the Director plugins of this job. An empty value removes the directive. |
+| [`maxconcurrentcopies=`](/docs/config/job/#d-maxconcurrentcopies) | string |  |  | repeatable | For Copy jobs: how many copy jobs are started at once from one selection. An empty value removes the directive. |
+| [`alwaysincremental=`](/docs/config/job/#d-alwaysincremental) | bool | `yes`, `no` |  | repeatable | Always Incremental scheme: only Incrementals are taken, and a Consolidate job merges the old ones into a VirtualFull. An empty value removes the directive. |
+| [`alwaysincrementaljobretention=`](/docs/config/job/#d-alwaysincrementaljobretention) | string |  |  | repeatable | Incrementals younger than this are not consolidated. An empty value removes the directive. |
+| [`alwaysincrementalkeepnumber=`](/docs/config/job/#d-alwaysincrementalkeepnumber) | string |  |  | repeatable | How many Incrementals are always kept unconsolidated, even when they are older than the retention. An empty value removes the directive. |
+| [`alwaysincrementalmaxfullage=`](/docs/config/job/#d-alwaysincrementalmaxfullage) | string |  |  | repeatable | When the Full of an Always Incremental chain is older than this, the Consolidate job includes it, so the Full does not grow old. An empty value removes the directive. |
+| [`maxfullconsolidations=`](/docs/config/job/#d-maxfullconsolidations) | string |  |  | repeatable | How many Fulls a Consolidate job may consolidate in one run (because of Always Incremental Max Full Age); 0 means no limit. An empty value removes the directive. |
+| [`runonincomingconnectinterval=`](/docs/config/job/#d-runonincomingconnectinterval) | string |  |  | repeatable | For clients that connect to the Director (Connection From Client To Director): start this job when the client connects and the last run is older than this interval. 0 switches it off. An empty value removes the directive. |
 | `newclient=` | resource | from [`.clients`](../dot-clients/) |  | repeatable | Directive (empty value removes it). |
 | `newfileset=` | resource | from [`.filesets`](../dot-filesets/) |  | repeatable | Directive (empty value removes it). |
 | `newpool=` | resource | from [`.pools`](../dot-pools/) |  | repeatable | Directive (empty value removes it). |
@@ -2051,89 +2051,89 @@ configure update jobdefs=<jobdefs> [yes] [description=<description> ...]
 
 | Argument | Type | Values / source | Default | Flags | Description |
 |---|---|---|---|---|---|
-| `jobdefs=` | resource | from [`.jobdefs`](../dot-jobdefs/) |  |  | Resource name. |
-| `description=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `type=` | enum | `Backup`, `Admin`, `Archive`, `Verify`, `Restore`, `Migrate`, `Copy`, `Consolidate` |  | repeatable | Directive (empty value removes it). |
-| `protocol=` | enum | `Native`, `NDMP_BAREOS`, `NDMP`, `NDMP_NATIVE` |  | repeatable | Directive (empty value removes it). |
-| `backupformat=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `level=` | enum | `Full`, `Base`, `Incremental`, `Differential`, `Since`, `VirtualFull`, `Catalog`, `InitCatalog`, `VolumeToCatalog`, `DiskToCatalog`, `Data` |  | repeatable | Directive (empty value removes it). |
-| `messages=` | resource | from [`.msgs`](../dot-msgs/) |  | repeatable | Directive (empty value removes it). |
-| `storage=` | resource | from [`.storages`](../dot-storage/) |  | repeatable | Directive (empty value removes it). |
-| `pool=` | resource | from [`.pools`](../dot-pools/) |  | repeatable | Directive (empty value removes it). |
-| `fullbackuppool=` | resource | from [`.pools`](../dot-pools/) |  | repeatable | Directive (empty value removes it). |
-| `virtualfullbackuppool=` | resource | from [`.pools`](../dot-pools/) |  | repeatable | Directive (empty value removes it). |
-| `incrementalbackuppool=` | resource | from [`.pools`](../dot-pools/) |  | repeatable | Directive (empty value removes it). |
-| `differentialbackuppool=` | resource | from [`.pools`](../dot-pools/) |  | repeatable | Directive (empty value removes it). |
-| `nextpool=` | resource | from [`.pools`](../dot-pools/) |  | repeatable | Directive (empty value removes it). |
-| `client=` | resource | from [`.clients`](../dot-clients/) |  | repeatable | Directive (empty value removes it). |
-| `fileset=` | resource | from [`.filesets`](../dot-filesets/) |  | repeatable | Directive (empty value removes it). |
-| `schedule=` | resource | from [`.schedule`](../dot-schedule/) |  | repeatable | Directive (empty value removes it). |
-| `jobtoverify=` | resource | from [`.jobs`](../dot-jobs/) |  | repeatable | Directive (empty value removes it). |
-| `verifyjob=` | resource | from [`.jobs`](../dot-jobs/) |  | repeatable | Directive (empty value removes it). |
-| `catalog=` | resource | from [`.catalogs`](../dot-catalogs/) |  | repeatable | Directive (empty value removes it). |
-| `jobdefs=` | resource | from [`.jobdefs`](../dot-jobdefs/) |  | repeatable | Directive (empty value removes it). |
-| `run=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `where=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `regexwhere=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `stripprefix=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `addprefix=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `addsuffix=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `bootstrap=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `writebootstrap=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `replace=` | enum | `Always`, `IfNewer`, `IfOlder`, `Never` |  | repeatable | Directive (empty value removes it). |
-| `maximumbandwidth=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `maxrunschedtime=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `maxruntime=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `fullmaxruntime=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `incrementalmaxruntime=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `differentialmaxruntime=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `maxwaittime=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `maxstartdelay=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `maxfullinterval=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `maxvirtualfullinterval=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `maxdiffinterval=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `prefixlinks=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `prunejobs=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `prunefiles=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `prunevolumes=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `purgemigrationjob=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `enabled=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `spoolattributes=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `spooldata=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `spoolsize=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `rerunfailedlevels=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `prefermountedvolumes=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `runbeforejob=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `runafterjob=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `runafterfailedjob=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `clientrunbeforejob=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `clientrunafterjob=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `maximumconcurrentjobs=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `rescheduleonerror=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `rescheduleinterval=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `rescheduletimes=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `priority=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `allowmixedpriority=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `selectionpattern=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `runscript=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `selectiontype=` | enum | `SmallestVolume`, `OldestVolume`, `PoolOccupancy`, `PoolTime`, `PoolUncopiedJobs`, `Client`, `Volume`, `Job`, `SqlQuery` |  | repeatable | Directive (empty value removes it). |
-| `accurate=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `allowduplicatejobs=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `cancellowerlevelduplicates=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `cancelqueuedduplicates=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `cancelrunningduplicates=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `savefilehistory=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `filehistorysize=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `fdpluginoptions=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `sdpluginoptions=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `dirpluginoptions=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `maxconcurrentcopies=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `alwaysincremental=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `alwaysincrementaljobretention=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `alwaysincrementalkeepnumber=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `alwaysincrementalmaxfullage=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `maxfullconsolidations=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `runonincomingconnectinterval=` | string |  |  | repeatable | Directive (empty value removes it). |
+| [`jobdefs=`](/docs/config/jobdefs/#d-jobdefs) | resource | from [`.jobdefs`](../dot-jobdefs/) |  |  | Resource name. |
+| [`description=`](/docs/config/jobdefs/#d-description) | string |  |  | repeatable | Free text describing the job. An empty value removes the directive. |
+| [`type=`](/docs/config/jobdefs/#d-type) | enum | `Backup`, `Admin`, `Archive`, `Verify`, `Restore`, `Migrate`, `Copy`, `Consolidate` |  | repeatable | What the job does: Backup, Restore, Verify, Admin (runs only its scripts), Migrate, Copy, Consolidate (Always Incremental), or Archive. An empty value removes the directive. |
+| [`protocol=`](/docs/config/jobdefs/#d-protocol) | enum | `Native`, `NDMP_BAREOS`, `NDMP`, `NDMP_NATIVE` |  | repeatable | Backup protocol: Native for the Bareos File Daemon; NDMP\_BAREOS or NDMP\_NATIVE for NAS filers (data stored by Bareos or by an NDMP tape server). An empty value removes the directive. |
+| [`backupformat=`](/docs/config/jobdefs/#d-backupformat) | string |  |  | repeatable | Format of NDMP backups (for example dump or tar, depending on the filer); Native for normal jobs. An empty value removes the directive. |
+| [`level=`](/docs/config/jobdefs/#d-level) | enum | `Full`, `Base`, `Incremental`, `Differential`, `Since`, `VirtualFull`, `Catalog`, `InitCatalog`, `VolumeToCatalog`, `DiskToCatalog`, `Data` |  | repeatable | Default level of the job: for backups Full, Incremental, Differential or VirtualFull; for verify jobs InitCatalog, Catalog, VolumeToCatalog, DiskToCatalog or Data. An empty value removes the directive. |
+| [`messages=`](/docs/config/jobdefs/#d-messages) | resource | from [`.msgs`](../dot-msgs/) |  | repeatable | Messages resource that decides where the job's messages go (job log in the catalog, mail, log file). An empty value removes the directive. |
+| [`storage=`](/docs/config/jobdefs/#d-storage) | resource | from [`.storages`](../dot-storage/) |  | repeatable | Storage the job writes to (or reads from). An empty value removes the directive. |
+| [`pool=`](/docs/config/jobdefs/#d-pool) | resource | from [`.pools`](../dot-pools/) |  | repeatable | Pool the job writes to. An empty value removes the directive. |
+| [`fullbackuppool=`](/docs/config/jobdefs/#d-fullbackuppool) | resource | from [`.pools`](../dot-pools/) |  | repeatable | Pool used when the job runs at level Full, so Fulls can have their own retention. An empty value removes the directive. |
+| [`virtualfullbackuppool=`](/docs/config/jobdefs/#d-virtualfullbackuppool) | resource | from [`.pools`](../dot-pools/) |  | repeatable | Pool a VirtualFull is written to. An empty value removes the directive. |
+| [`incrementalbackuppool=`](/docs/config/jobdefs/#d-incrementalbackuppool) | resource | from [`.pools`](../dot-pools/) |  | repeatable | Pool used for Incremental runs. An empty value removes the directive. |
+| [`differentialbackuppool=`](/docs/config/jobdefs/#d-differentialbackuppool) | resource | from [`.pools`](../dot-pools/) |  | repeatable | Pool used for Differential runs. An empty value removes the directive. |
+| [`nextpool=`](/docs/config/jobdefs/#d-nextpool) | resource | from [`.pools`](../dot-pools/) |  | repeatable | Pool that Copy, Migrate and VirtualFull jobs write to. An empty value removes the directive. |
+| [`client=`](/docs/config/jobdefs/#d-client) | resource | from [`.clients`](../dot-clients/) |  | repeatable | Client (File Daemon) the job backs up or, for restores, restores to by default. An empty value removes the directive. |
+| [`fileset=`](/docs/config/jobdefs/#d-fileset) | resource | from [`.filesets`](../dot-filesets/) |  | repeatable | FileSet that says what is backed up. An empty value removes the directive. |
+| [`schedule=`](/docs/config/jobdefs/#d-schedule) | resource | from [`.schedule`](../dot-schedule/) |  | repeatable | Schedule that starts the job automatically. An empty value removes the directive. |
+| [`jobtoverify=`](/docs/config/jobdefs/#d-jobtoverify) | resource | from [`.jobs`](../dot-jobs/) |  | repeatable | For verify jobs: the backup job whose last run is verified (levels Catalog, VolumeToCatalog, Data). An empty value removes the directive. |
+| [`verifyjob=`](/docs/config/jobdefs/#d-jobtoverify) | resource | from [`.jobs`](../dot-jobs/) |  | repeatable | For verify jobs: the backup job whose last run is verified (levels Catalog, VolumeToCatalog, Data). An empty value removes the directive. |
+| [`catalog=`](/docs/config/jobdefs/#d-catalog) | resource | from [`.catalogs`](../dot-catalogs/) |  | repeatable | Catalog for this job, overriding that of the client. An empty value removes the directive. |
+| [`jobdefs=`](/docs/config/jobdefs/#d-jobdefs) | resource | from [`.jobdefs`](../dot-jobdefs/) |  | repeatable | JobDefs resource whose directives this job inherits. An empty value removes the directive. |
+| [`run=`](/docs/config/jobdefs/#d-run) | string |  |  | repeatable | Starts another job (or a copy of this one with other settings) when this job is started, in run command syntax, for example a second backup to another storage. An empty value removes the directive. |
+| [`where=`](/docs/config/jobdefs/#d-where) | string |  |  | repeatable | For restore jobs: directory prefix the files are restored under. / restores to the original place. An empty value removes the directive. |
+| [`regexwhere=`](/docs/config/jobdefs/#d-regexwhere) | string |  |  | repeatable | For restore jobs: rewrites the paths of restored files with sed-like expressions (!from!to!), instead of a plain prefix. An empty value removes the directive. |
+| [`stripprefix=`](/docs/config/jobdefs/#d-stripprefix) | string |  |  | repeatable | For restore jobs: removes this prefix from the paths before restoring. An empty value removes the directive. |
+| [`addprefix=`](/docs/config/jobdefs/#d-addprefix) | string |  |  | repeatable | For restore jobs: adds this prefix to the paths (like Where). An empty value removes the directive. |
+| [`addsuffix=`](/docs/config/jobdefs/#d-addsuffix) | string |  |  | repeatable | For restore jobs: adds this suffix to the restored file names, for example to keep existing files. An empty value removes the directive. |
+| [`bootstrap=`](/docs/config/jobdefs/#d-bootstrap) | string |  |  | repeatable | Bootstrap file a restore job reads to find the data on the volumes. An empty value removes the directive. |
+| [`writebootstrap=`](/docs/config/jobdefs/#d-writebootstrap) | string |  |  | repeatable | File (or, starting with \|, a command) the job writes its bootstrap to after a backup: which volumes and blocks hold this job. An empty value removes the directive. |
+| [`replace=`](/docs/config/jobdefs/#d-replace) | enum | `Always`, `IfNewer`, `IfOlder`, `Never` |  | repeatable | For restore jobs: what happens to files that exist already: always (overwrite), ifnewer (only if the backup is newer), ifolder (only if it is older) or never. An empty value removes the directive. |
+| [`maximumbandwidth=`](/docs/config/jobdefs/#d-maximumbandwidth) | string |  |  | repeatable | Limits the bandwidth of this job. An empty value removes the directive. |
+| [`maxrunschedtime=`](/docs/config/jobdefs/#d-maxrunschedtime) | string |  |  | repeatable | Cancels the job if it has not finished this long after its scheduled time (waiting counts). An empty value removes the directive. |
+| [`maxruntime=`](/docs/config/jobdefs/#d-maxruntime) | string |  |  | repeatable | Cancels the job if it runs longer than this from its actual start. An empty value removes the directive. |
+| [`fullmaxruntime=`](/docs/config/jobdefs/#d-fullmaxruntime) | string |  |  | repeatable | Max Run Time for Full runs only. An empty value removes the directive. |
+| [`incrementalmaxruntime=`](/docs/config/jobdefs/#d-incrementalmaxruntime) | string |  |  | repeatable | Max Run Time for Incremental runs only. An empty value removes the directive. |
+| [`differentialmaxruntime=`](/docs/config/jobdefs/#d-differentialmaxruntime) | string |  |  | repeatable | Max Run Time for Differential runs only. An empty value removes the directive. |
+| [`maxwaittime=`](/docs/config/jobdefs/#d-maxwaittime) | string |  |  | repeatable | Cancels the job if it waits longer than this for a resource (a volume, a device, a concurrency slot) after it started. An empty value removes the directive. |
+| [`maxstartdelay=`](/docs/config/jobdefs/#d-maxstartdelay) | string |  |  | repeatable | Cancels the job if it cannot start within this time after its scheduled time, so a nightly job that missed its window does not run in the day. An empty value removes the directive. |
+| [`maxfullinterval=`](/docs/config/jobdefs/#d-maxfullinterval) | string |  |  | repeatable | Upgrades an Incremental or Differential to Full when the last successful Full is older than this. An empty value removes the directive. |
+| [`maxvirtualfullinterval=`](/docs/config/jobdefs/#d-maxvirtualfullinterval) | string |  |  | repeatable | Upgrades a run to VirtualFull when the last VirtualFull (or Full) is older than this. An empty value removes the directive. |
+| [`maxdiffinterval=`](/docs/config/jobdefs/#d-maxdiffinterval) | string |  |  | repeatable | Upgrades an Incremental to Differential when the last Differential is older than this. An empty value removes the directive. |
+| [`prefixlinks=`](/docs/config/jobdefs/#d-prefixlinks) | bool | `yes`, `no` |  | repeatable | For restores with Where: also prefix the targets of absolute symbolic links, so they point into the restore directory. An empty value removes the directive. |
+| [`prunejobs=`](/docs/config/jobdefs/#d-prunejobs) | bool | `yes`, `no` |  | repeatable | Prune the job records of this job's client after the job, as if the retention had been applied by prune jobs. An empty value removes the directive. |
+| [`prunefiles=`](/docs/config/jobdefs/#d-prunefiles) | bool | `yes`, `no` |  | repeatable | Prune the file records of this job's client after the job. An empty value removes the directive. |
+| [`prunevolumes=`](/docs/config/jobdefs/#d-prunevolumes) | bool | `yes`, `no` |  | repeatable | Prune the volumes of the pool after the job. An empty value removes the directive. |
+| [`purgemigrationjob=`](/docs/config/jobdefs/#d-purgemigrationjob) | bool | `yes`, `no` |  | repeatable | After a successful migration, purge the migrated (source) job from the catalog. An empty value removes the directive. |
+| [`enabled=`](/docs/config/jobdefs/#d-enabled) | bool | `yes`, `no` |  | repeatable | A disabled job is not started by its schedule; it can still be run by hand. enable job and disable job change it at run time. An empty value removes the directive. |
+| [`spoolattributes=`](/docs/config/jobdefs/#d-spoolattributes) | bool | `yes`, `no` |  | repeatable | Spool the file attributes on the Storage Daemon and insert them into the catalog at the end of the job, instead of while writing. An empty value removes the directive. |
+| [`spooldata=`](/docs/config/jobdefs/#d-spooldata) | bool | `yes`, `no` |  | repeatable | Spool the data to disk on the Storage Daemon first and write it to the volume in big chunks. An empty value removes the directive. |
+| [`spoolsize=`](/docs/config/jobdefs/#d-spoolsize) | string |  |  | repeatable | Upper limit of the spool file of this job. An empty value removes the directive. |
+| [`rerunfailedlevels=`](/docs/config/jobdefs/#d-rerunfailedlevels) | bool | `yes`, `no` |  | repeatable | If the last Full (or Differential) failed, run the next job at that level again instead of the scheduled lower level. An empty value removes the directive. |
+| [`prefermountedvolumes=`](/docs/config/jobdefs/#d-prefermountedvolumes) | bool | `yes`, `no` |  | repeatable | Prefer a drive that has a usable volume mounted. An empty value removes the directive. |
+| [`runbeforejob=`](/docs/config/jobdefs/#d-runbeforejob) | string |  |  | repeatable | Command the Director runs before the job; a failing command cancels the job. An empty value removes the directive. |
+| [`runafterjob=`](/docs/config/jobdefs/#d-runafterjob) | string |  |  | repeatable | Command the Director runs after a successful job (RunScript, RunsWhen = After, RunsOnFailure = no). An empty value removes the directive. |
+| [`runafterfailedjob=`](/docs/config/jobdefs/#d-runafterfailedjob) | string |  |  | repeatable | Command the Director runs after a failed job. An empty value removes the directive. |
+| [`clientrunbeforejob=`](/docs/config/jobdefs/#d-clientrunbeforejob) | string |  |  | repeatable | Command the File Daemon runs on the client before the backup, for example a database dump. An empty value removes the directive. |
+| [`clientrunafterjob=`](/docs/config/jobdefs/#d-clientrunafterjob) | string |  |  | repeatable | Command the File Daemon runs on the client after the job. An empty value removes the directive. |
+| [`maximumconcurrentjobs=`](/docs/config/jobdefs/#d-maximumconcurrentjobs) | string |  |  | repeatable | How many runs of this job may run at the same time; usually 1, so a slow run is not overtaken by the next one. An empty value removes the directive. |
+| [`rescheduleonerror=`](/docs/config/jobdefs/#d-rescheduleonerror) | bool | `yes`, `no` |  | repeatable | Start the job again when it failed, after Reschedule Interval, at most Reschedule Times times. An empty value removes the directive. |
+| [`rescheduleinterval=`](/docs/config/jobdefs/#d-rescheduleinterval) | string |  |  | repeatable | Wait between a failed run and its retry. An empty value removes the directive. |
+| [`rescheduletimes=`](/docs/config/jobdefs/#d-rescheduletimes) | string |  |  | repeatable | How many times a failed job is retried; 0 means without limit. An empty value removes the directive. |
+| [`priority=`](/docs/config/jobdefs/#d-priority) | string |  |  | repeatable | Priority of the job: smaller numbers first. An empty value removes the directive. |
+| [`allowmixedpriority=`](/docs/config/jobdefs/#d-allowmixedpriority) | bool | `yes`, `no` |  | repeatable | Allow this job to run together with jobs of other priorities, as long as they allow it as well. An empty value removes the directive. |
+| [`selectionpattern=`](/docs/config/jobdefs/#d-selectionpattern) | string |  |  | repeatable | For Copy and Migrate jobs: the pattern or SQL query used by Selection Type (a job or client name pattern, or a query returning job IDs). An empty value removes the directive. |
+| [`runscript=`](/docs/config/jobdefs/#d-runscript) | string |  |  | repeatable | Block that runs a command or console command before or after the job, on the Director or the client, with control over failure handling. An empty value removes the directive. |
+| [`selectiontype=`](/docs/config/jobdefs/#d-selectiontype) | enum | `SmallestVolume`, `OldestVolume`, `PoolOccupancy`, `PoolTime`, `PoolUncopiedJobs`, `Client`, `Volume`, `Job`, `SqlQuery` |  | repeatable | For Copy and Migrate jobs: how the source jobs are chosen: SmallestVolume, OldestVolume, Client, Volume, Job, SQLQuery, PoolOccupancy, PoolTime, PoolUncopiedJobs. An empty value removes the directive. |
+| [`accurate=`](/docs/config/jobdefs/#d-accurate) | bool | `yes`, `no` |  | repeatable | Accurate mode: the File Daemon receives the file list of the previous backups and also records deleted and renamed files, so a restore gives exactly the state of the backup. An empty value removes the directive. |
+| [`allowduplicatejobs=`](/docs/config/jobdefs/#d-allowduplicatejobs) | bool | `yes`, `no` |  | repeatable | Allow a second run of the same job while one is queued or running. An empty value removes the directive. |
+| [`cancellowerlevelduplicates=`](/docs/config/jobdefs/#d-cancellowerlevelduplicates) | bool | `yes`, `no` |  | repeatable | With Allow Duplicate Jobs = no: cancel the duplicate of the lower level (an Incremental gives way to a Full). An empty value removes the directive. |
+| [`cancelqueuedduplicates=`](/docs/config/jobdefs/#d-cancelqueuedduplicates) | bool | `yes`, `no` |  | repeatable | With Allow Duplicate Jobs = no: cancel a duplicate that is still waiting in the queue. An empty value removes the directive. |
+| [`cancelrunningduplicates=`](/docs/config/jobdefs/#d-cancelrunningduplicates) | bool | `yes`, `no` |  | repeatable | With Allow Duplicate Jobs = no: cancel the duplicate that is already running in favour of the new one. An empty value removes the directive. |
+| [`savefilehistory=`](/docs/config/jobdefs/#d-savefilehistory) | bool | `yes`, `no` |  | repeatable | For NDMP: store the file history sent by the filer, so single files can be restored. An empty value removes the directive. |
+| [`filehistorysize=`](/docs/config/jobdefs/#d-filehistorysize) | string |  |  | repeatable | For NDMP: size of the file history buffer. An empty value removes the directive. |
+| [`fdpluginoptions=`](/docs/config/jobdefs/#d-fdpluginoptions) | string |  |  | repeatable | Options passed to the File Daemon plugins of this job. An empty value removes the directive. |
+| [`sdpluginoptions=`](/docs/config/jobdefs/#d-sdpluginoptions) | string |  |  | repeatable | Options passed to the Storage Daemon plugins of this job. An empty value removes the directive. |
+| [`dirpluginoptions=`](/docs/config/jobdefs/#d-dirpluginoptions) | string |  |  | repeatable | Options passed to the Director plugins of this job. An empty value removes the directive. |
+| [`maxconcurrentcopies=`](/docs/config/jobdefs/#d-maxconcurrentcopies) | string |  |  | repeatable | For Copy jobs: how many copy jobs are started at once from one selection. An empty value removes the directive. |
+| [`alwaysincremental=`](/docs/config/jobdefs/#d-alwaysincremental) | bool | `yes`, `no` |  | repeatable | Always Incremental scheme: only Incrementals are taken, and a Consolidate job merges the old ones into a VirtualFull. An empty value removes the directive. |
+| [`alwaysincrementaljobretention=`](/docs/config/jobdefs/#d-alwaysincrementaljobretention) | string |  |  | repeatable | Incrementals younger than this are not consolidated. An empty value removes the directive. |
+| [`alwaysincrementalkeepnumber=`](/docs/config/jobdefs/#d-alwaysincrementalkeepnumber) | string |  |  | repeatable | How many Incrementals are always kept unconsolidated, even when they are older than the retention. An empty value removes the directive. |
+| [`alwaysincrementalmaxfullage=`](/docs/config/jobdefs/#d-alwaysincrementalmaxfullage) | string |  |  | repeatable | When the Full of an Always Incremental chain is older than this, the Consolidate job includes it, so the Full does not grow old. An empty value removes the directive. |
+| [`maxfullconsolidations=`](/docs/config/jobdefs/#d-maxfullconsolidations) | string |  |  | repeatable | How many Fulls a Consolidate job may consolidate in one run (because of Always Incremental Max Full Age); 0 means no limit. An empty value removes the directive. |
+| [`runonincomingconnectinterval=`](/docs/config/jobdefs/#d-runonincomingconnectinterval) | string |  |  | repeatable | For clients that connect to the Director (Connection From Client To Director): start this job when the client connects and the last run is older than this interval. 0 switches it off. An empty value removes the directive. |
 | `newclient=` | resource | from [`.clients`](../dot-clients/) |  | repeatable | Directive (empty value removes it). |
 | `newfileset=` | resource | from [`.filesets`](../dot-filesets/) |  | repeatable | Directive (empty value removes it). |
 | `newpool=` | resource | from [`.pools`](../dot-pools/) |  | repeatable | Directive (empty value removes it). |
@@ -2154,9 +2154,9 @@ configure update schedule=<schedule> [yes] [description=<description> ...]
 | Argument | Type | Values / source | Default | Flags | Description |
 |---|---|---|---|---|---|
 | `schedule=` | resource | from [`.schedule`](../dot-schedule/) |  |  | Resource name. |
-| `description=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `run=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `enabled=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
+| [`description=`](/docs/config/schedule/#d-description) | string |  |  | repeatable | Free text describing the schedule. An empty value removes the directive. |
+| [`run=`](/docs/config/schedule/#d-run) | string |  |  | repeatable | When the jobs of this schedule run, one directive per rule: optional level and overrides, then the date and time specification. An empty value removes the directive. |
+| [`enabled=`](/docs/config/schedule/#d-enabled) | bool | `yes`, `no` |  | repeatable | A disabled schedule starts no job; enable schedule and disable schedule change it at run time. An empty value removes the directive. |
 
 Also accepts the arguments of [configure update](#sub-configure-update): `yes`.
 
@@ -2174,11 +2174,11 @@ configure update fileset=<fileset> [yes] [description=<description> ...]
 | Argument | Type | Values / source | Default | Flags | Description |
 |---|---|---|---|---|---|
 | `fileset=` | resource | from [`.filesets`](../dot-filesets/) |  |  | Resource name. |
-| `description=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `include=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `exclude=` | string |  |  | repeatable | Directive (empty value removes it). |
-| `ignorefilesetchanges=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
-| `enablevss=` | bool | `yes`, `no` |  | repeatable | Directive (empty value removes it). |
+| [`description=`](/docs/config/fileset/#d-description) | string |  |  | repeatable | Free text describing the FileSet. An empty value removes the directive. |
+| [`include=`](/docs/config/fileset/#d-include) | string |  |  | repeatable | Block with the files to back up (File, Plugin) and Options blocks that say how. An empty value removes the directive. |
+| [`exclude=`](/docs/config/fileset/#d-exclude) | string |  |  | repeatable | Block with files and directories to leave out (File lines). An empty value removes the directive. |
+| [`ignorefilesetchanges=`](/docs/config/fileset/#d-ignorefilesetchanges) | bool | `yes`, `no` |  | repeatable | Normally a change of the FileSet makes the next Incremental or Differential a Full, since the old backups do not contain the new files. An empty value removes the directive. |
+| [`enablevss=`](/docs/config/fileset/#d-enablevss) | bool | `yes`, `no` |  | repeatable | On Windows clients: back up from a Volume Shadow Copy snapshot, so open files are consistent. An empty value removes the directive. |
 
 Also accepts the arguments of [configure update](#sub-configure-update): `yes`.
 

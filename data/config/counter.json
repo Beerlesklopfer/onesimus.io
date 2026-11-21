@@ -1,0 +1,124 @@
+{
+  "schema": 1,
+  "resource": "Counter",
+  "key": "counter",
+  "source": "Directive tables of the Bareos 25.1.2 Director as carried by odir (crates/odir/src/commands/show_items.rs) plus Onesimus extensions (crates/odir/src/config_check.rs EXTENSIONS)",
+  "description": "A Counter resource is a numbered variable, mainly used in Label Format of pools to number volumes.",
+  "examples": [
+    {
+      "title": "Volume numbers that wrap every year",
+      "config": "Counter {\n  Name = Week\n  Minimum = 1\n  Maximum = 53\n  Catalog = MyCatalog\n}\n\nPool {\n  Name = Weekly\n  Label Format = \"Weekly-${Week+}\"\n}"
+    }
+  ],
+  "directives": [
+    {
+      "name": "Name",
+      "key": "name",
+      "aliases": [],
+      "type": "name",
+      "default": null,
+      "values": [],
+      "required": true,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Name of the counter, used as a variable in Label Format (for example ${Weekly}).",
+      "examples": [
+        {
+          "config": "Counter {\n  Name = \"Weekly\"\n}",
+          "console": "configure add counter name=Weekly"
+        }
+      ]
+    },
+    {
+      "name": "Description",
+      "key": "description",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Free text describing the counter.",
+      "examples": [
+        {
+          "config": "Counter {\n  Name = Weekly\n  Description = \"Volume number of the weekly pool\"\n}",
+          "console": "configure add counter name=Weekly description=\"Volume number of the weekly pool\""
+        }
+      ]
+    },
+    {
+      "name": "Minimum",
+      "key": "minimum",
+      "aliases": [],
+      "type": "integer",
+      "default": "0",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Value the counter starts with and returns to after Maximum.",
+      "examples": [
+        {
+          "config": "Counter {\n  Name = Weekly\n  Minimum = 1\n}",
+          "console": "configure add counter name=Weekly minimum=1"
+        }
+      ]
+    },
+    {
+      "name": "Maximum",
+      "key": "maximum",
+      "aliases": [],
+      "type": "positive integer",
+      "default": "2147483647",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Highest value; then the counter wraps to Minimum (and increments Wrap Counter).",
+      "examples": [
+        {
+          "config": "Counter {\n  Name = Weekly\n  Maximum = 52\n}",
+          "console": "configure add counter name=Weekly maximum=52"
+        }
+      ]
+    },
+    {
+      "name": "Wrap Counter",
+      "key": "wrapcounter",
+      "aliases": [],
+      "type": "resource",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Counter that is incremented whenever this one wraps, for nested numbering such as week within year.",
+      "examples": [
+        {
+          "config": "Counter {\n  Name = Weekly\n  Wrap Counter = \"Year\"\n}",
+          "console": "configure add counter name=Weekly wrapcounter=Year"
+        }
+      ]
+    },
+    {
+      "name": "Catalog",
+      "key": "catalog",
+      "aliases": [],
+      "type": "resource",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Catalog the value is stored in; without it the counter lives in memory only and restarts at each Director start.",
+      "examples": [
+        {
+          "config": "Counter {\n  Name = Weekly\n  Catalog = \"MyCatalog\"\n}",
+          "console": "configure add counter name=Weekly catalog=MyCatalog"
+        }
+      ]
+    }
+  ],
+  "blocks": []
+}
