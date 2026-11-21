@@ -76,14 +76,16 @@ week:
 {{< screenshot name="statusbar-licence" variant="strip" alt="Status bar: Licence ends in 12 days, next to the month's usage" >}}
 
 ### What happens at the limit?
-From v1.0.0 the free edition starts no new backup jobs once the month's terabyte is written; running
-jobs finish, restores always work, and on the first of the month the count starts again. Your data is
-never deleted.
+Today nothing is limited: the Director only shows the usage. Enforcing the limit is planned for v1.0.0.
+From then on the free edition will start no new backup jobs once the month's terabyte is written; running
+jobs will finish, restores will always work, and on the first of the month the count will start again.
+Your data is never deleted.
 
 ### Why a limit, if the code is open?
 Onesimus is free software under the AGPL-3.0, and it stays that way. The limit is part of the official
 packages; the licence pays for signed packages, updates and support.
 
 ### What if my subscription ends?
-The Director falls back to the free edition with its terabyte per month. Nothing is lost, and every
-backup can still be restored.
+This is planned for v1.0.0 and not in place today; currently the Director only shows the usage. From
+then on the Director will fall back to the free edition with its terabyte per month. Nothing is lost,
+and every backup can still be restored.

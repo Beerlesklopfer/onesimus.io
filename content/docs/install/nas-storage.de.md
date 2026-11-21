@@ -22,8 +22,9 @@ einen Dienst für dein Init-System.
 - Backup, Restore und Verify auf **File**-Devices, auch über mehrere Volumes.
 - Aktive und passive Clients; `ofd` und `odir` über gRPC mit TLS, `bareos-fd` und `bareos-dir` über
   das klassische Protokoll.
-- Noch nicht: Band, Autochanger, S3, Spooling, Recycling und `relabel` von Volumes. Ein Job belegt
-  ein Device; für parallele Jobs richtest du mehrere Devices ein.
+- Noch nicht: Band, Autochanger, S3, Spooling, Recycling und `relabel` von Volumes. Ein Device bedient
+  einen Job zur Zeit, lesend oder schreibend; ein zweiter Job, der ein belegtes Device will, scheitert,
+  statt wie bei `bareos-sd` zu warten. Für parallele Jobs richtest du mehrere Devices ein.
 
 ## Bauen
 

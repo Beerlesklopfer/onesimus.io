@@ -36,8 +36,9 @@ protocol, the console name and (optionally) the password. Connect with **File â†
 4. For BNET: **How should we authenticate?** TLS-PSK (recommended) or TLS with certificates
    (CA, client certificate and key, or a PFX file; *Generate Certificates...* and *Convert
    PEM/DER to PFX...* help).
-5. **Server Configuration Preview**: the Console resource (and for gRPC the `Enable Grpc`
-   line of the Director resource) to paste into the Director's configuration, plus a
+5. **Server Configuration Preview**: the Console resource (for gRPC only that; a
+   `Grpc Port = N` line for the Director resource only when the gRPC port is not the BNET port
+   + 1000) to paste into the Director's configuration, plus a
    configuration for command line consoles (`bconsole`, `oconsole`). Copy to Clipboard, Save
    .conf or Save ZIP.
 6. **Test Connection** connects once and reports each step.

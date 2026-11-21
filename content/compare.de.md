@@ -21,7 +21,7 @@ Seite, bleib bei Bareos, oder lass `bareos-dir` als Rückweg installiert (siehe
 
 | Funktion | Bareos Director 25 | Onesimus Director |
 |---|---|---|
-| Ressourcen auf der Konsole ändern und löschen | `configure` kennt `add` und `export` | dazu `configure update` (Direktiven ändern), `configure delete` (nur nicht referenzierte Ressourcen) und `configure read` (Rohtext einer Ressource) |
+| Ressourcen auf der Konsole ändern und löschen | `configure` kennt `add` und `export` | dazu `configure update` (Direktiven ändern), `configure delete` (nur nicht referenzierte Ressourcen) und den Rohtext einer Ressource mit `.config read type=… name=…` auf der Konsole oder `ReadResource` über gRPC (`configure read` liefert nur eine kurze Zusammenfassung) |
 | Schnittstelle für Programme | Konsolenprotokoll; JSON-Ausgabe mit `.api 2` | zusätzlich eine typisierte gRPC-API mit TLS: eine RPC je Befehl mit strukturierten Protobuf-Antworten, dieselben ACLs wie auf der Konsole |
 | Live-Ereignisse | Job-Meldungen werden abgefragt (`messages`, `list joblog`) | gRPC-Push-Ereignisse: Job-Status, Job-Meldungen, Verbindungen von File und Storage Daemons, jeweils nach den ACLs der Console gefiltert |
 | Live-Job-Log in der Oberfläche | — | ja, aus den Push-Ereignissen (an Bareos fragt die Oberfläche regelmäßig ab) |
@@ -46,7 +46,7 @@ keine zusätzlichen Direktiven in `bareos-dir.d`, die den Rückweg versperren w�
 | Purge von Jobs und Dateien | ohne Transaktion, Fehler werden ignoriert | eine Transaktion, Fehler werden gemeldet |
 | Geheimnisse in Befehlszeilen | RunScript-Befehle stehen vollständig im Job-Log und in `show` | Passwörter, Tokens und Zugangsdaten in URLs werden in jeder Meldung und in `show` durch `***` ersetzt |
 | `configure add console` | legt eine Console mit beliebigen ACL-Direktiven an | nur mit Profilen, die nicht mehr erlauben als die anlegende Console hat; `configure add profile/user` wird abgelehnt |
-| Katalog-Schema | nur Bareos-Tabellen | die Bareos-Tabellen in `public` bleiben unberührt; Onesimus-Views, -Funktionen und die Tabelle der Katalog-ACL liegen im eigenen Schema `onesimus`, das ein Bareos-Schema-Upgrade nie blockiert |
+| Katalog-Schema | nur Bareos-Tabellen | die Bareos-Tabellen in `public` bleiben unberührt; Onesimus-Views, -Funktionen und die Tabelle der Katalog-ACL liegen im eigenen Schema `onesimus`, das ein Bareos-Schema-Upgrade nie blockiert; nur die Versionstabelle `bareos_schema_version` von odir bleibt in `public` |
 
 ## Was Bareos hat und Onesimus noch nicht
 

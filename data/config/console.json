@@ -267,7 +267,7 @@
       "required": false,
       "deprecated": false,
       "onesimus": false,
-      "description": "Authenticate the user by PAM on the Director host instead of by the console password. Bareos refuses PAM consoles without ACLs or profiles.",
+      "description": "Adds PAM on the Director host as a second step after the console login with its password: after the console login the Director asks for the PAM user and password. PAM logins work over the classic console protocol, not over gRPC. The ACLs come from the User resource named like the PAM user. Bareos refuses PAM consoles that have ACLs or a profile of their own.",
       "examples": [
         {
           "config": "Console {\n  Name = alice\n  Use PAM Authentication = no\n}"

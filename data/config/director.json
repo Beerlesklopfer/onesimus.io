@@ -89,12 +89,12 @@
         "Dir Address"
       ],
       "type": "address",
-      "default": "9101",
+      "default": null,
       "values": [],
       "required": false,
       "deprecated": false,
       "onesimus": false,
-      "description": "IP address or host name the Director listens on; the default is all addresses. Use Addresses for several addresses or IPv6 and IPv4 at once.",
+      "description": "IP address or host name the Director listens on. There is no default: without Address or Addresses the Director listens on all addresses. Use Addresses for several addresses or IPv6 and IPv4 at once.",
       "examples": [
         {
           "config": "Director {\n  Name = bareos-dir\n  Address = \"192.0.2.10\"\n}"
@@ -108,12 +108,12 @@
         "Dir Addresses"
       ],
       "type": "address block",
-      "default": "9101",
+      "default": null,
       "values": [],
       "required": false,
       "deprecated": false,
       "onesimus": false,
-      "description": "Several listen addresses in one block, each with ipv4 or ipv6, addr and port. It replaces Address and Port.",
+      "description": "Several listen addresses in one block, each with ipv4 or ipv6, addr and port. It replaces Address and Port. There is no default: without Address or Addresses the Director listens on all addresses.",
       "examples": [
         {
           "config": "Director {\n  Name = bareos-dir\n  Addresses = {\n    ipv4 = { addr = 0.0.0.0; port = 9101 }\n    ipv6 = { addr = ::; port = 9101 }\n  }\n}"
@@ -132,7 +132,7 @@
       "required": false,
       "deprecated": false,
       "onesimus": false,
-      "description": "Source address for connections the Director opens to File and Storage Daemons, useful on hosts with several interfaces.",
+      "description": "Source address for connections the Director opens to File and Storage Daemons, useful on hosts with several interfaces. The default 0 means any local address.",
       "examples": [
         {
           "config": "Director {\n  Name = bareos-dir\n  Source Address = \"192.0.2.10\"\n}"
@@ -251,7 +251,7 @@
       "required": false,
       "deprecated": false,
       "onesimus": false,
-      "description": "How many jobs the Director runs at the same time. Further jobs wait in the queue (status \"waiting for max Director jobs\"). Clients, storages and jobs have their own limits; the smallest one decides. The schedule view of the Onesimus GUI uses these limits to predict waits.",
+      "description": "How many jobs the Director runs at the same time. Further jobs wait in the queue (status \"is waiting on max total jobs\"). Clients, storages and jobs have their own limits; the smallest one decides. The schedule view of the Onesimus GUI uses these limits to predict waits.",
       "examples": [
         {
           "config": "Director {\n  Name = bareos-dir\n  Maximum Concurrent Jobs = 20\n}"

@@ -10,8 +10,9 @@ C++17 compiler. OpenSSL is built from a Git submodule unless you ask for the sys
 ## Linux
 
 ```bash
-sudo apt-get install build-essential cmake git perl \
-    qt6-base-dev qt6-base-private-dev qt6-tools-dev qt6-tools-dev-tools
+sudo apt-get install build-essential cmake git perl imagemagick libssl-dev libxkbcommon-dev \
+    qt6-base-dev qt6-base-private-dev qt6-tools-dev qt6-tools-dev-tools \
+    qt6-grpc-dev   # Qt GRPC and Qt Protobuf, for the connection to the Onesimus Director
 git clone https://github.com/Beerlesklopfer/Onesimus.git
 cd Onesimus
 ./build.sh
@@ -49,7 +50,8 @@ Details: [BUILD_OSX.md](https://github.com/Beerlesklopfer/Onesimus/blob/developm
 The connection to the Onesimus Director uses Qt's gRPC modules. CMake turns it on
 (`ENABLE_GRPC=ON`) when it finds **Qt Protobuf**, **Qt Protobuf Well-Known Types** and **Qt GRPC**
 and the `proto/` submodule. Without them the GUI still builds and talks to Bareos Directors over the
-classic protocol; it then says "This build of Onesimus has no gRPC support" when you choose gRPC.
+classic protocol; the gRPC entry is then greyed out, and its tool tip says "This build of Onesimus has no
+gRPC support".
 
 ## Build options of build.sh
 

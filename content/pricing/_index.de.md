@@ -76,14 +76,16 @@ Mit Lizenz warnt die Statuszeile ab 30 Tagen vor dem Ende der Jahreslizenz, in d
 {{< screenshot name="statusbar-licence" variant="strip" alt="Statuszeile: die Lizenz endet in 12 Tagen, neben dem Verbrauch des Monats" >}}
 
 ### Was passiert am Limit?
-Ab v1.0.0 startet die freie Edition keine neuen Backup-Jobs mehr, sobald das Terabyte des Monats
-geschrieben ist; laufende Jobs laufen zu Ende, Restores gehen immer, und am Monatsersten beginnt die
-Zählung neu. Deine Daten werden nie gelöscht.
+Heute ist nichts begrenzt: Der Director zeigt nur den Verbrauch an. Die Durchsetzung des Limits ist für
+v1.0.0 geplant. Ab dann startet die freie Edition keine neuen Backup-Jobs mehr, sobald das Terabyte des
+Monats geschrieben ist; laufende Jobs laufen zu Ende, Restores gehen immer, und am Monatsersten beginnt
+die Zählung neu. Deine Daten werden nie gelöscht.
 
 ### Warum ein Limit, wenn der Code offen ist?
 Onesimus ist freie Software unter der AGPL-3.0 und bleibt es. Das Limit gehört zu den offiziellen
 Paketen; die Lizenz bezahlt signierte Pakete, Updates und Support.
 
 ### Was, wenn mein Abo endet?
-Der Director fällt auf die freie Edition mit ihrem Terabyte pro Monat zurück. Nichts geht verloren, und
+Das ist für v1.0.0 geplant und heute noch nicht umgesetzt; derzeit zeigt der Director nur den Verbrauch
+an. Ab dann fällt der Director auf die freie Edition mit ihrem Terabyte pro Monat zurück. Nichts geht verloren, und
 jedes Backup lässt sich weiter zurückspielen.

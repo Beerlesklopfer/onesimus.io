@@ -38,8 +38,9 @@ Verbindung wieder.
 4. Bei BNET: **Wie soll die Anmeldung erfolgen?** *TLS-PSK (empfohlen)* oder *TLS mit
    Zertifikaten* (CA, Client-Zertifikat und Schlüssel oder eine PFX-Datei; *Zertifikate
    erzeugen...* und *PEM/DER in PFX umwandeln...* helfen dabei).
-5. **Vorschau der Serverkonfiguration**: die Console-Ressource (bei gRPC auch die Zeile
-   `Enable Grpc` der Director-Ressource) zum Einfügen in die Konfiguration des Directors, dazu
+5. **Vorschau der Serverkonfiguration**: die Console-Ressource (bei gRPC nur sie; eine Zeile
+   `Grpc Port = N` für die Director-Ressource nur, wenn der gRPC-Port nicht BNET-Port + 1000 ist)
+   zum Einfügen in die Konfiguration des Directors, dazu
    eine Konfiguration für Kommandozeilen-Konsolen (`bconsole`, `oconsole`). *In die
    Zwischenablage kopieren*, *.conf speichern* oder *ZIP speichern*.
 6. **Verbindung testen** verbindet einmal und meldet jeden Schritt.

@@ -52,7 +52,8 @@ Dateien.
 | `/etc/bareos/oconsole.conf` | `oconsole` | Konfiguration der Konsole; ohne sie liest `oconsole` `/etc/bareos/bconsole.conf` |
 | `/var/lib/bareos/` | alle Daemons | Arbeitsverzeichnis; dort liegen auch die selbstsignierten gRPC-Zertifikate |
 | `/var/lib/bareos/storage/` | `osd` | Verzeichnis, das das Paket `osd` für File-Volumes anlegt |
-| `/var/log/bareos/` | alle Daemons | Logs |
+| `/var/log/onesimus/` | alle Daemons | Logs der Daemons, eine Datei je Daemon: `/var/log/onesimus/<daemon>.log` (`odir.log`, `ofd.log`, `osd.log`) |
+| `/var/log/bareos/` | Messages-Ressourcen | nur das, was eine Messages-Ressource dort anhängt (`append = …`) |
 | `~/.config/oconsole/known_directors` | `oconsole --grpc` | vertrauenswürdige Director-Zertifikate |
 
 Eine vorhandene Konfiguration wird nie überschrieben. Nur wenn ein Verzeichnis keine `.conf`-Dateien
@@ -69,8 +70,9 @@ Die Units übernehmen das Verhalten der Bareos-Units:
   (`systemctl reset-failed odir` setzt den Zähler zurück).
 - `systemctl reload odir` prüft zuerst die Konfiguration mit `odir -t` und schickt erst dann SIGHUP:
   Eine kaputte Konfiguration wird nicht geladen.
-- `odir.service` hat `Conflicts=bareos-director.service` und `osd.service` hat
-  `Conflicts=bareos-sd.service`: Startet der eine, stoppt der andere.
+- `odir.service` hat `Conflicts=bareos-director.service`: Startet der eine, stoppt der andere.
+- Startet `osd`, stoppt `bareos-storage` (auch bekannt als `bareos-sd`), und umgekehrt; beide Pakete
+  bleiben installierbar.
 
 Konfiguration vor einem Neustart prüfen (liest den Katalog, ändert nichts):
 
@@ -80,8 +82,13 @@ sudo -u bareos /usr/sbin/odir -t -c /etc/bareos/bareos-dir.d; echo $?
 
 ## Einstellungen außerhalb der Konfiguration
 
-`odir` hat keine Direktiven, die `bareos-dir` nicht kennt, damit Bareos die Konfiguration weiter lesen
-kann. Eigene Einstellungen sind Umgebungsvariablen, gesetzt mit einem Drop-in (`systemctl edit odir`):
+`odir` versteht einige optionale Onesimus-Direktiven. Keine davon ist nötig, aber `bareos-dir` kennt sie
+nicht: Entferne sie, bevor du zu `bareos-dir` zurückwechselst.
+
+- Director-Ressource: `Grpc Port`, `Grpc TLS Certificate`, `Grpc TLS Key`, `mDNS Advertise`
+- Client- und Storage-Ressourcen: `Grpc Enable`, `Grpc Port`, `Grpc CA Certificate File`, `Grpc Server Name`
+
+Seine übrigen Einstellungen sind Umgebungsvariablen, gesetzt mit einem Drop-in (`systemctl edit odir`):
 
 | Variable | Wirkung | Vorgabe |
 |---|---|---|
@@ -102,7 +109,7 @@ Environment=ONESIMUS_DEFAULT_MEDIA_WAIT=3600
 `odir` nutzt den PostgreSQL-Katalog von Bareos. Beim Start legt er seine eigenen Objekte (Views,
 Funktionen und die Tabelle der Katalog-ACLs) in einem eigenen PostgreSQL-Schema `onesimus` an; die
 Bareos-Tabellen in `public` und die Bareos-Schemaversion bleiben, wie sie sind, `bareos-dir` öffnet den
-Katalog also weiter. Dafür braucht der Katalog-Benutzer das Recht, ein Schema anzulegen:
+Katalog also weiter. Nur seine Versionstabelle `bareos_schema_version` behält `odir` in `public`. Dafür braucht der Katalog-Benutzer das Recht, ein Schema anzulegen:
 
 ```sql
 GRANT CREATE ON DATABASE bareos TO bareos;

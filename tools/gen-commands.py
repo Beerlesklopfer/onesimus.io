@@ -461,9 +461,10 @@ def index_page(regular, dots, idx):
           "---", "", HEADER, ""]
     body = [
         "The Onesimus Director (`odir`) speaks the console language of the Bareos Director. "
-        "Every Bareos command works the same way in `oconsole`, in `bconsole` and in the "
-        "Onesimus GUI. Commands and arguments marked *Onesimus extension* exist only in the "
-        "Onesimus Director.",
+        "Its commands follow those of `bareos-dir`; some behave differently on purpose (see the "
+        "[comparison with Bareos](/compare/)), and each command page shows the state of that "
+        "command. The Onesimus GUI sends commands through its dialogs. Commands and arguments "
+        "marked *Onesimus extension* exist only in the Onesimus Director.",
         "This reference is generated from the console grammar that the Director itself "
         "prints with `.grammar`; the same grammar drives completion and help in the console. "
         "Dot commands are meant for programs such as the GUI, but you can type them as well.",

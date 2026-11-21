@@ -21,7 +21,7 @@ Bareos, or keep `bareos-dir` installed as your way back (see
 
 | Feature | Bareos Director 25 | Onesimus Director |
 |---|---|---|
-| Change and delete resources from the console | `configure` knows `add` and `export` | adds `configure update` (change directives), `configure delete` (only unreferenced resources) and `configure read` (raw text of a resource) |
+| Change and delete resources from the console | `configure` knows `add` and `export` | adds `configure update` (change directives), `configure delete` (only unreferenced resources) and the raw text of a resource with `.config read type=… name=…` on the console or `ReadResource` over gRPC (`configure read` gives only a short summary) |
 | API for programs | console protocol; JSON output with `.api 2` | additionally a typed gRPC API with TLS: one RPC per command with structured Protobuf answers, the same ACLs as the console |
 | Live events | job messages are read by polling (`messages`, `list joblog`) | gRPC push events: job status, job messages, file and storage daemon connects, each filtered by the console's ACLs |
 | Live job log in the GUI | — | yes, from the push events (the GUI polls when it talks to Bareos) |
@@ -46,7 +46,7 @@ extra directives in `bareos-dir.d` that would block the way back.
 | Purge of jobs and files | no transaction, errors ignored | one transaction, errors are reported |
 | Secrets in command lines | RunScript commands appear in full in the job log and in `show` | passwords, tokens and URL credentials are replaced by `***` in every message and in `show` |
 | `configure add console` | creates a console with any ACL directives | only with profiles that do not allow more than the creating console has; `configure add profile/user` is refused |
-| Catalog schema | Bareos tables only | Bareos tables stay untouched in `public`; Onesimus views, functions and the catalog ACL table live in their own schema `onesimus`, which never blocks a Bareos schema upgrade |
+| Catalog schema | Bareos tables only | Bareos tables stay untouched in `public`; Onesimus views, functions and the catalog ACL table live in their own schema `onesimus`, which never blocks a Bareos schema upgrade; only odir's version table `bareos_schema_version` stays in `public` |
 
 ## What Bareos has that Onesimus does not have yet
 

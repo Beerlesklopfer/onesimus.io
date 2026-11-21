@@ -123,7 +123,7 @@ configure add catalog name=MyCatalog dbuser=bareos dbname=bareos dbport=5432
 
 Key: `dbpassword` · Type: password · Aliases: Password
 
-Password of the database user. The Onesimus Director masks it (\*\*\*) in show.
+Password of the database user. The Onesimus Director masks it in show as sixteen asterisks (\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*).
 
 ```text
 Catalog {

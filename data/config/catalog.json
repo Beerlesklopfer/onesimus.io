@@ -99,7 +99,7 @@
       "required": false,
       "deprecated": false,
       "onesimus": false,
-      "description": "Password of the database user. The Onesimus Director masks it (***) in show.",
+      "description": "Password of the database user. The Onesimus Director masks it in show as sixteen asterisks (****************).",
       "examples": [
         {
           "config": "Catalog {\n  Name = MyCatalog\n  DB Password = \"db-secret\"\n}",

@@ -40,7 +40,7 @@ The Onesimus GUI creates such consoles from its ACL matrix with configure add co
 | [Where ACL](#d-whereacl) | ACL list |  |  | Which restore target paths (the where= of a restore) this console may use. |
 | [Plugin Options ACL](#d-pluginoptionsacl) | ACL list |  |  | Which plugin option strings a job may be started with this console may use. |
 | [Profile](#d-profile) | resource list |  |  | Profiles whose ACLs this console gets in addition to its own ACL directives. |
-| [Use PAM Authentication](#d-usepamauthentication) | yes\|no | `no` |  | Authenticate the user by PAM on the Director host instead of by the console password. |
+| [Use PAM Authentication](#d-usepamauthentication) | yes\|no | `no` |  | Adds PAM on the Director host as a second step after the console login with its password: after the console login the Director asks for the PAM user and password. |
 | [TLS Authenticate](#d-tlsauthenticate) | yes\|no | `no` |  | Use TLS only to authenticate the peer and switch back to an unencrypted connection afterwards. |
 | [TLS Enable](#d-tlsenable) | yes\|no | `yes` |  | Enable TLS for this connection. |
 | [TLS Require](#d-tlsrequire) | yes\|no | `yes` |  | Refuse connections that do not use TLS. |
@@ -265,7 +265,7 @@ configure add console name=alice password=[md5]5f4dcc3b5aa765d61d8327deb882cf99 
 
 Key: `usepamauthentication` · Type: yes|no · Default: `no` · Values: `yes`, `no`
 
-Authenticate the user by PAM on the Director host instead of by the console password. Bareos refuses PAM consoles without ACLs or profiles.
+Adds PAM on the Director host as a second step after the console login with its password: after the console login the Director asks for the PAM user and password. PAM logins work over the classic console protocol, not over gRPC. The ACLs come from the User resource named like the PAM user. Bareos refuses PAM consoles that have ACLs or a profile of their own.
 
 ```text
 Console {

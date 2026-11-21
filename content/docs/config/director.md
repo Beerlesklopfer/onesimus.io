@@ -33,8 +33,8 @@ The Onesimus Director listens for gRPC on 9101 + 1000 = 10101 and generates its 
 | [Description](#d-description) | string |  |  | Free text shown by status director. |
 | [Messages](#d-messages) | resource |  |  | Messages resource for messages that do not belong to a job, such as start, reload and connection errors. |
 | [Port](#d-port) | port | `9101` |  | TCP port the Director listens on for consoles and daemons. |
-| [Address](#d-address) | address | `9101` |  | IP address or host name the Director listens on; the default is all addresses. |
-| [Addresses](#d-addresses) | address block | `9101` |  | Several listen addresses in one block, each with ipv4 or ipv6, addr and port. |
+| [Address](#d-address) | address |  |  | IP address or host name the Director listens on. |
+| [Addresses](#d-addresses) | address block |  |  | Several listen addresses in one block, each with ipv4 or ipv6, addr and port. |
 | [Source Address](#d-sourceaddress) | address | `0` |  | Source address for connections the Director opens to File and Storage Daemons, useful on hosts with several interfaces. |
 | [Query File](#d-queryfile) | path | `/usr/lib/bareos/scripts/query.sql` |  | SQL file with the predefined queries of the query command. |
 | [Working Directory](#d-workingdirectory) | path | `/var/lib/bareos` |  | Directory for state files, bootstrap files and the like; it must be writable by the Director. |
@@ -133,9 +133,9 @@ Director {
 
 ### Address {#d-address}
 
-Key: `address` · Type: address · Default: `9101` · Aliases: Dir Address
+Key: `address` · Type: address · Aliases: Dir Address
 
-IP address or host name the Director listens on; the default is all addresses. Use Addresses for several addresses or IPv6 and IPv4 at once.
+IP address or host name the Director listens on. There is no default: without Address or Addresses the Director listens on all addresses. Use Addresses for several addresses or IPv6 and IPv4 at once.
 
 ```text
 Director {
@@ -146,9 +146,9 @@ Director {
 
 ### Addresses {#d-addresses}
 
-Key: `addresses` · Type: address block · Default: `9101` · Aliases: Dir Addresses
+Key: `addresses` · Type: address block · Aliases: Dir Addresses
 
-Several listen addresses in one block, each with ipv4 or ipv6, addr and port. It replaces Address and Port.
+Several listen addresses in one block, each with ipv4 or ipv6, addr and port. It replaces Address and Port. There is no default: without Address or Addresses the Director listens on all addresses.
 
 ```text
 Director {
@@ -164,7 +164,7 @@ Director {
 
 Key: `sourceaddress` · Type: address · Default: `0` · Aliases: Dir Source Address
 
-Source address for connections the Director opens to File and Storage Daemons, useful on hosts with several interfaces.
+Source address for connections the Director opens to File and Storage Daemons, useful on hosts with several interfaces. The default 0 means any local address.
 
 ```text
 Director {
@@ -255,7 +255,7 @@ Director {
 
 Key: `maximumconcurrentjobs` · Type: positive integer · Default: `1`
 
-How many jobs the Director runs at the same time. Further jobs wait in the queue (status "waiting for max Director jobs"). Clients, storages and jobs have their own limits; the smallest one decides. The schedule view of the Onesimus GUI uses these limits to predict waits.
+How many jobs the Director runs at the same time. Further jobs wait in the queue (status "is waiting on max total jobs"). Clients, storages and jobs have their own limits; the smallest one decides. The schedule view of the Onesimus GUI uses these limits to predict waits.
 
 ```text
 Director {

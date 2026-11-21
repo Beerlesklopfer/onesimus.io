@@ -28,7 +28,7 @@ pillars:
       text: "A native Qt6 application for Linux, Windows and macOS, in English, German, Spanish, French, Italian and Russian. It talks gRPC with TLS to the Onesimus Director and the classic console protocol to any Bareos Director."
     - icon: "⚙️"
       title: "Stability first"
-      text: "The Director `odir` runs every job that talks to a daemon in its own process: a job that crashes cannot take the Director down. Its console output is checked against `bconsole` byte for byte."
+      text: "The Director `odir` runs every job that talks to a daemon in its own process: a job that crashes cannot take the Director down. Its console answers are compared with those of `bareos-dir`, command by command; the status of each command is on its page."
     - icon: "↩️"
       title: "Bareos stays your fallback"
       text: "`odir` reads `/etc/bareos/bareos-dir.d` as it is and uses the Bareos PostgreSQL catalog. Both Directors can stay installed; systemd starts one and stops the other."
@@ -74,7 +74,7 @@ showcase:
         alt: "ACL matrix of the consoles"
     - label: "Prune & purge"
       title: "Purge with a preview"
-      text: "The prune and purge panel first runs a dry run and lists what would be purged. Only the previewed volumes are purged, and only after you confirm."
+      text: "The prune and purge panel first runs a dry run and lists what would be purged. It purges only after you confirm; at that moment the Director selects the volumes again with the same filter."
       bullets:
         - "Many volumes at once with `purge volume all … dryrun|yes` (Onesimus Director)"
         - "The Onesimus Director never purges the volumes that hold the latest Full chain of a client"

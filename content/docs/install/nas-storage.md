@@ -21,8 +21,9 @@ on the NAS on which you can run your own program and service: a Debian-based sys
 - Backup, restore and verify on **File** devices, also across several volumes.
 - Active and passive clients; `ofd` and `odir` over gRPC with TLS, `bareos-fd` and `bareos-dir` over
   the classic protocol.
-- Not yet: tape, autochangers, S3, spooling, recycling and `relabel` of volumes. One job uses one
-  device at a time; for parallel jobs, configure several devices.
+- Not yet: tape, autochangers, S3, spooling, recycling and `relabel` of volumes. A device serves one
+  job at a time, reading or writing; a second job that wants a busy device fails instead of waiting
+  as in `bareos-sd`. For parallel jobs, configure several devices.
 
 ## Build
 

@@ -7,8 +7,10 @@ weight: 30
 Die Befehlsreferenz gibt es nur auf Englisch, denn auch die Konsole spricht Englisch: Befehle,
 Argumente und Meldungen des Directors sind englisch.
 
-Der Onesimus Director (`odir`) versteht die Konsolensprache des Bareos Directors. Jeder
-Bareos-Befehl funktioniert in `oconsole`, in `bconsole` und in der Onesimus GUI gleich. Was als
+Der Onesimus Director (`odir`) versteht die Konsolensprache des Bareos Directors. Seine Befehle
+folgen denen von `bareos-dir`; manche verhalten sich mit Absicht anders (siehe den
+[Vergleich mit Bareos](/de/compare/)), und jede Befehlsseite zeigt den Stand dieses Befehls. Die
+Onesimus GUI schickt Befehle über ihre Dialoge. Was als
 *Onesimus extension* markiert ist, gibt es nur im Onesimus Director. Die Seiten werden aus der
 Grammatik erzeugt, die der Director selbst mit `.grammar` ausgibt.
 

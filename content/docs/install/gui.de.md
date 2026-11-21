@@ -11,8 +11,9 @@ OpenSSL des Systems.
 ## Linux
 
 ```bash
-sudo apt-get install build-essential cmake git perl \
-    qt6-base-dev qt6-base-private-dev qt6-tools-dev qt6-tools-dev-tools
+sudo apt-get install build-essential cmake git perl imagemagick libssl-dev libxkbcommon-dev \
+    qt6-base-dev qt6-base-private-dev qt6-tools-dev qt6-tools-dev-tools \
+    qt6-grpc-dev   # Qt GRPC und Qt Protobuf, für die Verbindung zum Onesimus Director
 git clone https://github.com/Beerlesklopfer/Onesimus.git
 cd Onesimus
 ./build.sh
@@ -50,8 +51,8 @@ Einzelheiten: [BUILD_OSX.md](https://github.com/Beerlesklopfer/Onesimus/blob/dev
 Die Verbindung zum Onesimus Director nutzt die gRPC-Module von Qt. CMake schaltet sie ein
 (`ENABLE_GRPC=ON`), wenn es **Qt Protobuf**, **Qt Protobuf Well-Known Types** und **Qt GRPC** sowie
 das Submodul `proto/` findet. Ohne sie baut die Oberfläche trotzdem und spricht mit Bareos Directors
-über das klassische Protokoll; wählst du gRPC, meldet sie dann „This build of Onesimus has no gRPC
-support“.
+über das klassische Protokoll; der Eintrag gRPC ist dann ausgegraut, und sein Tooltip sagt „This build of
+Onesimus has no gRPC support“.
 
 ## Optionen von build.sh
 
