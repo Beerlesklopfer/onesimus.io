@@ -13,6 +13,18 @@ Konsolenprotokoll oder über gRPC (`--grpc`).
 Der Assistent bekommt nicht deine Rechte. Er meldet sich als eigene Console an, und der Director
 entscheidet, was diese Console darf.
 
+<div class="note">
+
+**Kein eigenes Programm, nur Konfiguration.** Die Assistenten-Console ist kein zusätzlicher Dienst und
+kein eigenes Werkzeug. Sie ist eine gewöhnliche `Console`-Ressource in der Konfiguration des Directors,
+und besonders macht sie nur ihr Name: **Jede Console, deren Name auf `-mcp` endet, ist eine
+Assistenten-Console.** Der Director wendet die Assistenten-Regeln auf sie an, egal mit welchem Client
+sie sich anmeldet (`oconsole --mcp`, `bconsole`, die GUI), und keine Einstellung hebt sie auf. Zum
+Einrichten legst du eine `Console` an und gibst ihr das Profil `assistant`; zum Entfernen löschst du
+diese Ressource.
+
+</div>
+
 ## Die eigene Console des Assistenten
 
 `oconsole --mcp` meldet sich immer als **`<name>-mcp`** an. `<name>` ist die erste `Console` in

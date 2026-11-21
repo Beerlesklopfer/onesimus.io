@@ -13,6 +13,17 @@ Director is the same as in the interactive console, over the classic console pro
 The assistant does not get your rights. It logs in as a console of its own, and the Director decides
 what that console may do.
 
+<div class="note">
+
+**No separate program, just configuration.** The assistant console is not an extra daemon or tool. It
+is an ordinary `Console` resource in the Director's configuration, and the only thing that makes it
+special is its name: **every console whose name ends in `-mcp` is an assistant console.** The Director
+applies the assistant rules to it whichever client logs in with it (`oconsole --mcp`, `bconsole`, the
+GUI), and nothing in the configuration can lift them. To set one up you add a `Console` and give it the
+profile `assistant`; to remove it you delete that resource.
+
+</div>
+
 ## The assistant's own console
 
 `oconsole --mcp` always logs in as **`<name>-mcp`**, where `<name>` is the first `Console` in
