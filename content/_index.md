@@ -134,6 +134,17 @@ stack:
       fallback: "`bconsole` keeps working"
   note: "Tape, S3 and other device types are on the storage daemon's plan, not in it yet. See [Onesimus vs. Bareos](/compare/) for what is different and what is missing."
 
+name:
+  label: "The name"
+  title: "Why Onesimus?"
+  text: "Onesimus was a slave in the first century who ran away from his master Philemon. Far from home he met the apostle Paul, and through him Jesus Christ. Paul sent him back with a short letter that is part of the New Testament today. In it he plays on the name, which means *useful*:"
+  quotes:
+    - text: "Formerly he was useless to you, but now he is indeed useful to you and to me."
+      source: "[Philemon 11](https://www.bibleserver.com/ESV/Philemon1)"
+    - text: "For the Son of Man came to seek and to save the lost."
+      source: "[Luke 19:10](https://www.bibleserver.com/ESV/Luke19)"
+  closing: "Lost, found, restored: that is what a backup is for. And it is what God offers every person in Jesus Christ. We named the software after Onesimus because we believe that. The letter to Philemon is one page long; [read it](https://www.bibleserver.com/ESV/Philemon1)."
+
 cta:
   title: "Try it next to your Bareos installation"
   text: "Onesimus is open source under the AGPL-3.0 and not yet as established as Bareos. Install it on a test system first; the way back to Bareos is one `systemctl` command."

@@ -129,6 +129,25 @@
 </section>
 {{ end }}
 
+{{ with $p.name }}
+<!-- ======== NAME ======== -->
+<section class="section section--bordered" id="name">
+  <div class="container container--narrow">
+    <div class="section__header">
+      {{ with .label }}<div class="section__label">{{ . }}</div>{{ end }}
+      <h2 class="section__title">{{ .title }}</h2>
+    </div>
+    <div class="prose">
+      {{ .text | markdownify }}
+      {{ range .quotes }}
+      <blockquote><p>{{ .text }}</p><footer>{{ .source | markdownify }}</footer></blockquote>
+      {{ end }}
+      {{ with .closing }}<p>{{ . | markdownify }}</p>{{ end }}
+    </div>
+  </div>
+</section>
+{{ end }}
+
 {{ with $p.cta }}
 <!-- ======== CTA ======== -->
 <section class="section">
