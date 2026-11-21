@@ -1004,8 +1004,9 @@ code:not(pre code) {
 }
 .prose .note p:last-child { margin-bottom: 0; }
 
-.prose table { display: block; overflow-x: auto; }
-.prose td code, .prose th code { white-space: nowrap; }
+.prose table { display: block; overflow-x: auto; font-size: 0.92rem; }
+.prose td, .prose th { vertical-align: top; min-width: 7rem; }
+.prose td code, .prose th code { white-space: normal; overflow-wrap: anywhere; }
 
 @media (max-width: 960px) {
   .hero__grid,
