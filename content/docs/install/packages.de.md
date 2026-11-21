@@ -21,8 +21,8 @@ cargo build --release -p osd-daemon && cargo deb -p osd-daemon --no-build
 ls target/debian/
 ```
 
-Das Feature `mcp-production` baut `oconsole` mit einem MCP-Server, der nur liest; die Debian-Pakete
-nutzen es immer.
+Das Feature `mcp-production` baut `oconsole` mit der Produktions-Richtlinie für MCP (eingeschränkte
+Rechte des Assistenten, über HTTP nur lesend); die Debian-Pakete nutzen es immer.
 
 ## Die Pakete
 

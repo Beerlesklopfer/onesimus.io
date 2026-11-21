@@ -106,7 +106,7 @@ features:
       text: "Next to BVFS the Onesimus Director browses backup contents with OVFS, a PostgreSQL extension, and computes the same result itself where the extension is missing."
     - icon: "🤖"
       title: "MCP for AI assistants"
-      text: "`oconsole --mcp` offers the Director to AI assistants as typed tools, read-only in the production build, within the ACLs of its console."
+      text: "`oconsole --mcp` offers the Director to AI assistants as typed tools. The assistant counts as a console of its own with clearly restricted rights: by default it reads and may change the configuration, but not the ACLs. It cannot read the contents of your backups."
     - icon: "🌍"
       title: "Six languages, two themes"
       text: "Choose the language and a dark or light theme in the settings."

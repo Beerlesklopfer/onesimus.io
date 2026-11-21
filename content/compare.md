@@ -30,7 +30,7 @@ Bareos, or keep `bareos-dir` installed as your way back (see
 | Console grammar | — (`.help`) | `.grammar` returns every command the console may run with its keywords and value sources; it drives completion in `oconsole`, the man pages and the [command reference](/docs/commands/) |
 | Browsing backup contents | BVFS (`.bvfs_*`) with cache tables | BVFS unchanged, plus OVFS (`.ovfs_*`): a PostgreSQL extension; without it the Director computes the same result itself |
 | Service discovery | — | announces itself via mDNS/DNS-SD (`_onesimus-dir._tcp`), which the GUI uses to find Directors |
-| AI assistants | — | `oconsole --mcp` serves the Director as MCP tools (read-only in the production build) |
+| AI assistants | — | `oconsole --mcp` serves the Director as MCP tools; the assistant is a console of its own with restricted rights (by default read and configuration, no ACLs) and cannot read backup contents |
 
 ## Where Onesimus behaves differently on purpose
 
