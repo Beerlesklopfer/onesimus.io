@@ -1,0 +1,529 @@
+{
+  "schema": 1,
+  "resource": "Console",
+  "key": "console",
+  "source": "Directive tables of the Bareos 25.1.2 Director as carried by odir (crates/odir/src/commands/show_items.rs) plus Onesimus extensions (crates/odir/src/config_check.rs EXTENSIONS)",
+  "description": "A Console resource is a named login to the Director with its own password and ACLs (or profiles). Users should have personal consoles instead of the Director's password.",
+  "examples": [
+    {
+      "title": "A personal console with a profile",
+      "config": "Console {\n  Name = alice\n  Password = \"[md5]5f4dcc3b5aa765d61d8327deb882cf99\"\n  Profile = operator\n}",
+      "explanation": "The Onesimus GUI creates such consoles from its ACL matrix with configure add console."
+    }
+  ],
+  "directives": [
+    {
+      "name": "Name",
+      "key": "name",
+      "aliases": [],
+      "type": "name",
+      "default": null,
+      "values": [],
+      "required": true,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Name of the console. Users log in with this name and its password; it should be personal so that ACLs and the audit log mean something.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = \"alice\"\n}",
+          "console": "configure add console name=alice password=[md5]5f4dcc3b5aa765d61d8327deb882cf99 profile=operator"
+        }
+      ]
+    },
+    {
+      "name": "Description",
+      "key": "description",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Free text, for example who uses the console.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  Description = \"Operator console\"\n}",
+          "console": "configure add console name=alice password=[md5]5f4dcc3b5aa765d61d8327deb882cf99 profile=operator description=\"Operator console\""
+        }
+      ]
+    },
+    {
+      "name": "Password",
+      "key": "password",
+      "aliases": [],
+      "type": "password",
+      "default": null,
+      "values": [],
+      "required": true,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Password of the console. \"[md5]\" followed by the MD5 hash of the password is accepted, so the clear text need not be in the file. Since TLS-PSK uses it as key, the console's configuration must use the same password.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  Password = \"[md5]5f4dcc3b5aa765d61d8327deb882cf99\"\n}",
+          "console": "configure add console name=alice profile=operator password=[md5]5f4dcc3b5aa765d61d8327deb882cf99"
+        }
+      ]
+    },
+    {
+      "name": "Job ACL",
+      "key": "jobacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which jobs this console may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  Job ACL = backup-web, restore-files\n}"
+        }
+      ]
+    },
+    {
+      "name": "Client ACL",
+      "key": "clientacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which clients this console may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  Client ACL = web-fd, db-fd\n}"
+        }
+      ]
+    },
+    {
+      "name": "Storage ACL",
+      "key": "storageacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which storages this console may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  Storage ACL = File\n}"
+        }
+      ]
+    },
+    {
+      "name": "Schedule ACL",
+      "key": "scheduleacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which schedules this console may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  Schedule ACL = WeeklyCycle\n}"
+        }
+      ]
+    },
+    {
+      "name": "Pool ACL",
+      "key": "poolacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which pools this console may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  Pool ACL = Full, Incremental\n}"
+        }
+      ]
+    },
+    {
+      "name": "Command ACL",
+      "key": "commandacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which console commands this console may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. A console that may use restore needs the dot commands the restore uses as well (for the GUI: .api, .help, .bvfs_* or .ovfs_*). On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  Command ACL = status, list, llist, restore, .api, .help\n}"
+        }
+      ]
+    },
+    {
+      "name": "File Set ACL",
+      "key": "filesetacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which FileSets this console may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  File Set ACL = LinuxAll\n}"
+        }
+      ]
+    },
+    {
+      "name": "Catalog ACL",
+      "key": "catalogacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which catalogs this console may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. A console that may use no catalog cannot list jobs or volumes. On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  Catalog ACL = MyCatalog\n}"
+        }
+      ]
+    },
+    {
+      "name": "Where ACL",
+      "key": "whereacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which restore target paths (the where= of a restore) this console may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. An empty list forbids every where= other than the job's own; *all* allows any path. On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  Where ACL = /tmp/bareos-restores\n}"
+        }
+      ]
+    },
+    {
+      "name": "Plugin Options ACL",
+      "key": "pluginoptionsacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which plugin option strings a job may be started with this console may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  Plugin Options ACL = python:module_name=bareos-fd-local-fileset\n}"
+        }
+      ]
+    },
+    {
+      "name": "Profile",
+      "key": "profile",
+      "aliases": [],
+      "type": "resource list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Profiles whose ACLs this console gets in addition to its own ACL directives. Several profiles may be listed. The Onesimus configure add console requires at least one profile.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  Profile = \"operator\"\n}",
+          "console": "configure add console name=alice password=[md5]5f4dcc3b5aa765d61d8327deb882cf99 profile=operator"
+        }
+      ]
+    },
+    {
+      "name": "Use PAM Authentication",
+      "key": "usepamauthentication",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Authenticate the user by PAM on the Director host instead of by the console password. Bareos refuses PAM consoles without ACLs or profiles.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  Use PAM Authentication = no\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS Authenticate",
+      "key": "tlsauthenticate",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Use TLS only to authenticate the peer and switch back to an unencrypted connection afterwards. The data then travels in clear text, so this is meant for networks that are protected otherwise. Bareos' default TLS-PSK setup does not need it.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  TLS Authenticate = no\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS Enable",
+      "key": "tlsenable",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "yes",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Enable TLS for this connection. Since Bareos 18.2 TLS is on by default and uses TLS-PSK with the password of the resource, so no certificates are needed; set it to no only for peers that cannot speak TLS.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  TLS Enable = yes\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS Require",
+      "key": "tlsrequire",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "yes",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Refuse connections that do not use TLS. With the default (yes) a peer without TLS cannot connect; set it to no only during a migration from very old clients.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  TLS Require = yes\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS Cipher List",
+      "key": "tlscipherlist",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "OpenSSL cipher list for TLS 1.2 and older, colon separated. Leave it empty to use the OpenSSL defaults; restrict it only when a security policy demands specific ciphers.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  TLS Cipher List = \"PSK-AES256-GCM-SHA384:PSK-AES128-GCM-SHA256\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS Cipher Suites",
+      "key": "tlsciphersuites",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "OpenSSL cipher suites for TLS 1.3, colon separated. Empty means the OpenSSL defaults.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  TLS Cipher Suites = \"TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS DH File",
+      "key": "tlsdhfile",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "PEM file with Diffie-Hellman parameters for the DH key exchange of TLS 1.2. Without it, ephemeral DH ciphers are not offered; ECDHE and PSK ciphers do not need it.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  TLS DH File = \"/etc/bareos/tls/dh2048.pem\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS Protocol",
+      "key": "tlsprotocol",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Restricts the TLS protocol versions in OpenSSL syntax, for example to forbid old versions. Empty means the OpenSSL default.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  TLS Protocol = \"-ALL, +TLSv1.2, +TLSv1.3\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS Verify Peer",
+      "key": "tlsverifypeer",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "With certificate based TLS: check the peer's certificate against the CA and, for a server, against TLS Allowed CN. It has no effect with TLS-PSK.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  TLS Verify Peer = yes\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS Ca Certificate File",
+      "key": "tlscacertificatefile",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "PEM file with the CA certificates used to verify the peer's certificate. Needed for certificate based TLS when TLS Verify Peer is on (or use TLS CA Certificate Dir).",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  TLS Ca Certificate File = \"/etc/bareos/tls/ca.pem\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS Ca Certificate Dir",
+      "key": "tlscacertificatedir",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Directory of hashed CA certificates (as made by openssl rehash), an alternative to TLS CA Certificate File.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  TLS Ca Certificate Dir = \"/etc/ssl/certs\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS Certificate Revocation List",
+      "key": "tlscertificaterevocationlist",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "PEM file with a certificate revocation list; certificates on it are refused.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  TLS Certificate Revocation List = \"/etc/bareos/tls/crl.pem\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS Certificate",
+      "key": "tlscertificate",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "PEM file with the own certificate for certificate based TLS. Goes together with TLS Key.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  TLS Certificate = \"/etc/bareos/tls/bareos-dir.pem\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS Key",
+      "key": "tlskey",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "PEM file with the private key of TLS Certificate. Keep it readable for the daemon user only.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  TLS Key = \"/etc/bareos/tls/bareos-dir.key\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "TLS Allowed CN",
+      "key": "tlsallowedcn",
+      "aliases": [],
+      "type": "string list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Common names a peer certificate may carry; others are refused when TLS Verify Peer is on. Repeat the directive for several names.",
+      "examples": [
+        {
+          "config": "Console {\n  Name = alice\n  TLS Allowed CN = \"client1.example.com\"\n}"
+        }
+      ]
+    }
+  ],
+  "blocks": []
+}

@@ -1,0 +1,253 @@
+{
+  "schema": 1,
+  "resource": "Schedule",
+  "key": "schedule",
+  "source": "Directive tables of the Bareos 25.1.2 Director as carried by odir (crates/odir/src/commands/show_items.rs) plus Onesimus extensions (crates/odir/src/config_check.rs EXTENSIONS)",
+  "description": "A Schedule resource holds Run directives that say when the jobs that use it start, at which level and with which overrides.",
+  "examples": [
+    {
+      "title": "Monthly Full, weekly Differential, daily Incremental",
+      "config": "Schedule {\n  Name = WeeklyCycle\n  Description = \"Full on the first Sunday, differential on the other Sundays, incremental daily\"\n  Run = Full 1st sun at 23:05\n  Run = Differential 2nd-5th sun at 23:05\n  Run = Incremental mon-sat at 23:05\n}"
+    },
+    {
+      "title": "Overrides per run",
+      "config": "Schedule {\n  Name = Monthly\n  Run = Level=Full Pool=Monthly 1st sat at 21:00\n  Run = Level=Incremental Pool=Daily Priority=5 mon-fri at 22:30\n}"
+    }
+  ],
+  "directives": [
+    {
+      "name": "Name",
+      "key": "name",
+      "aliases": [],
+      "type": "name",
+      "default": null,
+      "values": [],
+      "required": true,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Name of the schedule; jobs refer to it with Schedule.",
+      "examples": [
+        {
+          "config": "Schedule {\n  Name = \"WeeklyCycle\"\n}",
+          "console": "configure add schedule name=WeeklyCycle"
+        }
+      ]
+    },
+    {
+      "name": "Description",
+      "key": "description",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Free text describing the schedule. The Onesimus GUI shows and edits it in the grid editor.",
+      "examples": [
+        {
+          "config": "Schedule {\n  Name = WeeklyCycle\n  Description = \"Full on the first Sunday, incrementals daily\"\n}",
+          "console": "configure update schedule=WeeklyCycle description=\"Full on the first Sunday, incrementals daily\""
+        }
+      ]
+    },
+    {
+      "name": "Run",
+      "key": "run",
+      "aliases": [],
+      "type": "schedule run",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "When the jobs of this schedule run, one directive per rule: optional level and overrides, then the date and time specification. See the Run block for the syntax. The Onesimus Director checks Run lines like the C++ Director and refuses an invalid one before writing it.",
+      "examples": [
+        {
+          "config": "Schedule {\n  Name = WeeklyCycle\n  Run = Full 1st sun at 23:05\n}",
+          "console": "configure update schedule=WeeklyCycle run=\"Full 1st sun at 23:05\""
+        }
+      ]
+    },
+    {
+      "name": "Enabled",
+      "key": "enabled",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "yes",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "A disabled schedule starts no job; enable schedule and disable schedule change it at run time.",
+      "examples": [
+        {
+          "config": "Schedule {\n  Name = WeeklyCycle\n  Enabled = yes\n}",
+          "console": "configure update schedule=WeeklyCycle enabled=yes"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Run",
+      "key": "run",
+      "description": "Syntax of a Run directive: [level] [overrides] [date specification] [at HH:MM]. The parts of the date specification combine: \"1st sun\" is the first Sunday, \"mon-fri\" every working day, \"on 1 jan\" the first of January. Without a date specification the run is daily. Words are case-insensitive; # starts a comment.",
+      "directives": [
+        {
+          "name": "Level",
+          "key": "level",
+          "type": "enum",
+          "default": null,
+          "values": [
+            "Full",
+            "Incremental",
+            "Differential",
+            "VirtualFull",
+            "Catalog",
+            "InitCatalog",
+            "VolumeToCatalog",
+            "DiskToCatalog",
+            "Data"
+          ],
+          "required": false,
+          "description": "The level of the run, written as a word (Full) or as Level=Full. Without it the job's Level applies. Base and Since are accepted; the Onesimus Director then keeps the job's level.",
+          "examples": [
+            {
+              "config": "Run = Level=Full 1st sun at 23:05"
+            }
+          ]
+        },
+        {
+          "name": "Pool override",
+          "key": "pool",
+          "type": "resource",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Pool=, FullPool=, IncrementalPool=, DifferentialPool= and NextPool= replace the pools of the job for this run.",
+          "examples": [
+            {
+              "config": "Run = Full Pool=Monthly 1st sun at 23:05"
+            }
+          ]
+        },
+        {
+          "name": "Other overrides",
+          "key": "overrides",
+          "type": "string",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Storage=, Messages=, Priority=, SpoolData=yes|no, Accurate=yes|no and MaxRunSchedTime= replace the job's settings for this run.",
+          "examples": [
+            {
+              "config": "Run = Incremental Priority=5 Storage=File2 mon-fri at 21:00"
+            }
+          ]
+        },
+        {
+          "name": "Weekday",
+          "key": "weekday",
+          "type": "string",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "mon ... sun (or monday ... sunday), single or as a range mon-fri; several separated by commas.",
+          "examples": [
+            {
+              "config": "Run = Incremental mon-sat at 23:05"
+            }
+          ]
+        },
+        {
+          "name": "Week of the month",
+          "key": "wom",
+          "type": "string",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "1st ... 5th (or first ... fifth), ranges such as 2nd-5th; last means the last seven days of the month. Combined with a weekday: \"1st sun\".",
+          "examples": [
+            {
+              "config": "Run = Differential 2nd-5th sun at 23:05"
+            }
+          ]
+        },
+        {
+          "name": "Day of the month",
+          "key": "mday",
+          "type": "string",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Numbers 1 to 31, ranges such as 1-7, written with on: \"on 1 at 01:05\". n/m means every m-th day starting with day n (1/2: odd days).",
+          "examples": [
+            {
+              "config": "Run = Full on 1 at 01:05"
+            }
+          ]
+        },
+        {
+          "name": "Month",
+          "key": "month",
+          "type": "string",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "jan ... dec (or the full names), single, as list or range.",
+          "examples": [
+            {
+              "config": "Run = Full on 1 jan, jul at 02:00"
+            }
+          ]
+        },
+        {
+          "name": "Week of the year",
+          "key": "woy",
+          "type": "string",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "w00 ... w53 (ISO weeks); wNN/wMM means every MM-th week starting with week NN.",
+          "examples": [
+            {
+              "config": "Run = Full w01/w02 sun at 03:00"
+            }
+          ]
+        },
+        {
+          "name": "Daily, weekly, monthly, hourly",
+          "key": "period",
+          "type": "string",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "daily (every day), weekly (on Sunday), monthly (the first of the month) and hourly (every hour, at the minute given by at).",
+          "examples": [
+            {
+              "config": "Run = Incremental hourly at 0:15"
+            }
+          ]
+        },
+        {
+          "name": "Time",
+          "key": "at",
+          "type": "string",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "at HH:MM in 24-hour time (am/pm are accepted). Without at the run starts at 00:00 (hourly: at :00). Several times need several Run lines.",
+          "examples": [
+            {
+              "config": "Run = Incremental daily at 23:05"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

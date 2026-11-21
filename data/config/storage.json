@@ -1,0 +1,702 @@
+{
+  "schema": 1,
+  "resource": "Storage",
+  "key": "storage",
+  "source": "Directive tables of the Bareos 25.1.2 Director as carried by odir (crates/odir/src/commands/show_items.rs) plus Onesimus extensions (crates/odir/src/config_check.rs EXTENSIONS)",
+  "description": "A Storage resource tells the Director how to reach a Storage Daemon and which of its devices and media type to use.",
+  "examples": [
+    {
+      "title": "Disk storage",
+      "config": "Storage {\n  Name = File\n  Address = backup.example.com\n  Password = \"storage-secret\"\n  Device = FileStorage\n  Media Type = File\n  Maximum Concurrent Jobs = 10\n}"
+    }
+  ],
+  "directives": [
+    {
+      "name": "Name",
+      "key": "name",
+      "aliases": [],
+      "type": "name",
+      "default": null,
+      "values": [],
+      "required": true,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Name of the Storage resource as jobs and pools refer to it.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = \"File\"\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File"
+        }
+      ]
+    },
+    {
+      "name": "Description",
+      "key": "description",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Free text describing the storage.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  Description = \"Disk storage in the server room\"\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File description=\"Disk storage in the server room\""
+        }
+      ]
+    },
+    {
+      "name": "Protocol",
+      "key": "protocol",
+      "aliases": [],
+      "type": "enum",
+      "default": "Native",
+      "values": [
+        "Native",
+        "NDMPv2",
+        "NDMPv3",
+        "NDMPv4"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Protocol to the storage: Native, or NDMP for NDMP tape servers.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  Protocol = Native\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File protocol=Native"
+        }
+      ]
+    },
+    {
+      "name": "Auth Type",
+      "key": "authtype",
+      "aliases": [],
+      "type": "enum",
+      "default": "None",
+      "values": [
+        "None",
+        "Clear",
+        "MD5"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Authentication for NDMP storage: None, Clear or MD5.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  Auth Type = None\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File authtype=None"
+        }
+      ]
+    },
+    {
+      "name": "Address",
+      "key": "address",
+      "aliases": [
+        "SD Address"
+      ],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": true,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Host name or IP address of the Storage Daemon, as the File Daemons must reach it: the Director passes it on to the client. Do not use localhost when clients run on other hosts.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  Address = \"backup.example.com\"\n}",
+          "console": "configure add storage name=File password=storage-secret device=FileStorage mediatype=File address=backup.example.com"
+        }
+      ]
+    },
+    {
+      "name": "Lan Address",
+      "key": "lanaddress",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Address used instead of Address for clients in passive mode on a separate LAN.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  Lan Address = \"10.0.0.5\"\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File lanaddress=10.0.0.5"
+        }
+      ]
+    },
+    {
+      "name": "Port",
+      "key": "port",
+      "aliases": [
+        "SD Port"
+      ],
+      "type": "positive integer",
+      "default": "9103",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "TCP port of the Storage Daemon.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  Port = 9103\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File port=9103"
+        }
+      ]
+    },
+    {
+      "name": "Username",
+      "key": "username",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "User name for NDMP authentication.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  Username = \"ndmp\"\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File username=ndmp"
+        }
+      ]
+    },
+    {
+      "name": "Password",
+      "key": "password",
+      "aliases": [
+        "SD Password"
+      ],
+      "type": "password",
+      "default": null,
+      "values": [],
+      "required": true,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Password shared with the Storage Daemon's Director resource (and TLS-PSK key).",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  Password = \"storage-secret\"\n}",
+          "console": "configure add storage name=File address=backup.example.com device=FileStorage mediatype=File password=storage-secret"
+        }
+      ]
+    },
+    {
+      "name": "Device",
+      "key": "device",
+      "aliases": [],
+      "type": "string list",
+      "default": null,
+      "values": [],
+      "required": true,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Name of a Device (or Autochanger) resource in the Storage Daemon. It must match the name there exactly. Several devices may be listed.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  Device = \"FileStorage\"\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret mediatype=File device=FileStorage"
+        }
+      ]
+    },
+    {
+      "name": "Media Type",
+      "key": "mediatype",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": true,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Media type of the volumes this storage writes. The Director only uses volumes of this media type with it, so different kinds of media (or different directories of file storage) need different media types. It must match Media Type of the device in the Storage Daemon.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  Media Type = \"File\"\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File"
+        }
+      ]
+    },
+    {
+      "name": "Auto Changer",
+      "key": "autochanger",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "The device is an autochanger (tape library); slots and barcodes are used for label, update slots and mount.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  Auto Changer = yes\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File autochanger=yes"
+        }
+      ]
+    },
+    {
+      "name": "Enabled",
+      "key": "enabled",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "yes",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "A disabled storage is not used for new jobs; enable/disable storage change it at run time.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  Enabled = yes\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File enabled=yes"
+        }
+      ]
+    },
+    {
+      "name": "Allow Compression",
+      "key": "allowcompression",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "yes",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Allow software compression by the File Daemon for jobs writing here. Set it to no for tape drives that compress in hardware.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  Allow Compression = yes\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File allowcompression=yes"
+        }
+      ]
+    },
+    {
+      "name": "Heartbeat Interval",
+      "key": "heartbeatinterval",
+      "aliases": [],
+      "type": "time",
+      "default": "0",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Interval of keep-alive packets to the Storage Daemon. 0 switches it off. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  Heartbeat Interval = 60\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File heartbeatinterval=60"
+        }
+      ]
+    },
+    {
+      "name": "Cache Status Interval",
+      "key": "cachestatusinterval",
+      "aliases": [],
+      "type": "time",
+      "default": "30",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "How long the Director caches the status of the Storage Daemon. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  Cache Status Interval = 30\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File cachestatusinterval=30"
+        }
+      ]
+    },
+    {
+      "name": "Maximum Concurrent Jobs",
+      "key": "maximumconcurrentjobs",
+      "aliases": [],
+      "type": "positive integer",
+      "default": "1",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "How many jobs may use this storage at the same time. With disk storage and several devices it can be raised; the device's own Maximum Concurrent Jobs in the Storage Daemon limits as well (the Director cannot read that one).",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  Maximum Concurrent Jobs = 10\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File maximumconcurrentjobs=10"
+        }
+      ]
+    },
+    {
+      "name": "Maximum Concurrent Read Jobs",
+      "key": "maximumconcurrentreadjobs",
+      "aliases": [],
+      "type": "positive integer",
+      "default": "0",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "How many of the concurrent jobs may read (restore, copy, migrate source); 0 means no own limit.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  Maximum Concurrent Read Jobs = 2\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File maximumconcurrentreadjobs=2"
+        }
+      ]
+    },
+    {
+      "name": "Paired Storage",
+      "key": "pairedstorage",
+      "aliases": [],
+      "type": "resource",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "For NDMP: the native storage that holds the data of an NDMP backup that Bareos stores itself.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  Paired Storage = \"File\"\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File pairedstorage=File"
+        }
+      ]
+    },
+    {
+      "name": "Maximum Bandwidth Per Job",
+      "key": "maximumbandwidthperjob",
+      "aliases": [],
+      "type": "speed",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Limits the bandwidth of each job on this storage. Speeds take the suffixes k/s, m/s (powers of 1024) or kb/s, mb/s (powers of 1000); a plain number means bytes per second.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  Maximum Bandwidth Per Job = 50 m/s\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File maximumbandwidthperjob=\"50 m/s\""
+        }
+      ]
+    },
+    {
+      "name": "Collect Statistics",
+      "key": "collectstatistics",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": true,
+      "onesimus": false,
+      "description": "Deprecated: collect device statistics in the catalog.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  Collect Statistics = no\n}"
+        }
+      ]
+    },
+    {
+      "name": "NDMP Changer Device",
+      "key": "ndmpchangerdevice",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Changer device of an NDMP tape server.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  NDMP Changer Device = \"/dev/sg0\"\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File ndmpchangerdevice=/dev/sg0"
+        }
+      ]
+    },
+    {
+      "name": "TLS Authenticate",
+      "key": "tlsauthenticate",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Use TLS only to authenticate the peer and switch back to an unencrypted connection afterwards. The data then travels in clear text, so this is meant for networks that are protected otherwise. Bareos' default TLS-PSK setup does not need it.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  TLS Authenticate = no\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File tlsauthenticate=no"
+        }
+      ]
+    },
+    {
+      "name": "TLS Enable",
+      "key": "tlsenable",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "yes",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Enable TLS for this connection. Since Bareos 18.2 TLS is on by default and uses TLS-PSK with the password of the resource, so no certificates are needed; set it to no only for peers that cannot speak TLS.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  TLS Enable = yes\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File tlsenable=yes"
+        }
+      ]
+    },
+    {
+      "name": "TLS Require",
+      "key": "tlsrequire",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "yes",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Refuse connections that do not use TLS. With the default (yes) a peer without TLS cannot connect; set it to no only during a migration from very old clients.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  TLS Require = yes\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File tlsrequire=yes"
+        }
+      ]
+    },
+    {
+      "name": "TLS Cipher List",
+      "key": "tlscipherlist",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "OpenSSL cipher list for TLS 1.2 and older, colon separated. Leave it empty to use the OpenSSL defaults; restrict it only when a security policy demands specific ciphers.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  TLS Cipher List = \"PSK-AES256-GCM-SHA384:PSK-AES128-GCM-SHA256\"\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File tlscipherlist=PSK-AES256-GCM-SHA384:PSK-AES128-GCM-SHA256"
+        }
+      ]
+    },
+    {
+      "name": "TLS Cipher Suites",
+      "key": "tlsciphersuites",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "OpenSSL cipher suites for TLS 1.3, colon separated. Empty means the OpenSSL defaults.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  TLS Cipher Suites = \"TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256\"\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File tlsciphersuites=TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256"
+        }
+      ]
+    },
+    {
+      "name": "TLS DH File",
+      "key": "tlsdhfile",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "PEM file with Diffie-Hellman parameters for the DH key exchange of TLS 1.2. Without it, ephemeral DH ciphers are not offered; ECDHE and PSK ciphers do not need it.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  TLS DH File = \"/etc/bareos/tls/dh2048.pem\"\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File tlsdhfile=/etc/bareos/tls/dh2048.pem"
+        }
+      ]
+    },
+    {
+      "name": "TLS Protocol",
+      "key": "tlsprotocol",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Restricts the TLS protocol versions in OpenSSL syntax, for example to forbid old versions. Empty means the OpenSSL default.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  TLS Protocol = \"-ALL, +TLSv1.2, +TLSv1.3\"\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File tlsprotocol=\"-ALL, +TLSv1.2, +TLSv1.3\""
+        }
+      ]
+    },
+    {
+      "name": "TLS Verify Peer",
+      "key": "tlsverifypeer",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "With certificate based TLS: check the peer's certificate against the CA and, for a server, against TLS Allowed CN. It has no effect with TLS-PSK.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  TLS Verify Peer = yes\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File tlsverifypeer=yes"
+        }
+      ]
+    },
+    {
+      "name": "TLS Ca Certificate File",
+      "key": "tlscacertificatefile",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "PEM file with the CA certificates used to verify the peer's certificate. Needed for certificate based TLS when TLS Verify Peer is on (or use TLS CA Certificate Dir).",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  TLS Ca Certificate File = \"/etc/bareos/tls/ca.pem\"\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File tlscacertificatefile=/etc/bareos/tls/ca.pem"
+        }
+      ]
+    },
+    {
+      "name": "TLS Ca Certificate Dir",
+      "key": "tlscacertificatedir",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Directory of hashed CA certificates (as made by openssl rehash), an alternative to TLS CA Certificate File.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  TLS Ca Certificate Dir = \"/etc/ssl/certs\"\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File tlscacertificatedir=/etc/ssl/certs"
+        }
+      ]
+    },
+    {
+      "name": "TLS Certificate Revocation List",
+      "key": "tlscertificaterevocationlist",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "PEM file with a certificate revocation list; certificates on it are refused.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  TLS Certificate Revocation List = \"/etc/bareos/tls/crl.pem\"\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File tlscertificaterevocationlist=/etc/bareos/tls/crl.pem"
+        }
+      ]
+    },
+    {
+      "name": "TLS Certificate",
+      "key": "tlscertificate",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "PEM file with the own certificate for certificate based TLS. Goes together with TLS Key.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  TLS Certificate = \"/etc/bareos/tls/bareos-dir.pem\"\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File tlscertificate=/etc/bareos/tls/bareos-dir.pem"
+        }
+      ]
+    },
+    {
+      "name": "TLS Key",
+      "key": "tlskey",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "PEM file with the private key of TLS Certificate. Keep it readable for the daemon user only.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  TLS Key = \"/etc/bareos/tls/bareos-dir.key\"\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File tlskey=/etc/bareos/tls/bareos-dir.key"
+        }
+      ]
+    },
+    {
+      "name": "TLS Allowed CN",
+      "key": "tlsallowedcn",
+      "aliases": [],
+      "type": "string list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Common names a peer certificate may carry; others are refused when TLS Verify Peer is on. Repeat the directive for several names.",
+      "examples": [
+        {
+          "config": "Storage {\n  Name = File\n  TLS Allowed CN = \"client1.example.com\"\n}",
+          "console": "configure add storage name=File address=backup.example.com password=storage-secret device=FileStorage mediatype=File tlsallowedcn=client1.example.com"
+        }
+      ]
+    }
+  ],
+  "blocks": []
+}

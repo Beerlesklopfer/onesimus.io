@@ -1,0 +1,250 @@
+{
+  "schema": 1,
+  "resource": "User",
+  "key": "user",
+  "source": "Directive tables of the Bareos 25.1.2 Director as carried by odir (crates/odir/src/commands/show_items.rs) plus Onesimus extensions (crates/odir/src/config_check.rs EXTENSIONS)",
+  "description": "A User resource gives ACLs (or profiles) to a user who logs in through a PAM console.",
+  "examples": [
+    {
+      "title": "A PAM user",
+      "config": "User {\n  Name = alice\n  Profile = operator\n}"
+    }
+  ],
+  "directives": [
+    {
+      "name": "Name",
+      "key": "name",
+      "aliases": [],
+      "type": "name",
+      "default": null,
+      "values": [],
+      "required": true,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Name of the user, as PAM authenticated it through a PAM console.",
+      "examples": [
+        {
+          "config": "User {\n  Name = \"alice\"\n}",
+          "console": "configure add user name=alice"
+        }
+      ]
+    },
+    {
+      "name": "Description",
+      "key": "description",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Free text describing the user.",
+      "examples": [
+        {
+          "config": "User {\n  Name = alice\n  Description = \"Backup operator\"\n}",
+          "console": "configure add user name=alice description=\"Backup operator\""
+        }
+      ]
+    },
+    {
+      "name": "Job ACL",
+      "key": "jobacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which jobs this user may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "User {\n  Name = alice\n  Job ACL = backup-web, restore-files\n}",
+          "console": "configure add user name=alice jobacl=\"backup-web, restore-files\""
+        }
+      ]
+    },
+    {
+      "name": "Client ACL",
+      "key": "clientacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which clients this user may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "User {\n  Name = alice\n  Client ACL = web-fd, db-fd\n}",
+          "console": "configure add user name=alice clientacl=\"web-fd, db-fd\""
+        }
+      ]
+    },
+    {
+      "name": "Storage ACL",
+      "key": "storageacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which storages this user may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "User {\n  Name = alice\n  Storage ACL = File\n}",
+          "console": "configure add user name=alice storageacl=File"
+        }
+      ]
+    },
+    {
+      "name": "Schedule ACL",
+      "key": "scheduleacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which schedules this user may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "User {\n  Name = alice\n  Schedule ACL = WeeklyCycle\n}",
+          "console": "configure add user name=alice scheduleacl=WeeklyCycle"
+        }
+      ]
+    },
+    {
+      "name": "Pool ACL",
+      "key": "poolacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which pools this user may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "User {\n  Name = alice\n  Pool ACL = Full, Incremental\n}",
+          "console": "configure add user name=alice poolacl=\"Full, Incremental\""
+        }
+      ]
+    },
+    {
+      "name": "Command ACL",
+      "key": "commandacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which console commands this user may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. A console that may use restore needs the dot commands the restore uses as well (for the GUI: .api, .help, .bvfs_* or .ovfs_*). On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "User {\n  Name = alice\n  Command ACL = status, list, llist, restore, .api, .help\n}",
+          "console": "configure add user name=alice commandacl=\"status, list, llist, restore, .api, .help\""
+        }
+      ]
+    },
+    {
+      "name": "File Set ACL",
+      "key": "filesetacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which FileSets this user may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "User {\n  Name = alice\n  File Set ACL = LinuxAll\n}",
+          "console": "configure add user name=alice filesetacl=LinuxAll"
+        }
+      ]
+    },
+    {
+      "name": "Catalog ACL",
+      "key": "catalogacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which catalogs this user may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. A console that may use no catalog cannot list jobs or volumes. On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "User {\n  Name = alice\n  Catalog ACL = MyCatalog\n}",
+          "console": "configure add user name=alice catalogacl=MyCatalog"
+        }
+      ]
+    },
+    {
+      "name": "Where ACL",
+      "key": "whereacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which restore target paths (the where= of a restore) this user may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. An empty list forbids every where= other than the job's own; *all* allows any path. On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "User {\n  Name = alice\n  Where ACL = /tmp/bareos-restores\n}",
+          "console": "configure add user name=alice whereacl=/tmp/bareos-restores"
+        }
+      ]
+    },
+    {
+      "name": "Plugin Options ACL",
+      "key": "pluginoptionsacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which plugin option strings a job may be started with this user may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "User {\n  Name = alice\n  Plugin Options ACL = python:module_name=bareos-fd-local-fileset\n}",
+          "console": "configure add user name=alice pluginoptionsacl=python:module_name=bareos-fd-local-fileset"
+        }
+      ]
+    },
+    {
+      "name": "Profile",
+      "key": "profile",
+      "aliases": [],
+      "type": "resource list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Profiles whose ACLs the user gets.",
+      "examples": [
+        {
+          "config": "User {\n  Name = alice\n  Profile = \"operator\"\n}",
+          "console": "configure add user name=alice profile=operator"
+        }
+      ]
+    }
+  ],
+  "blocks": []
+}

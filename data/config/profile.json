@@ -1,0 +1,232 @@
+{
+  "schema": 1,
+  "resource": "Profile",
+  "key": "profile",
+  "source": "Directive tables of the Bareos 25.1.2 Director as carried by odir (crates/odir/src/commands/show_items.rs) plus Onesimus extensions (crates/odir/src/config_check.rs EXTENSIONS)",
+  "description": "A Profile resource is a named set of ACLs that Console and User resources refer to, so several consoles share one definition of what they may do.",
+  "examples": [
+    {
+      "title": "An operator profile",
+      "config": "Profile {\n  Name = operator\n  Description = \"Run and watch backups, restore to /tmp\"\n  Job ACL = *all*\n  Client ACL = *all*\n  Storage ACL = *all*\n  Schedule ACL = *all*\n  Pool ACL = *all*\n  File Set ACL = *all*\n  Catalog ACL = *all*\n  Command ACL = status, list, llist, run, rerun, cancel, restore, messages, show, .api, .help, .jobs, .clients, .storages, .pools, .filesets, .bvfs_*\n  Where ACL = /tmp/bareos-restores\n}"
+    }
+  ],
+  "directives": [
+    {
+      "name": "Name",
+      "key": "name",
+      "aliases": [],
+      "type": "name",
+      "default": null,
+      "values": [],
+      "required": true,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Name of the profile; Console and User resources refer to it with Profile.",
+      "examples": [
+        {
+          "config": "Profile {\n  Name = \"operator\"\n}",
+          "console": "configure add profile name=operator"
+        }
+      ]
+    },
+    {
+      "name": "Description",
+      "key": "description",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Free text describing what the profile is for.",
+      "examples": [
+        {
+          "config": "Profile {\n  Name = operator\n  Description = \"Run and watch backups\"\n}",
+          "console": "configure add profile name=operator description=\"Run and watch backups\""
+        }
+      ]
+    },
+    {
+      "name": "Job ACL",
+      "key": "jobacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which jobs this profile may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "Profile {\n  Name = operator\n  Job ACL = backup-web, restore-files\n}",
+          "console": "configure add profile name=operator jobacl=\"backup-web, restore-files\""
+        }
+      ]
+    },
+    {
+      "name": "Client ACL",
+      "key": "clientacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which clients this profile may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "Profile {\n  Name = operator\n  Client ACL = web-fd, db-fd\n}",
+          "console": "configure add profile name=operator clientacl=\"web-fd, db-fd\""
+        }
+      ]
+    },
+    {
+      "name": "Storage ACL",
+      "key": "storageacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which storages this profile may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "Profile {\n  Name = operator\n  Storage ACL = File\n}",
+          "console": "configure add profile name=operator storageacl=File"
+        }
+      ]
+    },
+    {
+      "name": "Schedule ACL",
+      "key": "scheduleacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which schedules this profile may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "Profile {\n  Name = operator\n  Schedule ACL = WeeklyCycle\n}",
+          "console": "configure add profile name=operator scheduleacl=WeeklyCycle"
+        }
+      ]
+    },
+    {
+      "name": "Pool ACL",
+      "key": "poolacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which pools this profile may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "Profile {\n  Name = operator\n  Pool ACL = Full, Incremental\n}",
+          "console": "configure add profile name=operator poolacl=\"Full, Incremental\""
+        }
+      ]
+    },
+    {
+      "name": "Command ACL",
+      "key": "commandacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which console commands this profile may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. A console that may use restore needs the dot commands the restore uses as well (for the GUI: .api, .help, .bvfs_* or .ovfs_*). On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "Profile {\n  Name = operator\n  Command ACL = status, list, llist, restore, .api, .help\n}",
+          "console": "configure add profile name=operator commandacl=\"status, list, llist, restore, .api, .help\""
+        }
+      ]
+    },
+    {
+      "name": "File Set ACL",
+      "key": "filesetacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which FileSets this profile may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "Profile {\n  Name = operator\n  File Set ACL = LinuxAll\n}",
+          "console": "configure add profile name=operator filesetacl=LinuxAll"
+        }
+      ]
+    },
+    {
+      "name": "Catalog ACL",
+      "key": "catalogacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which catalogs this profile may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. A console that may use no catalog cannot list jobs or volumes. On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "Profile {\n  Name = operator\n  Catalog ACL = MyCatalog\n}",
+          "console": "configure add profile name=operator catalogacl=MyCatalog"
+        }
+      ]
+    },
+    {
+      "name": "Where ACL",
+      "key": "whereacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which restore target paths (the where= of a restore) this profile may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. An empty list forbids every where= other than the job's own; *all* allows any path. On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "Profile {\n  Name = operator\n  Where ACL = /tmp/bareos-restores\n}",
+          "console": "configure add profile name=operator whereacl=/tmp/bareos-restores"
+        }
+      ]
+    },
+    {
+      "name": "Plugin Options ACL",
+      "key": "pluginoptionsacl",
+      "aliases": [],
+      "type": "ACL list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Which plugin option strings a job may be started with this profile may use. The list holds names or regular expressions, separated by commas or given by repeating the directive; the first matching entry decides, an entry starting with ! forbids, *all* allows everything, and a name no entry matches is forbidden. On the Onesimus Director the catalog ACL (.acl) can narrow this list further, never widen it.",
+      "examples": [
+        {
+          "config": "Profile {\n  Name = operator\n  Plugin Options ACL = python:module_name=bareos-fd-local-fileset\n}",
+          "console": "configure add profile name=operator pluginoptionsacl=python:module_name=bareos-fd-local-fileset"
+        }
+      ]
+    }
+  ],
+  "blocks": []
+}

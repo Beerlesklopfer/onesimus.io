@@ -1,0 +1,824 @@
+{
+  "schema": 1,
+  "resource": "Client",
+  "key": "client",
+  "source": "Directive tables of the Bareos 25.1.2 Director as carried by odir (crates/odir/src/commands/show_items.rs) plus Onesimus extensions (crates/odir/src/config_check.rs EXTENSIONS)",
+  "description": "A Client resource describes a File Daemon the Director backs up: where to reach it, how to authenticate, and limits and quotas for its jobs.",
+  "examples": [
+    {
+      "title": "A typical Linux client",
+      "config": "Client {\n  Name = web-fd\n  Address = web.example.com\n  Password = \"client-secret\"\n  Maximum Concurrent Jobs = 2\n}"
+    },
+    {
+      "title": "A client behind NAT that connects to the Director",
+      "config": "Client {\n  Name = laptop-fd\n  Address = laptop.example.com\n  Password = \"laptop-secret\"\n  Connection From Director To Client = no\n  Connection From Client To Director = yes\n}"
+    }
+  ],
+  "directives": [
+    {
+      "name": "Name",
+      "key": "name",
+      "aliases": [],
+      "type": "name",
+      "default": null,
+      "values": [],
+      "required": true,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Name of the client as jobs, the catalog and the job logs know it. Renaming it starts a new history in the catalog, since jobs are stored by client.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = \"web-fd\"\n}",
+          "console": "configure add client name=web-fd address=web.example.com password=client-secret"
+        }
+      ]
+    },
+    {
+      "name": "Description",
+      "key": "description",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Free text describing the client.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  Description = \"Web server\"\n}",
+          "console": "configure update client=web-fd description=\"Web server\""
+        }
+      ]
+    },
+    {
+      "name": "Protocol",
+      "key": "protocol",
+      "aliases": [],
+      "type": "enum",
+      "default": "Native",
+      "values": [
+        "Native",
+        "NDMPv2",
+        "NDMPv3",
+        "NDMPv4"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Protocol to talk to the client: Native (the Bareos File Daemon) or one of the NDMP versions for NAS filers.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  Protocol = Native\n}",
+          "console": "configure update client=web-fd protocol=Native"
+        }
+      ]
+    },
+    {
+      "name": "Auth Type",
+      "key": "authtype",
+      "aliases": [],
+      "type": "enum",
+      "default": "None",
+      "values": [
+        "None",
+        "Clear",
+        "MD5"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Authentication for NDMP clients: None, Clear or MD5. Native clients ignore it.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  Auth Type = MD5\n}",
+          "console": "configure update client=web-fd authtype=MD5"
+        }
+      ]
+    },
+    {
+      "name": "Address",
+      "key": "address",
+      "aliases": [
+        "FD Address"
+      ],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": true,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Host name or IP address of the File Daemon. Required, since the Director connects to it (unless Connection From Client To Director is used).",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  Address = \"web.example.com\"\n}",
+          "console": "configure update client=web-fd address=web.example.com"
+        }
+      ]
+    },
+    {
+      "name": "Lan Address",
+      "key": "lanaddress",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Address used instead of Address when the Storage Daemon connects to the File Daemon in passive mode, for setups where storage and client share a LAN that the Director does not see.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  Lan Address = \"10.0.0.21\"\n}",
+          "console": "configure update client=web-fd lanaddress=10.0.0.21"
+        }
+      ]
+    },
+    {
+      "name": "Port",
+      "key": "port",
+      "aliases": [
+        "FD Port"
+      ],
+      "type": "positive integer",
+      "default": "9102",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "TCP port of the File Daemon.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  Port = 9102\n}",
+          "console": "configure update client=web-fd port=9102"
+        }
+      ]
+    },
+    {
+      "name": "Username",
+      "key": "username",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "User name for NDMP authentication.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  Username = \"ndmp\"\n}",
+          "console": "configure update client=web-fd username=ndmp"
+        }
+      ]
+    },
+    {
+      "name": "Password",
+      "key": "password",
+      "aliases": [
+        "FD Password"
+      ],
+      "type": "password",
+      "default": null,
+      "values": [],
+      "required": true,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Password shared with the File Daemon's Director resource; with TLS-PSK it is also the TLS key. Both sides must have the same value.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  Password = \"client-secret\"\n}",
+          "console": "configure update client=web-fd password=client-secret"
+        }
+      ]
+    },
+    {
+      "name": "Catalog",
+      "key": "catalog",
+      "aliases": [],
+      "type": "resource",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Catalog the jobs of this client are stored in, for installations with several catalogs.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  Catalog = \"MyCatalog\"\n}",
+          "console": "configure update client=web-fd catalog=MyCatalog"
+        }
+      ]
+    },
+    {
+      "name": "Passive",
+      "key": "passive",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Passive mode: the Storage Daemon connects to the File Daemon instead of the other way round. Useful when the client may not open connections, for example behind a firewall.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  Passive = yes\n}",
+          "console": "configure update client=web-fd passive=yes"
+        }
+      ]
+    },
+    {
+      "name": "Connection From Director To Client",
+      "key": "connectionfromdirectortoclient",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "yes",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "The Director opens the connection to the File Daemon (the normal case).",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  Connection From Director To Client = yes\n}",
+          "console": "configure update client=web-fd connectionfromdirectortoclient=yes"
+        }
+      ]
+    },
+    {
+      "name": "Connection From Client To Director",
+      "key": "connectionfromclienttodirector",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "The File Daemon connects to the Director and keeps the connection open, so a client behind NAT or a firewall can be backed up. Needs the matching setting in the File Daemon. With Run On Incoming Connect Interval a job can start when the client connects.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  Connection From Client To Director = yes\n}",
+          "console": "configure update client=web-fd connectionfromclienttodirector=yes"
+        }
+      ]
+    },
+    {
+      "name": "Enabled",
+      "key": "enabled",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "yes",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "A disabled client is not backed up by scheduled jobs; enable client and disable client change it at run time.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  Enabled = yes\n}",
+          "console": "configure update client=web-fd enabled=yes"
+        }
+      ]
+    },
+    {
+      "name": "Hard Quota",
+      "key": "hardquota",
+      "aliases": [],
+      "type": "size",
+      "default": "0",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Upper limit for the data of this client; a backup that would go beyond it fails. 0 means no limit. Sizes take the suffixes k, m, g, t (powers of 1024) or kb, mb, gb, tb (powers of 1000).",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  Hard Quota = 500 g\n}",
+          "console": "configure update client=web-fd hardquota=\"500 g\""
+        }
+      ]
+    },
+    {
+      "name": "Soft Quota",
+      "key": "softquota",
+      "aliases": [],
+      "type": "size",
+      "default": "0",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Soft limit for the data of this client: beyond it a warning is written, and after the Soft Quota Grace Period jobs fail. Sizes take the suffixes k, m, g, t (powers of 1024) or kb, mb, gb, tb (powers of 1000).",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  Soft Quota = 400 g\n}",
+          "console": "configure update client=web-fd softquota=\"400 g\""
+        }
+      ]
+    },
+    {
+      "name": "Soft Quota Grace Period",
+      "key": "softquotagraceperiod",
+      "aliases": [],
+      "type": "time",
+      "default": "0",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "How long the soft quota may be exceeded before jobs fail. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  Soft Quota Grace Period = 7 days\n}",
+          "console": "configure update client=web-fd softquotagraceperiod=\"7 days\""
+        }
+      ]
+    },
+    {
+      "name": "Strict Quotas",
+      "key": "strictquotas",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "When the soft quota grace period has run out: yes makes the soft quota a hard limit; no lets jobs run up to the hard quota.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  Strict Quotas = no\n}",
+          "console": "configure update client=web-fd strictquotas=no"
+        }
+      ]
+    },
+    {
+      "name": "Quota Include Failed Jobs",
+      "key": "quotaincludefailedjobs",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "yes",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Count the data of failed jobs into the quota.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  Quota Include Failed Jobs = yes\n}",
+          "console": "configure update client=web-fd quotaincludefailedjobs=yes"
+        }
+      ]
+    },
+    {
+      "name": "File Retention",
+      "key": "fileretention",
+      "aliases": [],
+      "type": "time",
+      "default": "5184000",
+      "values": [],
+      "required": false,
+      "deprecated": true,
+      "onesimus": false,
+      "description": "Deprecated in Bareos 25: how long file records of this client's jobs are kept. Set retention in the Pool instead. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  File Retention = 60 days\n}"
+        }
+      ]
+    },
+    {
+      "name": "Job Retention",
+      "key": "jobretention",
+      "aliases": [],
+      "type": "time",
+      "default": "15552000",
+      "values": [],
+      "required": false,
+      "deprecated": true,
+      "onesimus": false,
+      "description": "Deprecated in Bareos 25: how long job records of this client are kept. Set retention in the Pool instead. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  Job Retention = 6 months\n}"
+        }
+      ]
+    },
+    {
+      "name": "Heartbeat Interval",
+      "key": "heartbeatinterval",
+      "aliases": [],
+      "type": "time",
+      "default": "0",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Interval of keep-alive packets to the File Daemon. 0 switches it off. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  Heartbeat Interval = 60\n}",
+          "console": "configure update client=web-fd heartbeatinterval=60"
+        }
+      ]
+    },
+    {
+      "name": "Auto Prune",
+      "key": "autoprune",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": true,
+      "onesimus": false,
+      "description": "Deprecated in Bareos 25: prune this client's jobs and files after each job.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  Auto Prune = no\n}"
+        }
+      ]
+    },
+    {
+      "name": "Maximum Concurrent Jobs",
+      "key": "maximumconcurrentjobs",
+      "aliases": [],
+      "type": "positive integer",
+      "default": "1",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "How many jobs may run on this client at the same time; further jobs wait. Raise it when several jobs (for example per file system) back up the same host.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  Maximum Concurrent Jobs = 2\n}",
+          "console": "configure update client=web-fd maximumconcurrentjobs=2"
+        }
+      ]
+    },
+    {
+      "name": "Maximum Bandwidth Per Job",
+      "key": "maximumbandwidthperjob",
+      "aliases": [],
+      "type": "speed",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Limits the bandwidth of each job of this client. Speeds take the suffixes k/s, m/s (powers of 1024) or kb/s, mb/s (powers of 1000); a plain number means bytes per second.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  Maximum Bandwidth Per Job = 20 m/s\n}",
+          "console": "configure update client=web-fd maximumbandwidthperjob=\"20 m/s\""
+        }
+      ]
+    },
+    {
+      "name": "NDMP Log Level",
+      "key": "ndmploglevel",
+      "aliases": [],
+      "type": "positive integer",
+      "default": "4",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Detail of NDMP messages of this client, 0 to 9.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  NDMP Log Level = 4\n}",
+          "console": "configure update client=web-fd ndmploglevel=4"
+        }
+      ]
+    },
+    {
+      "name": "NDMP Block Size",
+      "key": "ndmpblocksize",
+      "aliases": [],
+      "type": "size",
+      "default": "64512",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Block size of NDMP backups. Sizes take the suffixes k, m, g, t (powers of 1024) or kb, mb, gb, tb (powers of 1000).",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  NDMP Block Size = 64512\n}",
+          "console": "configure update client=web-fd ndmpblocksize=64512"
+        }
+      ]
+    },
+    {
+      "name": "NDMP Use LMDB",
+      "key": "ndmpuselmdb",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "yes",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Keep the NDMP file history in an LMDB database during the job instead of in memory, for filers with many files.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  NDMP Use LMDB = yes\n}",
+          "console": "configure update client=web-fd ndmpuselmdb=yes"
+        }
+      ]
+    },
+    {
+      "name": "TLS Authenticate",
+      "key": "tlsauthenticate",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Use TLS only to authenticate the peer and switch back to an unencrypted connection afterwards. The data then travels in clear text, so this is meant for networks that are protected otherwise. Bareos' default TLS-PSK setup does not need it.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  TLS Authenticate = no\n}",
+          "console": "configure update client=web-fd tlsauthenticate=no"
+        }
+      ]
+    },
+    {
+      "name": "TLS Enable",
+      "key": "tlsenable",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "yes",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Enable TLS for this connection. Since Bareos 18.2 TLS is on by default and uses TLS-PSK with the password of the resource, so no certificates are needed; set it to no only for peers that cannot speak TLS.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  TLS Enable = yes\n}",
+          "console": "configure update client=web-fd tlsenable=yes"
+        }
+      ]
+    },
+    {
+      "name": "TLS Require",
+      "key": "tlsrequire",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "yes",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Refuse connections that do not use TLS. With the default (yes) a peer without TLS cannot connect; set it to no only during a migration from very old clients.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  TLS Require = yes\n}",
+          "console": "configure update client=web-fd tlsrequire=yes"
+        }
+      ]
+    },
+    {
+      "name": "TLS Cipher List",
+      "key": "tlscipherlist",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "OpenSSL cipher list for TLS 1.2 and older, colon separated. Leave it empty to use the OpenSSL defaults; restrict it only when a security policy demands specific ciphers.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  TLS Cipher List = \"PSK-AES256-GCM-SHA384:PSK-AES128-GCM-SHA256\"\n}",
+          "console": "configure update client=web-fd tlscipherlist=PSK-AES256-GCM-SHA384:PSK-AES128-GCM-SHA256"
+        }
+      ]
+    },
+    {
+      "name": "TLS Cipher Suites",
+      "key": "tlsciphersuites",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "OpenSSL cipher suites for TLS 1.3, colon separated. Empty means the OpenSSL defaults.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  TLS Cipher Suites = \"TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256\"\n}",
+          "console": "configure update client=web-fd tlsciphersuites=TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256"
+        }
+      ]
+    },
+    {
+      "name": "TLS DH File",
+      "key": "tlsdhfile",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "PEM file with Diffie-Hellman parameters for the DH key exchange of TLS 1.2. Without it, ephemeral DH ciphers are not offered; ECDHE and PSK ciphers do not need it.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  TLS DH File = \"/etc/bareos/tls/dh2048.pem\"\n}",
+          "console": "configure update client=web-fd tlsdhfile=/etc/bareos/tls/dh2048.pem"
+        }
+      ]
+    },
+    {
+      "name": "TLS Protocol",
+      "key": "tlsprotocol",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Restricts the TLS protocol versions in OpenSSL syntax, for example to forbid old versions. Empty means the OpenSSL default.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  TLS Protocol = \"-ALL, +TLSv1.2, +TLSv1.3\"\n}",
+          "console": "configure update client=web-fd tlsprotocol=\"-ALL, +TLSv1.2, +TLSv1.3\""
+        }
+      ]
+    },
+    {
+      "name": "TLS Verify Peer",
+      "key": "tlsverifypeer",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "With certificate based TLS: check the peer's certificate against the CA and, for a server, against TLS Allowed CN. It has no effect with TLS-PSK.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  TLS Verify Peer = yes\n}",
+          "console": "configure update client=web-fd tlsverifypeer=yes"
+        }
+      ]
+    },
+    {
+      "name": "TLS Ca Certificate File",
+      "key": "tlscacertificatefile",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "PEM file with the CA certificates used to verify the peer's certificate. Needed for certificate based TLS when TLS Verify Peer is on (or use TLS CA Certificate Dir).",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  TLS Ca Certificate File = \"/etc/bareos/tls/ca.pem\"\n}",
+          "console": "configure update client=web-fd tlscacertificatefile=/etc/bareos/tls/ca.pem"
+        }
+      ]
+    },
+    {
+      "name": "TLS Ca Certificate Dir",
+      "key": "tlscacertificatedir",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Directory of hashed CA certificates (as made by openssl rehash), an alternative to TLS CA Certificate File.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  TLS Ca Certificate Dir = \"/etc/ssl/certs\"\n}",
+          "console": "configure update client=web-fd tlscacertificatedir=/etc/ssl/certs"
+        }
+      ]
+    },
+    {
+      "name": "TLS Certificate Revocation List",
+      "key": "tlscertificaterevocationlist",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "PEM file with a certificate revocation list; certificates on it are refused.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  TLS Certificate Revocation List = \"/etc/bareos/tls/crl.pem\"\n}",
+          "console": "configure update client=web-fd tlscertificaterevocationlist=/etc/bareos/tls/crl.pem"
+        }
+      ]
+    },
+    {
+      "name": "TLS Certificate",
+      "key": "tlscertificate",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "PEM file with the own certificate for certificate based TLS. Goes together with TLS Key.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  TLS Certificate = \"/etc/bareos/tls/bareos-dir.pem\"\n}",
+          "console": "configure update client=web-fd tlscertificate=/etc/bareos/tls/bareos-dir.pem"
+        }
+      ]
+    },
+    {
+      "name": "TLS Key",
+      "key": "tlskey",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "PEM file with the private key of TLS Certificate. Keep it readable for the daemon user only.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  TLS Key = \"/etc/bareos/tls/bareos-dir.key\"\n}",
+          "console": "configure update client=web-fd tlskey=/etc/bareos/tls/bareos-dir.key"
+        }
+      ]
+    },
+    {
+      "name": "TLS Allowed CN",
+      "key": "tlsallowedcn",
+      "aliases": [],
+      "type": "string list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Common names a peer certificate may carry; others are refused when TLS Verify Peer is on. Repeat the directive for several names.",
+      "examples": [
+        {
+          "config": "Client {\n  Name = web-fd\n  TLS Allowed CN = \"client1.example.com\"\n}",
+          "console": "configure update client=web-fd tlsallowedcn=client1.example.com"
+        }
+      ]
+    }
+  ],
+  "blocks": []
+}

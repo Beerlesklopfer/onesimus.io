@@ -1,0 +1,1759 @@
+{
+  "schema": 1,
+  "resource": "Job",
+  "key": "job",
+  "source": "Directive tables of the Bareos 25.1.2 Director as carried by odir (crates/odir/src/commands/show_items.rs) plus Onesimus extensions (crates/odir/src/config_check.rs EXTENSIONS)",
+  "description": "A Job resource describes one unit of work: what to back up (FileSet) from where (Client), to where (Pool, Storage) and when (Schedule), or a restore, verify, copy, migrate, consolidate or admin job.",
+  "examples": [
+    {
+      "title": "A nightly backup job",
+      "config": "Job {\n  Name = backup-web\n  Type = Backup\n  Level = Incremental\n  Client = web-fd\n  FileSet = LinuxAll\n  Schedule = WeeklyCycle\n  Storage = File\n  Messages = Standard\n  Pool = Incremental\n  Full Backup Pool = Full\n  Differential Backup Pool = Differential\n  Write Bootstrap = \"/var/lib/bareos/%c.bsr\"\n}"
+    },
+    {
+      "title": "A job with a database dump before the backup",
+      "config": "Job {\n  Name = backup-db\n  JobDefs = DefaultJob\n  Client = db-fd\n  RunScript {\n    RunsWhen = Before\n    RunsOnClient = yes\n    FailJobOnError = yes\n    Command = \"/usr/local/bin/dump-database\"\n  }\n}"
+    },
+    {
+      "title": "A restore job",
+      "config": "Job {\n  Name = RestoreFiles\n  Type = Restore\n  Client = web-fd\n  FileSet = LinuxAll\n  Storage = File\n  Pool = Incremental\n  Messages = Standard\n  Where = /tmp/bareos-restores\n}"
+    }
+  ],
+  "directives": [
+    {
+      "name": "Name",
+      "key": "name",
+      "aliases": [],
+      "type": "name",
+      "default": null,
+      "values": [],
+      "required": true,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Name of the job. It appears in job lists, logs and the catalog; renaming it starts a new history, so the next Incremental becomes a Full.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = \"backup-web\"\n}",
+          "console": "configure add job name=backup-web type=Backup messages=Standard pool=Incremental"
+        }
+      ]
+    },
+    {
+      "name": "Description",
+      "key": "description",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Free text describing the job.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Description = \"Nightly backup of the web server\"\n}",
+          "console": "configure update job=backup-web description=\"Nightly backup of the web server\""
+        }
+      ]
+    },
+    {
+      "name": "Type",
+      "key": "type",
+      "aliases": [],
+      "type": "enum",
+      "default": null,
+      "values": [
+        "Backup",
+        "Restore",
+        "Verify",
+        "Admin",
+        "Archive",
+        "Migrate",
+        "Copy",
+        "Consolidate"
+      ],
+      "required": true,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "What the job does: Backup, Restore, Verify, Admin (runs only its scripts), Migrate, Copy, Consolidate (Always Incremental), or Archive. Required, directly or through JobDefs.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Type = Backup\n}",
+          "console": "configure update job=backup-web type=Backup"
+        }
+      ]
+    },
+    {
+      "name": "Protocol",
+      "key": "protocol",
+      "aliases": [],
+      "type": "enum",
+      "default": "Native",
+      "values": [
+        "Native",
+        "NDMP_BAREOS",
+        "NDMP_NATIVE"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Backup protocol: Native for the Bareos File Daemon; NDMP_BAREOS or NDMP_NATIVE for NAS filers (data stored by Bareos or by an NDMP tape server).",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Protocol = Native\n}",
+          "console": "configure update job=backup-web protocol=Native"
+        }
+      ]
+    },
+    {
+      "name": "Backup Format",
+      "key": "backupformat",
+      "aliases": [],
+      "type": "string",
+      "default": "Native",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Format of NDMP backups (for example dump or tar, depending on the filer); Native for normal jobs.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Backup Format = Native\n}",
+          "console": "configure update job=backup-web backupformat=Native"
+        }
+      ]
+    },
+    {
+      "name": "Level",
+      "key": "level",
+      "aliases": [],
+      "type": "enum",
+      "default": null,
+      "values": [
+        "Full",
+        "Incremental",
+        "Differential",
+        "VirtualFull",
+        "Base",
+        "Since",
+        "InitCatalog",
+        "Catalog",
+        "VolumeToCatalog",
+        "DiskToCatalog",
+        "Data"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Default level of the job: for backups Full, Incremental, Differential or VirtualFull; for verify jobs InitCatalog, Catalog, VolumeToCatalog, DiskToCatalog or Data. A Run line of the Schedule or run level= overrides it. An Incremental or Differential without a Full before it is upgraded to Full.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Level = Incremental\n}",
+          "console": "configure update job=backup-web level=Incremental"
+        }
+      ]
+    },
+    {
+      "name": "Messages",
+      "key": "messages",
+      "aliases": [],
+      "type": "resource",
+      "default": null,
+      "values": [],
+      "required": true,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Messages resource that decides where the job's messages go (job log in the catalog, mail, log file). Required.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Messages = \"Standard\"\n}",
+          "console": "configure update job=backup-web messages=Standard"
+        }
+      ]
+    },
+    {
+      "name": "Storage",
+      "key": "storage",
+      "aliases": [],
+      "type": "resource list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Storage the job writes to (or reads from). Several may be listed; the first available one is used. A Storage in the Pool takes precedence over the job's.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Storage = \"File\"\n}",
+          "console": "configure update job=backup-web storage=File"
+        }
+      ]
+    },
+    {
+      "name": "Pool",
+      "key": "pool",
+      "aliases": [],
+      "type": "resource",
+      "default": null,
+      "values": [],
+      "required": true,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Pool the job writes to. Required for backups; Full Backup Pool and the other level pools and Run line overrides can choose another one per level.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Pool = \"Incremental\"\n}",
+          "console": "configure update job=backup-web pool=Incremental"
+        }
+      ]
+    },
+    {
+      "name": "Full Backup Pool",
+      "key": "fullbackuppool",
+      "aliases": [],
+      "type": "resource",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Pool used when the job runs at level Full, so Fulls can have their own retention.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Full Backup Pool = \"Full\"\n}",
+          "console": "configure update job=backup-web fullbackuppool=Full"
+        }
+      ]
+    },
+    {
+      "name": "Virtual Full Backup Pool",
+      "key": "virtualfullbackuppool",
+      "aliases": [],
+      "type": "resource",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Pool a VirtualFull is written to. It must differ from the pools it reads from unless the storage has more than one device.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Virtual Full Backup Pool = \"VirtualFull\"\n}",
+          "console": "configure update job=backup-web virtualfullbackuppool=VirtualFull"
+        }
+      ]
+    },
+    {
+      "name": "Incremental Backup Pool",
+      "key": "incrementalbackuppool",
+      "aliases": [],
+      "type": "resource",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Pool used for Incremental runs.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Incremental Backup Pool = \"Incremental\"\n}",
+          "console": "configure update job=backup-web incrementalbackuppool=Incremental"
+        }
+      ]
+    },
+    {
+      "name": "Differential Backup Pool",
+      "key": "differentialbackuppool",
+      "aliases": [],
+      "type": "resource",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Pool used for Differential runs.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Differential Backup Pool = \"Differential\"\n}",
+          "console": "configure update job=backup-web differentialbackuppool=Differential"
+        }
+      ]
+    },
+    {
+      "name": "Next Pool",
+      "key": "nextpool",
+      "aliases": [],
+      "type": "resource",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Pool that Copy, Migrate and VirtualFull jobs write to. Overrides Next Pool of the source pool.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Next Pool = \"Offsite\"\n}",
+          "console": "configure update job=backup-web nextpool=Offsite"
+        }
+      ]
+    },
+    {
+      "name": "Client",
+      "key": "client",
+      "aliases": [],
+      "type": "resource",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Client (File Daemon) the job backs up or, for restores, restores to by default. Required for backups.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Client = \"web-fd\"\n}",
+          "console": "configure update job=backup-web client=web-fd"
+        }
+      ]
+    },
+    {
+      "name": "File Set",
+      "key": "fileset",
+      "aliases": [],
+      "type": "resource",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "FileSet that says what is backed up. Changing the FileSet makes the next Incremental or Differential a Full unless Ignore FileSet Changes is set.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  File Set = \"LinuxAll\"\n}",
+          "console": "configure update job=backup-web fileset=LinuxAll"
+        }
+      ]
+    },
+    {
+      "name": "Schedule",
+      "key": "schedule",
+      "aliases": [],
+      "type": "resource",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Schedule that starts the job automatically. Without it, the job only runs when it is started by hand or by another job.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Schedule = \"WeeklyCycle\"\n}",
+          "console": "configure update job=backup-web schedule=WeeklyCycle"
+        }
+      ]
+    },
+    {
+      "name": "Job To Verify",
+      "key": "jobtoverify",
+      "aliases": [
+        "Verify Job"
+      ],
+      "type": "resource",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "For verify jobs: the backup job whose last run is verified (levels Catalog, VolumeToCatalog, Data).",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Job To Verify = \"backup-web\"\n}",
+          "console": "configure update job=backup-web jobtoverify=backup-web"
+        }
+      ]
+    },
+    {
+      "name": "Catalog",
+      "key": "catalog",
+      "aliases": [],
+      "type": "resource",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Catalog for this job, overriding that of the client.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Catalog = \"MyCatalog\"\n}",
+          "console": "configure update job=backup-web catalog=MyCatalog"
+        }
+      ]
+    },
+    {
+      "name": "Job Defs",
+      "key": "jobdefs",
+      "aliases": [],
+      "type": "resource",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "JobDefs resource whose directives this job inherits. Directives written in the job itself win. The Onesimus GUI shows which values come from the JobDefs.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Job Defs = \"DefaultJob\"\n}",
+          "console": "configure update job=backup-web jobdefs=DefaultJob"
+        }
+      ]
+    },
+    {
+      "name": "Run",
+      "key": "run",
+      "aliases": [],
+      "type": "string list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Starts another job (or a copy of this one with other settings) when this job is started, in run command syntax, for example a second backup to another storage. It is rarely needed; Copy jobs are the usual way to a second copy.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Run = \"backup-web-copy level=%l since=\\\"%s\\\"\"\n}",
+          "console": "configure update job=backup-web run=\"backup-web-copy level=%l since=\\\"%s\\\"\""
+        }
+      ]
+    },
+    {
+      "name": "Where",
+      "key": "where",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "For restore jobs: directory prefix the files are restored under. / restores to the original place. The restore command and the GUI can change it per restore, within the console's Where ACL.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Where = \"/tmp/bareos-restores\"\n}",
+          "console": "configure update job=backup-web where=/tmp/bareos-restores"
+        }
+      ]
+    },
+    {
+      "name": "Regex Where",
+      "key": "regexwhere",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "For restore jobs: rewrites the paths of restored files with sed-like expressions (!from!to!), instead of a plain prefix.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Regex Where = \"!/home!/srv/restored-home!\"\n}",
+          "console": "configure update job=backup-web regexwhere=!/home!/srv/restored-home!"
+        }
+      ]
+    },
+    {
+      "name": "Strip Prefix",
+      "key": "stripprefix",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "For restore jobs: removes this prefix from the paths before restoring.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Strip Prefix = \"/var/www\"\n}",
+          "console": "configure update job=backup-web stripprefix=/var/www"
+        }
+      ]
+    },
+    {
+      "name": "Add Prefix",
+      "key": "addprefix",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "For restore jobs: adds this prefix to the paths (like Where).",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Add Prefix = \"/restore\"\n}",
+          "console": "configure update job=backup-web addprefix=/restore"
+        }
+      ]
+    },
+    {
+      "name": "Add Suffix",
+      "key": "addsuffix",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "For restore jobs: adds this suffix to the restored file names, for example to keep existing files.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Add Suffix = \".restored\"\n}",
+          "console": "configure update job=backup-web addsuffix=.restored"
+        }
+      ]
+    },
+    {
+      "name": "Bootstrap",
+      "key": "bootstrap",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Bootstrap file a restore job reads to find the data on the volumes. Usually written by the restore command itself.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Bootstrap = \"/var/lib/bareos/restore.bsr\"\n}",
+          "console": "configure update job=backup-web bootstrap=/var/lib/bareos/restore.bsr"
+        }
+      ]
+    },
+    {
+      "name": "Write Bootstrap",
+      "key": "writebootstrap",
+      "aliases": [],
+      "type": "path or |command",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "File (or, starting with |, a command) the job writes its bootstrap to after a backup: which volumes and blocks hold this job. With it a restore is possible even without the catalog, so keep it off the backup server. %c, %n and other job variables are replaced.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Write Bootstrap = \"/var/lib/bareos/%c.bsr\"\n}",
+          "console": "configure update job=backup-web writebootstrap=/var/lib/bareos/%c.bsr"
+        }
+      ]
+    },
+    {
+      "name": "Write Verify List",
+      "key": "writeverifylist",
+      "aliases": [],
+      "type": "path",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": true,
+      "onesimus": false,
+      "description": "Deprecated: file the verify job writes its list of files to.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Write Verify List = \"/var/lib/bareos/verify.lst\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Replace",
+      "key": "replace",
+      "aliases": [],
+      "type": "enum",
+      "default": "Always",
+      "values": [
+        "always",
+        "ifnewer",
+        "ifolder",
+        "never"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "For restore jobs: what happens to files that exist already: always (overwrite), ifnewer (only if the backup is newer), ifolder (only if it is older) or never.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Replace = IfNewer\n}",
+          "console": "configure update job=backup-web replace=IfNewer"
+        }
+      ]
+    },
+    {
+      "name": "Maximum Bandwidth",
+      "key": "maximumbandwidth",
+      "aliases": [],
+      "type": "speed",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Limits the bandwidth of this job. Speeds take the suffixes k/s, m/s (powers of 1024) or kb/s, mb/s (powers of 1000); a plain number means bytes per second.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Maximum Bandwidth = 10 m/s\n}",
+          "console": "configure update job=backup-web maximumbandwidth=\"10 m/s\""
+        }
+      ]
+    },
+    {
+      "name": "Max Run Sched Time",
+      "key": "maxrunschedtime",
+      "aliases": [],
+      "type": "time",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Cancels the job if it has not finished this long after its scheduled time (waiting counts). Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Max Run Sched Time = 10 hours\n}",
+          "console": "configure update job=backup-web maxrunschedtime=\"10 hours\""
+        }
+      ]
+    },
+    {
+      "name": "Max Run Time",
+      "key": "maxruntime",
+      "aliases": [],
+      "type": "time",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Cancels the job if it runs longer than this from its actual start. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Max Run Time = 8 hours\n}",
+          "console": "configure update job=backup-web maxruntime=\"8 hours\""
+        }
+      ]
+    },
+    {
+      "name": "Full Max Runtime",
+      "key": "fullmaxruntime",
+      "aliases": [],
+      "type": "time",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Max Run Time for Full runs only. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Full Max Runtime = 12 hours\n}",
+          "console": "configure update job=backup-web fullmaxruntime=\"12 hours\""
+        }
+      ]
+    },
+    {
+      "name": "Incremental Max Runtime",
+      "key": "incrementalmaxruntime",
+      "aliases": [],
+      "type": "time",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Max Run Time for Incremental runs only. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Incremental Max Runtime = 2 hours\n}",
+          "console": "configure update job=backup-web incrementalmaxruntime=\"2 hours\""
+        }
+      ]
+    },
+    {
+      "name": "Differential Max Runtime",
+      "key": "differentialmaxruntime",
+      "aliases": [],
+      "type": "time",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Max Run Time for Differential runs only. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Differential Max Runtime = 4 hours\n}",
+          "console": "configure update job=backup-web differentialmaxruntime=\"4 hours\""
+        }
+      ]
+    },
+    {
+      "name": "Max Wait Time",
+      "key": "maxwaittime",
+      "aliases": [],
+      "type": "time",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Cancels the job if it waits longer than this for a resource (a volume, a device, a concurrency slot) after it started. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Max Wait Time = 1 hour\n}",
+          "console": "configure update job=backup-web maxwaittime=\"1 hour\""
+        }
+      ]
+    },
+    {
+      "name": "Max Start Delay",
+      "key": "maxstartdelay",
+      "aliases": [],
+      "type": "time",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Cancels the job if it cannot start within this time after its scheduled time, so a nightly job that missed its window does not run in the day. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Max Start Delay = 4 hours\n}",
+          "console": "configure update job=backup-web maxstartdelay=\"4 hours\""
+        }
+      ]
+    },
+    {
+      "name": "Max Full Interval",
+      "key": "maxfullinterval",
+      "aliases": [],
+      "type": "time",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Upgrades an Incremental or Differential to Full when the last successful Full is older than this. A simple way to get regular Fulls without a Full Run line. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Max Full Interval = 30 days\n}",
+          "console": "configure update job=backup-web maxfullinterval=\"30 days\""
+        }
+      ]
+    },
+    {
+      "name": "Max Virtual Full Interval",
+      "key": "maxvirtualfullinterval",
+      "aliases": [],
+      "type": "time",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Upgrades a run to VirtualFull when the last VirtualFull (or Full) is older than this. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Max Virtual Full Interval = 7 days\n}",
+          "console": "configure update job=backup-web maxvirtualfullinterval=\"7 days\""
+        }
+      ]
+    },
+    {
+      "name": "Max Diff Interval",
+      "key": "maxdiffinterval",
+      "aliases": [],
+      "type": "time",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Upgrades an Incremental to Differential when the last Differential is older than this. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Max Diff Interval = 7 days\n}",
+          "console": "configure update job=backup-web maxdiffinterval=\"7 days\""
+        }
+      ]
+    },
+    {
+      "name": "Prefix Links",
+      "key": "prefixlinks",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "For restores with Where: also prefix the targets of absolute symbolic links, so they point into the restore directory.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Prefix Links = yes\n}",
+          "console": "configure update job=backup-web prefixlinks=yes"
+        }
+      ]
+    },
+    {
+      "name": "Prune Jobs",
+      "key": "prunejobs",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Prune the job records of this job's client after the job, as if the retention had been applied by prune jobs.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Prune Jobs = yes\n}",
+          "console": "configure update job=backup-web prunejobs=yes"
+        }
+      ]
+    },
+    {
+      "name": "Prune Files",
+      "key": "prunefiles",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Prune the file records of this job's client after the job.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Prune Files = yes\n}",
+          "console": "configure update job=backup-web prunefiles=yes"
+        }
+      ]
+    },
+    {
+      "name": "Prune Volumes",
+      "key": "prunevolumes",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Prune the volumes of the pool after the job.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Prune Volumes = yes\n}",
+          "console": "configure update job=backup-web prunevolumes=yes"
+        }
+      ]
+    },
+    {
+      "name": "Purge Migration Job",
+      "key": "purgemigrationjob",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "After a successful migration, purge the migrated (source) job from the catalog.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Purge Migration Job = yes\n}",
+          "console": "configure update job=backup-web purgemigrationjob=yes"
+        }
+      ]
+    },
+    {
+      "name": "Enabled",
+      "key": "enabled",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "yes",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "A disabled job is not started by its schedule; it can still be run by hand. enable job and disable job change it at run time.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Enabled = yes\n}",
+          "console": "configure update job=backup-web enabled=yes"
+        }
+      ]
+    },
+    {
+      "name": "Spool Attributes",
+      "key": "spoolattributes",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Spool the file attributes on the Storage Daemon and insert them into the catalog at the end of the job, instead of while writing. Speeds up jobs with many small files.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Spool Attributes = yes\n}",
+          "console": "configure update job=backup-web spoolattributes=yes"
+        }
+      ]
+    },
+    {
+      "name": "Spool Data",
+      "key": "spooldata",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Spool the data to disk on the Storage Daemon first and write it to the volume in big chunks. Meant for tape drives that would otherwise stop and start (shoe-shining). It implies Spool Attributes.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Spool Data = yes\n}",
+          "console": "configure update job=backup-web spooldata=yes"
+        }
+      ]
+    },
+    {
+      "name": "Spool Size",
+      "key": "spoolsize",
+      "aliases": [],
+      "type": "size",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Upper limit of the spool file of this job. Sizes take the suffixes k, m, g, t (powers of 1024) or kb, mb, gb, tb (powers of 1000).",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Spool Size = 50 g\n}",
+          "console": "configure update job=backup-web spoolsize=\"50 g\""
+        }
+      ]
+    },
+    {
+      "name": "Rerun Failed Levels",
+      "key": "rerunfailedlevels",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "If the last Full (or Differential) failed, run the next job at that level again instead of the scheduled lower level.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Rerun Failed Levels = yes\n}",
+          "console": "configure update job=backup-web rerunfailedlevels=yes"
+        }
+      ]
+    },
+    {
+      "name": "Prefer Mounted Volumes",
+      "key": "prefermountedvolumes",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "yes",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Prefer a drive that has a usable volume mounted. With no, the Director prefers an idle drive, which spreads jobs over several drives.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Prefer Mounted Volumes = yes\n}",
+          "console": "configure update job=backup-web prefermountedvolumes=yes"
+        }
+      ]
+    },
+    {
+      "name": "Run Before Job",
+      "key": "runbeforejob",
+      "aliases": [],
+      "type": "command",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Command the Director runs before the job; a failing command cancels the job. Short form of a RunScript with RunsWhen = Before on the Director.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Run Before Job = \"/usr/local/bin/prepare-backup %c\"\n}",
+          "console": "configure update job=backup-web runbeforejob=\"/usr/local/bin/prepare-backup %c\""
+        }
+      ]
+    },
+    {
+      "name": "Run After Job",
+      "key": "runafterjob",
+      "aliases": [],
+      "type": "command",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Command the Director runs after a successful job (RunScript, RunsWhen = After, RunsOnFailure = no).",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Run After Job = \"/usr/local/bin/notify-done %j %e\"\n}",
+          "console": "configure update job=backup-web runafterjob=\"/usr/local/bin/notify-done %j %e\""
+        }
+      ]
+    },
+    {
+      "name": "Run After Failed Job",
+      "key": "runafterfailedjob",
+      "aliases": [],
+      "type": "command",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Command the Director runs after a failed job.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Run After Failed Job = \"/usr/local/bin/notify-failed %j\"\n}",
+          "console": "configure update job=backup-web runafterfailedjob=\"/usr/local/bin/notify-failed %j\""
+        }
+      ]
+    },
+    {
+      "name": "Client Run Before Job",
+      "key": "clientrunbeforejob",
+      "aliases": [],
+      "type": "command",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Command the File Daemon runs on the client before the backup, for example a database dump. A failing command cancels the job.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Client Run Before Job = \"/usr/local/bin/dump-database\"\n}",
+          "console": "configure update job=backup-web clientrunbeforejob=/usr/local/bin/dump-database"
+        }
+      ]
+    },
+    {
+      "name": "Client Run After Job",
+      "key": "clientrunafterjob",
+      "aliases": [],
+      "type": "command",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Command the File Daemon runs on the client after the job.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Client Run After Job = \"/usr/local/bin/cleanup-dump\"\n}",
+          "console": "configure update job=backup-web clientrunafterjob=/usr/local/bin/cleanup-dump"
+        }
+      ]
+    },
+    {
+      "name": "Maximum Concurrent Jobs",
+      "key": "maximumconcurrentjobs",
+      "aliases": [],
+      "type": "positive integer",
+      "default": "1",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "How many runs of this job may run at the same time; usually 1, so a slow run is not overtaken by the next one.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Maximum Concurrent Jobs = 1\n}",
+          "console": "configure update job=backup-web maximumconcurrentjobs=1"
+        }
+      ]
+    },
+    {
+      "name": "Reschedule On Error",
+      "key": "rescheduleonerror",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Start the job again when it failed, after Reschedule Interval, at most Reschedule Times times.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Reschedule On Error = yes\n}",
+          "console": "configure update job=backup-web rescheduleonerror=yes"
+        }
+      ]
+    },
+    {
+      "name": "Reschedule Interval",
+      "key": "rescheduleinterval",
+      "aliases": [],
+      "type": "time",
+      "default": "1800",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Wait between a failed run and its retry. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Reschedule Interval = 30 minutes\n}",
+          "console": "configure update job=backup-web rescheduleinterval=\"30 minutes\""
+        }
+      ]
+    },
+    {
+      "name": "Reschedule Times",
+      "key": "rescheduletimes",
+      "aliases": [],
+      "type": "positive integer",
+      "default": "5",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "How many times a failed job is retried; 0 means without limit.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Reschedule Times = 3\n}",
+          "console": "configure update job=backup-web rescheduletimes=3"
+        }
+      ]
+    },
+    {
+      "name": "Priority",
+      "key": "priority",
+      "aliases": [],
+      "type": "positive integer",
+      "default": "10",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Priority of the job: smaller numbers first. Jobs of different priorities do not run at the same time (unless Allow Mixed Priority): a job waits until all jobs of a higher priority are done. Use it for example to run the catalog backup after all others. The schedule view of the Onesimus GUI does not count such waits as avoidable.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Priority = 10\n}",
+          "console": "configure update job=backup-web priority=10"
+        }
+      ]
+    },
+    {
+      "name": "Allow Mixed Priority",
+      "key": "allowmixedpriority",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Allow this job to run together with jobs of other priorities, as long as they allow it as well.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Allow Mixed Priority = yes\n}",
+          "console": "configure update job=backup-web allowmixedpriority=yes"
+        }
+      ]
+    },
+    {
+      "name": "Selection Pattern",
+      "key": "selectionpattern",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "For Copy and Migrate jobs: the pattern or SQL query used by Selection Type (a job or client name pattern, or a query returning job IDs).",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Selection Pattern = \"backup-.*\"\n}",
+          "console": "configure update job=backup-web selectionpattern=backup-.*"
+        }
+      ]
+    },
+    {
+      "name": "Run Script",
+      "key": "runscript",
+      "aliases": [],
+      "type": "block",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Block that runs a command or console command before or after the job, on the Director or the client, with control over failure handling. See the RunScript block.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Run Script {\n    RunsWhen = Before\n    RunsOnClient = yes\n    FailJobOnError = yes\n    Command = \"/usr/local/bin/dump-database\"\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Selection Type",
+      "key": "selectiontype",
+      "aliases": [],
+      "type": "enum",
+      "default": null,
+      "values": [
+        "SmallestVolume",
+        "OldestVolume",
+        "PoolOccupancy",
+        "PoolTime",
+        "PoolUncopiedJobs",
+        "Client",
+        "Volume",
+        "Job",
+        "SQLQuery"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "For Copy and Migrate jobs: how the source jobs are chosen: SmallestVolume, OldestVolume, Client, Volume, Job, SQLQuery, PoolOccupancy, PoolTime, PoolUncopiedJobs.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Selection Type = PoolUncopiedJobs\n}",
+          "console": "configure update job=backup-web selectiontype=PoolUncopiedJobs"
+        }
+      ]
+    },
+    {
+      "name": "Accurate",
+      "key": "accurate",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Accurate mode: the File Daemon receives the file list of the previous backups and also records deleted and renamed files, so a restore gives exactly the state of the backup. Needed for Always Incremental and VirtualFull; costs memory on the client.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Accurate = yes\n}",
+          "console": "configure update job=backup-web accurate=yes"
+        }
+      ]
+    },
+    {
+      "name": "Allow Duplicate Jobs",
+      "key": "allowduplicatejobs",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "yes",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Allow a second run of the same job while one is queued or running. With no, the Cancel ... Duplicates directives decide which one is canceled.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Allow Duplicate Jobs = no\n}",
+          "console": "configure update job=backup-web allowduplicatejobs=no"
+        }
+      ]
+    },
+    {
+      "name": "Allow Higher Duplicates",
+      "key": "allowhigherduplicates",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "yes",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": true,
+      "onesimus": false,
+      "description": "Deprecated: allow duplicates of a higher level.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Allow Higher Duplicates = yes\n}"
+        }
+      ]
+    },
+    {
+      "name": "Cancel Lower Level Duplicates",
+      "key": "cancellowerlevelduplicates",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "With Allow Duplicate Jobs = no: cancel the duplicate of the lower level (an Incremental gives way to a Full).",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Cancel Lower Level Duplicates = yes\n}",
+          "console": "configure update job=backup-web cancellowerlevelduplicates=yes"
+        }
+      ]
+    },
+    {
+      "name": "Cancel Queued Duplicates",
+      "key": "cancelqueuedduplicates",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "With Allow Duplicate Jobs = no: cancel a duplicate that is still waiting in the queue.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Cancel Queued Duplicates = yes\n}",
+          "console": "configure update job=backup-web cancelqueuedduplicates=yes"
+        }
+      ]
+    },
+    {
+      "name": "Cancel Running Duplicates",
+      "key": "cancelrunningduplicates",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "With Allow Duplicate Jobs = no: cancel the duplicate that is already running in favour of the new one.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Cancel Running Duplicates = no\n}",
+          "console": "configure update job=backup-web cancelrunningduplicates=no"
+        }
+      ]
+    },
+    {
+      "name": "Save File History",
+      "key": "savefilehistory",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "yes",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "For NDMP: store the file history sent by the filer, so single files can be restored.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Save File History = yes\n}",
+          "console": "configure update job=backup-web savefilehistory=yes"
+        }
+      ]
+    },
+    {
+      "name": "File History Size",
+      "key": "filehistorysize",
+      "aliases": [],
+      "type": "size",
+      "default": "10000000",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "For NDMP: size of the file history buffer. Sizes take the suffixes k, m, g, t (powers of 1024) or kb, mb, gb, tb (powers of 1000).",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  File History Size = 10000000\n}",
+          "console": "configure update job=backup-web filehistorysize=10000000"
+        }
+      ]
+    },
+    {
+      "name": "FD Plugin Options",
+      "key": "fdpluginoptions",
+      "aliases": [],
+      "type": "string list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Options passed to the File Daemon plugins of this job.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  FD Plugin Options = \"python:module_name=bareos-fd-postgresql\"\n}",
+          "console": "configure update job=backup-web fdpluginoptions=python:module_name=bareos-fd-postgresql"
+        }
+      ]
+    },
+    {
+      "name": "SD Plugin Options",
+      "key": "sdpluginoptions",
+      "aliases": [],
+      "type": "string list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Options passed to the Storage Daemon plugins of this job.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  SD Plugin Options = \"autoxflate:compress=lz4\"\n}",
+          "console": "configure update job=backup-web sdpluginoptions=autoxflate:compress=lz4"
+        }
+      ]
+    },
+    {
+      "name": "Dir Plugin Options",
+      "key": "dirpluginoptions",
+      "aliases": [],
+      "type": "string list",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Options passed to the Director plugins of this job.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Dir Plugin Options = \"python:module_name=x\"\n}",
+          "console": "configure update job=backup-web dirpluginoptions=python:module_name=x"
+        }
+      ]
+    },
+    {
+      "name": "Max Concurrent Copies",
+      "key": "maxconcurrentcopies",
+      "aliases": [],
+      "type": "positive integer",
+      "default": "100",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "For Copy jobs: how many copy jobs are started at once from one selection.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Max Concurrent Copies = 10\n}",
+          "console": "configure update job=backup-web maxconcurrentcopies=10"
+        }
+      ]
+    },
+    {
+      "name": "Always Incremental",
+      "key": "alwaysincremental",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Always Incremental scheme: only Incrementals are taken, and a Consolidate job merges the old ones into a VirtualFull. Needs Accurate and pools for the consolidated data.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Always Incremental = yes\n}",
+          "console": "configure update job=backup-web alwaysincremental=yes"
+        }
+      ]
+    },
+    {
+      "name": "Always Incremental Job Retention",
+      "key": "alwaysincrementaljobretention",
+      "aliases": [],
+      "type": "time",
+      "default": "0",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Incrementals younger than this are not consolidated. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Always Incremental Job Retention = 7 days\n}",
+          "console": "configure update job=backup-web alwaysincrementaljobretention=\"7 days\""
+        }
+      ]
+    },
+    {
+      "name": "Always Incremental Keep Number",
+      "key": "alwaysincrementalkeepnumber",
+      "aliases": [],
+      "type": "positive integer",
+      "default": "0",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "How many Incrementals are always kept unconsolidated, even when they are older than the retention.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Always Incremental Keep Number = 7\n}",
+          "console": "configure update job=backup-web alwaysincrementalkeepnumber=7"
+        }
+      ]
+    },
+    {
+      "name": "Always Incremental Max Full Age",
+      "key": "alwaysincrementalmaxfullage",
+      "aliases": [],
+      "type": "time",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "When the Full of an Always Incremental chain is older than this, the Consolidate job includes it, so the Full does not grow old. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Always Incremental Max Full Age = 30 days\n}",
+          "console": "configure update job=backup-web alwaysincrementalmaxfullage=\"30 days\""
+        }
+      ]
+    },
+    {
+      "name": "Max Full Consolidations",
+      "key": "maxfullconsolidations",
+      "aliases": [],
+      "type": "positive integer",
+      "default": "0",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "How many Fulls a Consolidate job may consolidate in one run (because of Always Incremental Max Full Age); 0 means no limit. Only valid for Consolidate jobs.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Max Full Consolidations = 1\n}",
+          "console": "configure update job=backup-web maxfullconsolidations=1"
+        }
+      ]
+    },
+    {
+      "name": "Run On Incoming Connect Interval",
+      "key": "runonincomingconnectinterval",
+      "aliases": [],
+      "type": "time",
+      "default": "0",
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "For clients that connect to the Director (Connection From Client To Director): start this job when the client connects and the last run is older than this interval. 0 switches it off. Times are written as a number with a unit: seconds, minutes, hours, days, weeks, months, quarters or years (abbreviations such as 30d, 12h or 1y work too); several parts add up (\"1 month 15 days\"), and a plain number means seconds.",
+      "examples": [
+        {
+          "config": "Job {\n  Name = backup-web\n  Run On Incoming Connect Interval = 1 day\n}",
+          "console": "configure update job=backup-web runonincomingconnectinterval=\"1 day\""
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "name": "RunScript",
+      "key": "runscript",
+      "description": "Runs a command or console command before or after the job, on the Director or the client. Several RunScript blocks may be given.",
+      "directives": [
+        {
+          "name": "Command",
+          "key": "command",
+          "type": "string",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Shell command to run; repeatable. Job variables are replaced: %c client, %d Director, %e exit status, %i JobId, %j unique job name, %l level, %n job name, %s since time, %t job type, %v volume names.",
+          "examples": [
+            {
+              "config": "Command = \"/usr/local/bin/dump-database %l\""
+            }
+          ]
+        },
+        {
+          "name": "Console",
+          "key": "console",
+          "type": "string",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Console command the Director runs instead of a shell command, for example to start another job or update a volume.",
+          "examples": [
+            {
+              "config": "Console = \"update stats days=30\""
+            }
+          ]
+        },
+        {
+          "name": "Runs When",
+          "key": "runswhen",
+          "type": "enum",
+          "default": "Never",
+          "values": [
+            "Before",
+            "After",
+            "AfterVSS",
+            "Always",
+            "Queued"
+          ],
+          "required": false,
+          "description": "When the script runs: Before the job, After it, AfterVSS (Windows, after the snapshot), Always (before and after) or Queued (when the job enters the queue).",
+          "examples": [
+            {
+              "config": "Runs When = Before"
+            }
+          ]
+        },
+        {
+          "name": "Runs On Client",
+          "key": "runsonclient",
+          "type": "yes|no",
+          "default": "yes",
+          "values": [
+            "yes",
+            "no"
+          ],
+          "required": false,
+          "description": "Run the command on the client (by the File Daemon) instead of on the Director.",
+          "examples": [
+            {
+              "config": "Runs On Client = no"
+            }
+          ]
+        },
+        {
+          "name": "Runs On Success",
+          "key": "runsonsuccess",
+          "type": "yes|no",
+          "default": "yes",
+          "values": [
+            "yes",
+            "no"
+          ],
+          "required": false,
+          "description": "Run the script after a successful job.",
+          "examples": [
+            {
+              "config": "Runs On Success = yes"
+            }
+          ]
+        },
+        {
+          "name": "Runs On Failure",
+          "key": "runsonfailure",
+          "type": "yes|no",
+          "default": "no",
+          "values": [
+            "yes",
+            "no"
+          ],
+          "required": false,
+          "description": "Run the script after a failed job as well, for example to clean up.",
+          "examples": [
+            {
+              "config": "Runs On Failure = yes"
+            }
+          ]
+        },
+        {
+          "name": "Fail Job On Error",
+          "key": "failjobonerror",
+          "type": "yes|no",
+          "default": "yes",
+          "values": [
+            "yes",
+            "no"
+          ],
+          "required": false,
+          "description": "A script that exits with an error fails the job (for Before scripts: the job does not run).",
+          "examples": [
+            {
+              "config": "Fail Job On Error = no"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

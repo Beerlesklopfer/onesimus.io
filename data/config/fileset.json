@@ -1,0 +1,856 @@
+{
+  "schema": 1,
+  "resource": "FileSet",
+  "key": "fileset",
+  "source": "Directive tables of the Bareos 25.1.2 Director as carried by odir (crates/odir/src/commands/show_items.rs) plus Onesimus extensions (crates/odir/src/config_check.rs EXTENSIONS)",
+  "description": "A FileSet resource says what a backup job saves: the Include blocks list files and plugins with Options blocks for compression, signatures and patterns; Exclude blocks leave things out.",
+  "examples": [
+    {
+      "title": "Linux system with excludes",
+      "config": "FileSet {\n  Name = LinuxAll\n  Include {\n    Options {\n      Signature = XXH128\n      Compression = LZ4\n      One FS = no\n      FS Type = ext4, xfs, btrfs\n    }\n    Options {\n      Wild Dir = \"*/.cache\"\n      Wild File = \"*.tmp\"\n      Exclude = yes\n    }\n    File = /\n    Exclude Dir Containing = .nobackup\n  }\n  Exclude {\n    File = /var/lib/bareos\n    File = /proc\n    File = /tmp\n  }\n}",
+      "explanation": "The first Options block whose patterns match decides: .cache directories and *.tmp files are excluded, everything else on ext4, xfs and btrfs file systems is saved with checksum and compression."
+    },
+    {
+      "title": "A database through a plugin",
+      "config": "FileSet {\n  Name = PostgreSQL\n  Include {\n    Options {\n      Signature = XXH128\n    }\n    Plugin = \"python3:module_name=bareos-fd-postgresql\"\n  }\n}"
+    }
+  ],
+  "directives": [
+    {
+      "name": "Name",
+      "key": "name",
+      "aliases": [],
+      "type": "name",
+      "default": null,
+      "values": [],
+      "required": true,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Name of the FileSet.",
+      "examples": [
+        {
+          "config": "FileSet {\n  Name = \"LinuxAll\"\n}",
+          "console": "configure add fileset name=LinuxAll"
+        }
+      ]
+    },
+    {
+      "name": "Description",
+      "key": "description",
+      "aliases": [],
+      "type": "string",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Free text describing the FileSet.",
+      "examples": [
+        {
+          "config": "FileSet {\n  Name = LinuxAll\n  Description = \"All local file systems\"\n}",
+          "console": "configure update fileset=LinuxAll description=\"All local file systems\""
+        }
+      ]
+    },
+    {
+      "name": "Include",
+      "key": "include",
+      "aliases": [],
+      "type": "block",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Block with the files to back up (File, Plugin) and Options blocks that say how. A FileSet may have several Include blocks. See the Include block.",
+      "examples": [
+        {
+          "config": "FileSet {\n  Name = LinuxAll\n  Include {\n    Options {\n      Signature = XXH128\n    }\n    File = /etc\n    File = /home\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Exclude",
+      "key": "exclude",
+      "aliases": [],
+      "type": "block",
+      "default": null,
+      "values": [],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Block with files and directories to leave out (File lines). Patterns go into an Options block with Exclude = yes instead.",
+      "examples": [
+        {
+          "config": "FileSet {\n  Name = LinuxAll\n  Exclude {\n    File = /home/*/.cache\n    File = /tmp\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Ignore File Set Changes",
+      "key": "ignorefilesetchanges",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "no",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "Normally a change of the FileSet makes the next Incremental or Differential a Full, since the old backups do not contain the new files. With yes the change is ignored; new files then only appear in the next Full.",
+      "examples": [
+        {
+          "config": "FileSet {\n  Name = LinuxAll\n  Ignore File Set Changes = yes\n}",
+          "console": "configure update fileset=LinuxAll ignorefilesetchanges=yes"
+        }
+      ]
+    },
+    {
+      "name": "Enable VSS",
+      "key": "enablevss",
+      "aliases": [],
+      "type": "yes|no",
+      "default": "yes",
+      "values": [
+        "yes",
+        "no"
+      ],
+      "required": false,
+      "deprecated": false,
+      "onesimus": false,
+      "description": "On Windows clients: back up from a Volume Shadow Copy snapshot, so open files are consistent.",
+      "examples": [
+        {
+          "config": "FileSet {\n  Name = LinuxAll\n  Enable VSS = yes\n}",
+          "console": "configure update fileset=LinuxAll enablevss=yes"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Include",
+      "key": "include",
+      "description": "Files and plugins to back up, with Options blocks.",
+      "directives": [
+        {
+          "name": "File",
+          "key": "file",
+          "type": "path",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "A file or directory to back up; directories are backed up recursively. Repeat it for several paths. \"|command\" uses the output of a command on the Director as list, \"\\\\|command\" one run on the client, and \"<file\" (\"\\\\<file\" on the client) reads the list from a file.",
+          "examples": [
+            {
+              "config": "File = /home"
+            }
+          ]
+        },
+        {
+          "name": "Plugin",
+          "key": "plugin",
+          "type": "string",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "A File Daemon plugin with its options that delivers the data instead of files, for example a database plugin. The Onesimus Director masks secrets in plugin lines in show output and in the FileSet text stored in the catalog; the File Daemon still gets the real line.",
+          "examples": [
+            {
+              "config": "Plugin = \"python3:module_name=bareos-fd-postgresql:db_host=localhost\""
+            }
+          ]
+        },
+        {
+          "name": "Exclude Dir Containing",
+          "key": "excludedircontaining",
+          "type": "string",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Leave out every directory that contains a file of this name, so users can mark directories with a .nobackup file.",
+          "examples": [
+            {
+              "config": "Exclude Dir Containing = .nobackup"
+            }
+          ]
+        },
+        {
+          "name": "Options",
+          "key": "options",
+          "type": "block",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Block of options for the files of this Include. Several Options blocks may be given: the first block whose patterns match a file decides; a block without patterns applies to all remaining files. See the Options block.",
+          "examples": [
+            {
+              "config": "Options {\n  Signature = XXH128\n  Compression = LZ4\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Exclude",
+      "key": "exclude",
+      "description": "Files and directories to leave out.",
+      "directives": [
+        {
+          "name": "File",
+          "key": "file",
+          "type": "path",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "A file or directory that is left out. Wildcards are not interpreted here; use an Options block with Wild and Exclude = yes for patterns.",
+          "examples": [
+            {
+              "config": "File = /var/tmp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Options",
+      "key": "options",
+      "description": "Options of an Include block. Several blocks may be given; the first block whose patterns (Wild, Regex, ...) match a file decides, a block without patterns applies to all other files. The option keywords and values follow the Onesimus Director's port of the C++ table (inc_conf.cc); Hard Links defaults to no, Acl Support and Xattr Support to yes.",
+      "directives": [
+        {
+          "name": "Signature",
+          "key": "signature",
+          "type": "enum",
+          "default": null,
+          "values": [
+            "MD5",
+            "SHA1",
+            "SHA256",
+            "SHA512",
+            "XXH128"
+          ],
+          "required": false,
+          "description": "Checksum stored for every file, used by verify jobs and Accurate mode to detect changes. XXH128 is fast; SHA256 or SHA512 are cryptographic. Without it no checksum is stored.",
+          "examples": [
+            {
+              "config": "Signature = XXH128"
+            }
+          ]
+        },
+        {
+          "name": "Compression",
+          "key": "compression",
+          "type": "enum",
+          "default": null,
+          "values": [
+            "GZIP",
+            "GZIP1",
+            "GZIP2",
+            "GZIP3",
+            "GZIP4",
+            "GZIP5",
+            "GZIP6",
+            "GZIP7",
+            "GZIP8",
+            "GZIP9",
+            "LZO",
+            "LZFAST",
+            "LZ4",
+            "LZ4HC"
+          ],
+          "required": false,
+          "description": "Software compression on the client. LZ4 is fast with moderate gain, GZIP6 (= GZIP) compresses better but costs CPU. Leave it off for data that is compressed already and for tape drives that compress in hardware (see Allow Compression of the Storage).",
+          "examples": [
+            {
+              "config": "Compression = LZ4"
+            }
+          ]
+        },
+        {
+          "name": "Encryption",
+          "key": "encryption",
+          "type": "enum",
+          "default": null,
+          "values": [
+            "blowfish",
+            "3des",
+            "aes128",
+            "aes192",
+            "aes256",
+            "camellia128",
+            "camellia192",
+            "camellia256",
+            "aes128hmacsha1",
+            "aes256hmacsha1"
+          ],
+          "required": false,
+          "description": "Cipher for data encryption on the client. Encryption also needs PKI keys in the File Daemon's configuration; without the private key the data cannot be restored.",
+          "examples": [
+            {
+              "config": "Encryption = aes256"
+            }
+          ]
+        },
+        {
+          "name": "Force Encryption",
+          "key": "forceencryption",
+          "type": "yes|no",
+          "default": "no",
+          "values": [
+            "yes",
+            "no"
+          ],
+          "required": false,
+          "description": "Fail the job instead of backing up unencrypted when encryption is not possible.",
+          "examples": [
+            {
+              "config": "Force Encryption = yes"
+            }
+          ]
+        },
+        {
+          "name": "One FS",
+          "key": "onefs",
+          "type": "yes|no",
+          "default": "yes",
+          "values": [
+            "yes",
+            "no"
+          ],
+          "required": false,
+          "description": "Stay on the file system of each File line and do not descend into other mounted file systems. With no, mount points are crossed; then FS Type helps to skip /proc, /sys and network file systems.",
+          "examples": [
+            {
+              "config": "One FS = no"
+            }
+          ]
+        },
+        {
+          "name": "Recurse",
+          "key": "recurse",
+          "type": "yes|no",
+          "default": "yes",
+          "values": [
+            "yes",
+            "no"
+          ],
+          "required": false,
+          "description": "Back up directories recursively. With no, only the entries directly in a listed directory are saved.",
+          "examples": [
+            {
+              "config": "Recurse = no"
+            }
+          ]
+        },
+        {
+          "name": "Sparse",
+          "key": "sparse",
+          "type": "yes|no",
+          "default": "no",
+          "values": [
+            "yes",
+            "no"
+          ],
+          "required": false,
+          "description": "Store sparse files efficiently (holes are not stored), for example virtual machine images.",
+          "examples": [
+            {
+              "config": "Sparse = yes"
+            }
+          ]
+        },
+        {
+          "name": "Hard Links",
+          "key": "hardlinks",
+          "type": "yes|no",
+          "default": "no",
+          "values": [
+            "yes",
+            "no"
+          ],
+          "required": false,
+          "description": "Detect hard links and store the data of a multiply linked file once. In Bareos 25 the default is no (each link is saved as a file), which saves memory on clients with many files; the Onesimus Director has the same default.",
+          "examples": [
+            {
+              "config": "Hard Links = yes"
+            }
+          ]
+        },
+        {
+          "name": "Replace",
+          "key": "replace",
+          "type": "enum",
+          "default": "always",
+          "values": [
+            "always",
+            "ifnewer",
+            "never"
+          ],
+          "required": false,
+          "description": "Default replace mode for restores of these files.",
+          "examples": [
+            {
+              "config": "Replace = ifnewer"
+            }
+          ]
+        },
+        {
+          "name": "Read Fifo",
+          "key": "readfifo",
+          "type": "yes|no",
+          "default": "no",
+          "values": [
+            "yes",
+            "no"
+          ],
+          "required": false,
+          "description": "Read the data from named pipes (FIFOs) instead of saving them as special files, for example to back up a database dump written into a pipe by a Client Run Before Job script.",
+          "examples": [
+            {
+              "config": "Read Fifo = yes"
+            }
+          ]
+        },
+        {
+          "name": "Portable",
+          "key": "portable",
+          "type": "yes|no",
+          "default": "no",
+          "values": [
+            "yes",
+            "no"
+          ],
+          "required": false,
+          "description": "On Windows: store files in a portable format (without Windows backup streams), so they can be restored on other systems, at the cost of security information.",
+          "examples": [
+            {
+              "config": "Portable = yes"
+            }
+          ]
+        },
+        {
+          "name": "Mtime Only",
+          "key": "mtimeonly",
+          "type": "yes|no",
+          "default": "no",
+          "values": [
+            "yes",
+            "no"
+          ],
+          "required": false,
+          "description": "Select files for Incremental and Differential backups by modification time only, ignoring the change time (ctime).",
+          "examples": [
+            {
+              "config": "Mtime Only = yes"
+            }
+          ]
+        },
+        {
+          "name": "Keep Atime",
+          "key": "keepatime",
+          "type": "yes|no",
+          "default": "no",
+          "values": [
+            "yes",
+            "no"
+          ],
+          "required": false,
+          "description": "Reset the access time of each file after reading it. This changes the ctime, so Incrementals would save the files again unless Mtime Only is set; Noatime is usually the better choice.",
+          "examples": [
+            {
+              "config": "Keep Atime = yes"
+            }
+          ]
+        },
+        {
+          "name": "Noatime",
+          "key": "noatime",
+          "type": "yes|no",
+          "default": "no",
+          "values": [
+            "yes",
+            "no"
+          ],
+          "required": false,
+          "description": "Open files with O_NOATIME so reading does not change the access time (Linux, file owner or root).",
+          "examples": [
+            {
+              "config": "Noatime = yes"
+            }
+          ]
+        },
+        {
+          "name": "Exclude",
+          "key": "exclude",
+          "type": "yes|no",
+          "default": "no",
+          "values": [
+            "yes",
+            "no"
+          ],
+          "required": false,
+          "description": "The files matched by the patterns of this Options block are excluded instead of included.",
+          "examples": [
+            {
+              "config": "Exclude = yes"
+            }
+          ]
+        },
+        {
+          "name": "Acl Support",
+          "key": "aclsupport",
+          "type": "yes|no",
+          "default": "yes",
+          "values": [
+            "yes",
+            "no"
+          ],
+          "required": false,
+          "description": "Back up POSIX and NFSv4 ACLs. Default yes in Bareos 25 and in the Onesimus Director.",
+          "examples": [
+            {
+              "config": "Acl Support = no"
+            }
+          ]
+        },
+        {
+          "name": "Xattr Support",
+          "key": "xattrsupport",
+          "type": "yes|no",
+          "default": "yes",
+          "values": [
+            "yes",
+            "no"
+          ],
+          "required": false,
+          "description": "Back up extended attributes (for example SELinux labels). Default yes in Bareos 25.",
+          "examples": [
+            {
+              "config": "Xattr Support = no"
+            }
+          ]
+        },
+        {
+          "name": "Ignore Case",
+          "key": "ignorecase",
+          "type": "yes|no",
+          "default": "no",
+          "values": [
+            "yes",
+            "no"
+          ],
+          "required": false,
+          "description": "Match Wild and Regex patterns without regard to case; useful for Windows clients.",
+          "examples": [
+            {
+              "config": "Ignore Case = yes"
+            }
+          ]
+        },
+        {
+          "name": "Hfs Plus Support",
+          "key": "hfsplussupport",
+          "type": "yes|no",
+          "default": "no",
+          "values": [
+            "yes",
+            "no"
+          ],
+          "required": false,
+          "description": "On macOS: back up HFS+ resource forks and Finder information.",
+          "examples": [
+            {
+              "config": "Hfs Plus Support = yes"
+            }
+          ]
+        },
+        {
+          "name": "Enhanced Wild",
+          "key": "enhancedwild",
+          "type": "yes|no",
+          "default": "no",
+          "values": [
+            "yes",
+            "no"
+          ],
+          "required": false,
+          "description": "Accepted for compatibility; the Director stores it like Noatime (the C++ Director does the same).",
+          "examples": [
+            {
+              "config": "Enhanced Wild = no"
+            }
+          ]
+        },
+        {
+          "name": "Check File Changes",
+          "key": "checkfilechanges",
+          "type": "yes|no",
+          "default": "no",
+          "values": [
+            "yes",
+            "no"
+          ],
+          "required": false,
+          "description": "Check after reading a file whether it changed while it was saved, and warn if so.",
+          "examples": [
+            {
+              "config": "Check File Changes = yes"
+            }
+          ]
+        },
+        {
+          "name": "Honor No Dump Flag",
+          "key": "honornodumpflag",
+          "type": "yes|no",
+          "default": "no",
+          "values": [
+            "yes",
+            "no"
+          ],
+          "required": false,
+          "description": "Skip files that carry the nodump flag (chattr +d).",
+          "examples": [
+            {
+              "config": "Honor No Dump Flag = yes"
+            }
+          ]
+        },
+        {
+          "name": "Shadowing",
+          "key": "shadowing",
+          "type": "enum",
+          "default": "none",
+          "values": [
+            "none",
+            "localwarn",
+            "localremove",
+            "globalwarn",
+            "globalremove"
+          ],
+          "required": false,
+          "description": "Detects File lines that lie inside other File lines (and would be saved twice): warn about them or remove them, within this Include (local) or the whole FileSet (global).",
+          "examples": [
+            {
+              "config": "Shadowing = localremove"
+            }
+          ]
+        },
+        {
+          "name": "Auto Exclude",
+          "key": "autoexclude",
+          "type": "yes|no",
+          "default": "yes",
+          "values": [
+            "yes",
+            "no"
+          ],
+          "required": false,
+          "description": "On Windows: honour the files the system lists as not to be backed up (FilesNotToBackup).",
+          "examples": [
+            {
+              "config": "Auto Exclude = no"
+            }
+          ]
+        },
+        {
+          "name": "Verify",
+          "key": "verify",
+          "type": "string",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Attributes compared by verify jobs, as option letters: i inode, p permissions, n links, u user, g group, s size, a atime, m mtime, c ctime, d size decrease, 5 MD5, 1 SHA1.",
+          "examples": [
+            {
+              "config": "Verify = pins5"
+            }
+          ]
+        },
+        {
+          "name": "Accurate",
+          "key": "accurate",
+          "type": "string",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Attributes compared in Accurate mode to decide whether a file changed, as option letters like Verify (default mcs: mtime, ctime and size).",
+          "examples": [
+            {
+              "config": "Accurate = mcs"
+            }
+          ]
+        },
+        {
+          "name": "Strip Path",
+          "key": "strippath",
+          "type": "positive integer",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Removes this many leading path components before the files are stored.",
+          "examples": [
+            {
+              "config": "Strip Path = 1"
+            }
+          ]
+        },
+        {
+          "name": "Size",
+          "key": "size",
+          "type": "string",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Select files by size: a size, a range (10k-1m) or a comparison (<1m, >1g).",
+          "examples": [
+            {
+              "config": "Size = >1g"
+            }
+          ]
+        },
+        {
+          "name": "Wild",
+          "key": "wild",
+          "type": "pattern",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Shell wildcard (* ? [ ]) matched against the full path; repeatable. Files that match are handled by this Options block (included, or excluded with Exclude = yes).",
+          "examples": [
+            {
+              "config": "Wild = \"*.iso\""
+            }
+          ]
+        },
+        {
+          "name": "Wild Dir",
+          "key": "wilddir",
+          "type": "pattern",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Wildcard matched against directory paths only.",
+          "examples": [
+            {
+              "config": "Wild Dir = \"*/.cache\""
+            }
+          ]
+        },
+        {
+          "name": "Wild File",
+          "key": "wildfile",
+          "type": "pattern",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Wildcard matched against file names (not directories); a pattern without / matches the base name.",
+          "examples": [
+            {
+              "config": "Wild File = \"*.tmp\""
+            }
+          ]
+        },
+        {
+          "name": "Regex",
+          "key": "regex",
+          "type": "pattern",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "POSIX extended regular expression matched against the full path; repeatable.",
+          "examples": [
+            {
+              "config": "Regex = \"\\\\.(mp4|mkv)$\""
+            }
+          ]
+        },
+        {
+          "name": "Regex Dir",
+          "key": "regexdir",
+          "type": "pattern",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Regular expression matched against directory paths only.",
+          "examples": [
+            {
+              "config": "Regex Dir = \"/node_modules$\""
+            }
+          ]
+        },
+        {
+          "name": "Regex File",
+          "key": "regexfile",
+          "type": "pattern",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Regular expression matched against file paths only.",
+          "examples": [
+            {
+              "config": "Regex File = \"\\\\.o$\""
+            }
+          ]
+        },
+        {
+          "name": "FS Type",
+          "key": "fstype",
+          "type": "string list",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Only back up file systems of these types (ext4, xfs, btrfs, ...). Together with One FS = no it selects the local file systems and skips proc, sysfs, tmpfs and network mounts.",
+          "examples": [
+            {
+              "config": "FS Type = ext4, xfs, btrfs"
+            }
+          ]
+        },
+        {
+          "name": "Drive Type",
+          "key": "drivetype",
+          "type": "string list",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "On Windows: only back up drives of these types (fixed, removable, remote, cdrom, ramdisk).",
+          "examples": [
+            {
+              "config": "Drive Type = fixed"
+            }
+          ]
+        },
+        {
+          "name": "Meta",
+          "key": "meta",
+          "type": "string list",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Meta information passed to plugins.",
+          "examples": [
+            {
+              "config": "Meta = \"key=value\""
+            }
+          ]
+        },
+        {
+          "name": "Plugin",
+          "key": "plugin",
+          "type": "string",
+          "default": null,
+          "values": [],
+          "required": false,
+          "description": "Plugin that handles the files of this Options block.",
+          "examples": [
+            {
+              "config": "Plugin = \"python3:module_name=x\""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
