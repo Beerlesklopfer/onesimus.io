@@ -12,6 +12,7 @@
         {{- /* Blog and the legal pages exist in English only */}}
         <li><a href="{{ "/blog/" | relURL }}">Blog</a></li>
         <li><a href="{{ "/pricing/" | relLangURL }}">{{ if eq .Language.Lang "de" }}Preise{{ else }}Pricing{{ end }}</a></li>
+        <li><a href="{{ "/security/" | relLangURL }}">{{ if eq .Language.Lang "de" }}Sicherheit{{ else }}Security{{ end }}</a></li>
         <li><a href="{{ "/legal/imprint/" | relURL }}">{{ if eq .Language.Lang "de" }}Impressum{{ else }}Imprint{{ end }}</a></li>
         <li><a href="{{ "/legal/privacy/" | relURL }}">{{ if eq .Language.Lang "de" }}Datenschutz{{ else }}Privacy{{ end }}</a></li>
         <li><a href="#" data-consent-open>{{ if eq .Language.Lang "de" }}Cookie-Einstellungen{{ else }}Cookie settings{{ end }}</a></li>
