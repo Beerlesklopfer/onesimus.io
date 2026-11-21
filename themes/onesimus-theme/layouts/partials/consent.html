@@ -1,0 +1,73 @@
+{{- $de := eq .Language.Lang "de" -}}
+<div class="consent" id="consent" role="dialog" aria-live="polite" aria-label="{{ if $de }}Statistik-Cookies{{ else }}Statistics cookies{{ end }}" hidden>
+  <div class="consent__inner">
+    <p class="consent__text">
+      {{- if $de -}}
+      Darf diese Seite Besuche mit Matomo zählen? Dafür setzt sie Cookies. Matomo läuft auf unserem eigenen Server, die IP-Adresse wird gekürzt, nichts geht an Dritte. Ohne deine Zustimmung wird nichts gezählt. <a href="{{ "/legal/privacy/" | relURL }}#matomo">Mehr dazu</a>
+      {{- else -}}
+      May this site count visits with Matomo? It sets cookies for that. Matomo runs on our own server, the IP address is shortened, nothing goes to third parties. Without your consent nothing is counted. <a href="{{ "/legal/privacy/" | relURL }}#matomo">More</a>
+      {{- end -}}
+    </p>
+    <div class="consent__actions">
+      <button type="button" class="btn btn--ghost" data-consent="no">{{ if $de }}Ablehnen{{ else }}Decline{{ end }}</button>
+      <button type="button" class="btn btn--ghost" data-consent="yes">{{ if $de }}Zustimmen{{ else }}Accept{{ end }}</button>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  var KEY = 'onesimus-consent';           // "yes" or "no"; kept in this browser only
+  function stored() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
+  function store(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
+  function clearMatomoCookies() {
+    document.cookie.split(';').forEach(function (c) {
+      var name = c.split('=')[0].trim();
+      if (/^(_pk_|mtm_|MATOMO_)/.test(name)) {
+        document.cookie = name + '=; Max-Age=0; path=/';
+        document.cookie = name + '=; Max-Age=0; path=/; domain=' + location.hostname;
+      }
+    });
+  }
+  var loaded = false;
+  function loadMatomo() {
+    if (loaded) return;
+    loaded = true;
+    // Matomo, only after consent
+    var _paq = window._paq = window._paq || [];
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    var u = '//stats.forgeiec.io/';
+    _paq.push(['setTrackerUrl', u + 'matomo.php']);
+    _paq.push(['setSiteId', '6']);
+    var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+    g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
+  }
+  var box = document.getElementById('consent');
+  function show() { if (box) box.hidden = false; }
+  function hide() { if (box) box.hidden = true; }
+  function decide(v) {
+    store(v);
+    hide();
+    if (v === 'yes') {
+      loadMatomo();
+    } else {
+      if (window._paq) window._paq.push(['forgetCookieConsentGiven']);
+      clearMatomoCookies();
+      if (loaded) location.reload();   // stop a tracker that already runs
+    }
+  }
+  if (box) {
+    box.querySelectorAll('[data-consent]').forEach(function (b) {
+      b.addEventListener('click', function () { decide(b.getAttribute('data-consent')); });
+    });
+  }
+  // Any element with data-consent-open reopens the choice (footer, privacy page)
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest ? e.target.closest('[data-consent-open]') : null;
+    if (t) { e.preventDefault(); show(); }
+  });
+  var v = stored();
+  if (v === 'yes') loadMatomo();
+  else if (v !== 'no') show();
+})();
+</script>

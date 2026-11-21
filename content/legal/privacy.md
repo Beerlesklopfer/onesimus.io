@@ -3,9 +3,9 @@ title: "Privacy policy (Datenschutzerklärung)"
 description: "Which data is processed when you visit this website."
 ---
 
-*In short: this website sets no cookies, uses no tracking or analytics and loads no content from third parties (the fonts are served from this site). The web server keeps technical log files. Details in German below.*
+*In short: this website counts visits with Matomo, which runs on our own server, only if you agree; then Matomo sets cookies. Without your consent no cookies are set and nothing is counted. IP addresses are shortened, nothing is passed to third parties, and you can change your choice at any time under "Cookie settings" at the bottom of every page. The web server keeps technical log files. Details in German below.*
 
-Stand: 25.10.2026
+Stand: 21.11.2026
 
 ## Verantwortlicher
 
@@ -14,7 +14,7 @@ Telefon: [0174 1738291](tel:+491741738291), E-Mail: [contact@onesimus.io](mailto
 
 ## Kurz gesagt
 
-Diese Seite setzt **keine Cookies**, nutzt **keine Analyse- oder Tracking-Werkzeuge** und lädt **keine Inhalte von Dritten**. Auch die Schriften werden von dieser Seite selbst ausgeliefert, nicht von einem Schriftendienst. Ein kleines eigenes Skript schaltet auf Mobilgeräten das Menü um. Es gibt kein Formular und kein Benutzerkonto. Die Seite wird verschlüsselt (HTTPS) ausgeliefert.
+Diese Seite zählt Besuche mit **Matomo**, aber **nur mit Ihrer Einwilligung**. Matomo läuft auf meinem eigenen Server; die Daten gehen an niemanden sonst. Ohne Einwilligung setzt die Seite **keine Cookies** und zählt nichts. Sie lädt **keine Inhalte von Dritten**: Auch die Schriften werden von dieser Seite selbst ausgeliefert, nicht von einem Schriftendienst. Ein kleines eigenes Skript schaltet auf Mobilgeräten das Menü um und merkt sich Ihre Entscheidung zu den Cookies. Es gibt kein Formular und kein Benutzerkonto. Die Seite wird verschlüsselt (HTTPS) ausgeliefert.
 
 ## Server-Protokolle
 
@@ -24,9 +24,22 @@ Wenn Sie diese Seite aufrufen, verarbeitet der Webserver technisch notwendige Da
 - **Rechtsgrundlage:** berechtigtes Interesse, Art. 6 Abs. 1 lit. f DSGVO.
 - **Speicherdauer:** Die Protokolle werden nicht länger gespeichert, als es für Betrieb und Sicherheit erforderlich ist.
 
+## Statistik mit Matomo {#matomo}
+
+Wenn Sie im Hinweis am unteren Bildschirmrand auf **Zustimmen** klicken, zählt diese Seite Ihren Besuch mit der Open-Source-Software Matomo. Matomo betreibe ich selbst unter stats.forgeiec.io auf einem Server bei der Hetzner Online GmbH (siehe Hosting). Die Daten werden nicht an Dritte weitergegeben und nicht für Werbung genutzt.
+
+- **Verarbeitete Daten:** gekürzte IP-Adresse (die letzten zwei Bytes werden entfernt, z. B. 192.168.x.x), aufgerufene Seiten und Zeitpunkt, die Seite, von der Sie kamen, angeklickte Links zu anderen Seiten und Downloads, Angaben Ihres Browsers (Browsertyp und -sprache, Betriebssystem, Bildschirmauflösung) sowie, falls in Matomo eingerichtet, der ungefähre Ort (Land, Region) aus der gekürzten IP-Adresse.
+- **Cookies:** Matomo setzt Cookies (`_pk_id`, bis zu 13 Monate, erkennt einen wiederkehrenden Browser; `_pk_ses`, 30 Minuten, fasst einen Besuch zusammen). Ohne Ihre Einwilligung werden weder Cookies gesetzt noch Daten an Matomo gesendet.
+- **Zweck:** Zu erfahren, welche Seiten gelesen werden, um das Angebot zu verbessern.
+- **Rechtsgrundlage:** Ihre Einwilligung, § 25 Abs. 1 TDDDG und Art. 6 Abs. 1 lit. a DSGVO.
+- **Speicherdauer:** Die Rohdaten einzelner Besuche werden nach 6 Monaten gelöscht; danach bleiben nur zusammengefasste Zahlen ohne Personenbezug.
+- **Widerruf:** Sie können Ihre Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen: über <a href="#" data-consent-open>Cookie-Einstellungen</a> (auch unten auf jeder Seite) und dort **Ablehnen**. Die Matomo-Cookies werden dann gelöscht.
+
+Ihre Entscheidung (Zustimmen oder Ablehnen) speichert Ihr Browser im lokalen Speicher dieser Seite, damit der Hinweis nicht bei jedem Aufruf erscheint. Diese Speicherung ist für den von Ihnen gewünschten Dienst unbedingt erforderlich (§ 25 Abs. 2 Nr. 2 TDDDG); sie wird nicht an den Server übertragen.
+
 ## Hosting
 
-Die Seite liegt auf einem Server, den ich bei der Hetzner Online GmbH (Industriestr. 25, 91710 Gunzenhausen) betreibe.
+Die Seite und die Matomo-Instanz liegen auf Servern, die ich bei der Hetzner Online GmbH (Industriestr. 25, 91710 Gunzenhausen) betreibe.
 
 ## Kontaktaufnahme
 

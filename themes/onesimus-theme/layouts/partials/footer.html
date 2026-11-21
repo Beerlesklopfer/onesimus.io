@@ -14,6 +14,7 @@
         <li><a href="{{ "/pricing/" | relLangURL }}">{{ if eq .Language.Lang "de" }}Preise{{ else }}Pricing{{ end }}</a></li>
         <li><a href="{{ "/legal/imprint/" | relURL }}">{{ if eq .Language.Lang "de" }}Impressum{{ else }}Imprint{{ end }}</a></li>
         <li><a href="{{ "/legal/privacy/" | relURL }}">{{ if eq .Language.Lang "de" }}Datenschutz{{ else }}Privacy{{ end }}</a></li>
+        <li><a href="#" data-consent-open>{{ if eq .Language.Lang "de" }}Cookie-Einstellungen{{ else }}Cookie settings{{ end }}</a></li>
         <li><a href="{{ "/legal/disclaimer/" | relURL }}">{{ if eq .Language.Lang "de" }}Haftungsausschluss{{ else }}Disclaimer{{ end }}</a></li>
       </ul>
     </div>
