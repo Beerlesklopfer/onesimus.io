@@ -13,7 +13,8 @@ Unterschiede, die sich im Quellcode nachprüfen lassen. Wo Bareos vorn liegt, st
 **Stand:** Onesimus ist noch nicht so etabliert wie Bareos. Bareos ist ein ausgereiftes Projekt mit vielen Jahren
 Produktionseinsatz und kommerziellem Support. Brauchst du etwas aus dem letzten Abschnitt dieser
 Seite, bleib bei Bareos, oder lass `bareos-dir` als Rückweg installiert (siehe
-[Umstieg von Bareos](/de/docs/install/migrate-from-bareos/)).
+[Umstieg von Bareos](/de/docs/install/migrate-from-bareos/)). Wo Onesimus heute läuft und was noch nicht getestet
+ist: [Betriebsbericht](/de/operations/).
 
 </div>
 

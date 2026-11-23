@@ -13,7 +13,8 @@ in the source code. Where Bareos is ahead, it says so.
 **Status:** Onesimus is not yet as established as Bareos. Bareos is a mature project with many years of production
 use and commercial support. If you need something from the last section of this page, stay with
 Bareos, or keep `bareos-dir` installed as your way back (see
-[Migrating from Bareos](/docs/install/migrate-from-bareos/)).
+[Migrating from Bareos](/docs/install/migrate-from-bareos/)). Where Onesimus runs today and what has not been
+tested yet: [operations report](/operations/).
 
 </div>
 
