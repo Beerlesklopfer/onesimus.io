@@ -9,7 +9,7 @@ enableEmoji = true
 [params]
   description = "A modern Qt6 GUI and a stable Rust backup stack: a drop-in replacement for the Bareos Director, with Bareos as the fallback."
   author = "Beerlesklopfer"
-  github = "https://github.com/Beerlesklopfer/Onesimus"
+  github = "https://github.com/Onesimus-io/Onesimus"
   tagline = "Backup management, reimagined."
   ogImage = "/img/og-image.png"
 
@@ -62,7 +62,7 @@ enableEmoji = true
     [[languages.en.menus.main]]
       identifier = "github"
       name = "GitHub"
-      url = "https://github.com/Beerlesklopfer/Onesimus"
+      url = "https://github.com/Onesimus-io/Onesimus"
       weight = 6
       [languages.en.menus.main.params]
         external = true
@@ -118,7 +118,7 @@ enableEmoji = true
     [[languages.de.menus.main]]
       identifier = "github"
       name = "GitHub"
-      url = "https://github.com/Beerlesklopfer/Onesimus"
+      url = "https://github.com/Onesimus-io/Onesimus"
       weight = 6
       [languages.de.menus.main.params]
         external = true

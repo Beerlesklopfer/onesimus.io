@@ -5,7 +5,7 @@ description: "How to report a vulnerability in Onesimus, and how we handle it."
 
 Onesimus manages backups, so its security matters to everyone who uses it. This page describes how we
 handle vulnerabilities, as the EU Cyber Resilience Act (Regulation (EU) 2024/2847) asks of software
-manufacturers. The same text is in [SECURITY.md](https://github.com/Beerlesklopfer/Onesimus/blob/development/SECURITY.md)
+manufacturers. The same text is in [SECURITY.md](https://github.com/Onesimus-io/Onesimus/blob/development/SECURITY.md)
 in the repository.
 
 ## Report a vulnerability
@@ -13,7 +13,7 @@ in the repository.
 Please report it **privately**, never in a public issue:
 
 - on GitHub: **Security → Report a vulnerability** in the
-  [Onesimus repository](https://github.com/Beerlesklopfer/Onesimus/security/advisories/new), or
+  [Onesimus repository](https://github.com/Onesimus-io/Onesimus/security/advisories/new), or
 - by e-mail to [contact@onesimus.io](mailto:contact@onesimus.io?subject=SECURITY) with the subject `SECURITY`.
 
 Include the affected version or commit, the platform, the steps to reproduce and what an attacker gains.

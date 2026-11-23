@@ -24,6 +24,6 @@ Diese Seite enthält Links zu Webseiten Dritter, auf deren Inhalte ich keinen Ei
 
 ## Urheberrecht und Lizenz
 
-Die Texte und die Gestaltung dieser Seite sind © 2026 Jörg Bernau. Die Software Onesimus steht unter der [GNU Affero General Public License v3.0](https://github.com/Beerlesklopfer/Onesimus/blob/development/LICENSE).
+Die Texte und die Gestaltung dieser Seite sind © 2026 Jörg Bernau. Die Software Onesimus steht unter der [GNU Affero General Public License v3.0](https://github.com/Onesimus-io/Onesimus/blob/development/LICENSE).
 
 See also the [disclaimer](/legal/disclaimer/) and the [privacy policy](/legal/privacy/).

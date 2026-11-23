@@ -1,6 +1,6 @@
 # onesimus.io
 
-The website for [Onesimus](https://github.com/Beerlesklopfer/Onesimus) — a modern Qt6 management interface for Bacula & Bareos backup systems.
+The website for [Onesimus](https://github.com/Onesimus-io/Onesimus) — a modern Qt6 management interface for Bacula & Bareos backup systems.
 
 ## Quick Start
 

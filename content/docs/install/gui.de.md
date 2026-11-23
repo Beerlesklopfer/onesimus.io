@@ -14,13 +14,13 @@ OpenSSL des Systems.
 sudo apt-get install build-essential cmake git perl imagemagick libssl-dev libxkbcommon-dev \
     qt6-base-dev qt6-base-private-dev qt6-tools-dev qt6-tools-dev-tools \
     qt6-grpc-dev   # Qt GRPC und Qt Protobuf, für die Verbindung zum Onesimus Director
-git clone https://github.com/Beerlesklopfer/Onesimus.git
+git clone https://github.com/Onesimus-io/Onesimus.git
 cd Onesimus
 ./build.sh
 ```
 
 Das Programm liegt danach in `build/onesimus`. Paketnamen für Fedora, Arch und openSUSE stehen in
-[BUILD_LINUX.md](https://github.com/Beerlesklopfer/Onesimus/blob/development/BUILD_LINUX.md).
+[BUILD_LINUX.md](https://github.com/Onesimus-io/Onesimus/blob/development/BUILD_LINUX.md).
 `cpack -G DEB` im Build-Verzeichnis baut ein Debian-Paket.
 
 ## Windows
@@ -28,23 +28,23 @@ Das Programm liegt danach in `build/onesimus`. Paketnamen für Fedora, Arch und 
 Installiere **Visual Studio 2022** mit der Arbeitslast „Desktopentwicklung mit C++“ und Qt 6, dann:
 
 ```powershell
-git clone https://github.com/Beerlesklopfer/Onesimus.git
+git clone https://github.com/Onesimus-io/Onesimus.git
 cd Onesimus
 .\build-windows.ps1
 ```
 
-Einzelheiten: [BUILD_WINDOWS.md](https://github.com/Beerlesklopfer/Onesimus/blob/development/BUILD_WINDOWS.md).
+Einzelheiten: [BUILD_WINDOWS.md](https://github.com/Onesimus-io/Onesimus/blob/development/BUILD_WINDOWS.md).
 
 ## macOS
 
 ```bash
 brew install qt@6 cmake
-git clone https://github.com/Beerlesklopfer/Onesimus.git
+git clone https://github.com/Onesimus-io/Onesimus.git
 cd Onesimus
 ./build.sh
 ```
 
-Einzelheiten: [BUILD_OSX.md](https://github.com/Beerlesklopfer/Onesimus/blob/development/BUILD_OSX.md).
+Einzelheiten: [BUILD_OSX.md](https://github.com/Onesimus-io/Onesimus/blob/development/BUILD_OSX.md).
 
 ## gRPC-Unterstützung
 

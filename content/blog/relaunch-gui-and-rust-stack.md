@@ -46,7 +46,7 @@ can do that Onesimus cannot do yet, is on the [comparison page](/compare/).
 ## Status
 
 Onesimus is in early access. Packages of the current version will be published through the
-[GitHub repository](https://github.com/Beerlesklopfer/Onesimus); the first public release will be
+[GitHub repository](https://github.com/Onesimus-io/Onesimus); the first public release will be
 **v1.0.0**. Until then you can build it from source ([installation](/docs/install/)) and read the
 [manual](/docs/manual/), the [command reference](/docs/commands/) and the
 [configuration reference](/docs/config/).

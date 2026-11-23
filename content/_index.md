@@ -14,7 +14,7 @@ hero:
     - label: "Onesimus vs. Bareos"
       url: "/compare/"
     - label: "GitHub"
-      url: "https://github.com/Beerlesklopfer/Onesimus"
+      url: "https://github.com/Onesimus-io/Onesimus"
   screenshot:
     name: "overview"
     alt: "The Onesimus main window: the Jobs tab with the job list and the statistics dock"
@@ -153,5 +153,5 @@ cta:
       url: "/docs/install/"
       primary: true
     - label: "Star on GitHub"
-      url: "https://github.com/Beerlesklopfer/Onesimus"
+      url: "https://github.com/Onesimus-io/Onesimus"
 ---

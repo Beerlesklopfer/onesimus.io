@@ -5,14 +5,14 @@ weight: 2
 ---
 
 The Rust stack lives in the repository
-[onesimus-director](https://github.com/Beerlesklopfer/onesimus-director). There is no public package
+[onesimus-director](https://github.com/Onesimus-io/onesimus-director). There is no public package
 repository yet: you build the Debian packages yourself with
 [cargo-deb](https://crates.io/crates/cargo-deb) and install them with `dpkg -i`.
 
 ## Build the packages
 
 ```bash
-git clone https://github.com/Beerlesklopfer/onesimus-director.git
+git clone https://github.com/Onesimus-io/onesimus-director.git
 cd onesimus-director
 cargo build --release -p odir -p ofd -p oconsole \
     --no-default-features --features oconsole/mcp-production

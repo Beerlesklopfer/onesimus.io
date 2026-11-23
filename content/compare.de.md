@@ -60,4 +60,4 @@ keine zusätzlichen Direktiven in `bareos-dir.d`, die den Rückweg versperren w�
 | Reife und Support | viele Jahre im Produktionseinsatz, kommerzieller Support | junges Projekt, noch nicht so etabliert |
 
 Fehlt etwas oder stimmt etwas nicht? Eröffne ein Issue auf
-[GitHub](https://github.com/Beerlesklopfer/Onesimus/issues).
+[GitHub](https://github.com/Onesimus-io/Onesimus/issues).

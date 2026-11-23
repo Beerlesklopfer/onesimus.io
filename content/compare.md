@@ -60,4 +60,4 @@ extra directives in `bareos-dir.d` that would block the way back.
 | Maturity and support | many years in production, commercial support | young project, not yet as established |
 
 Something missing or wrong on this page? Open an issue on
-[GitHub](https://github.com/Beerlesklopfer/Onesimus/issues).
+[GitHub](https://github.com/Onesimus-io/Onesimus/issues).

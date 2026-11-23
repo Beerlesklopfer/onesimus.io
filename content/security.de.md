@@ -6,14 +6,14 @@ description: "Wie du eine Sicherheitslücke in Onesimus meldest und wie wir dami
 Onesimus verwaltet Backups, deshalb geht seine Sicherheit alle an, die es nutzen. Diese Seite beschreibt,
 wie wir mit Sicherheitslücken umgehen, wie es der Cyber Resilience Act der EU (Verordnung (EU) 2024/2847)
 von Software-Herstellern verlangt. Derselbe Text steht als
-[SECURITY.md](https://github.com/Beerlesklopfer/Onesimus/blob/development/SECURITY.md) im Repository.
+[SECURITY.md](https://github.com/Onesimus-io/Onesimus/blob/development/SECURITY.md) im Repository.
 
 ## Sicherheitslücke melden
 
 Bitte melde sie **vertraulich**, nie in einem öffentlichen Issue:
 
 - auf GitHub: **Security → Report a vulnerability** im
-  [Onesimus-Repository](https://github.com/Beerlesklopfer/Onesimus/security/advisories/new), oder
+  [Onesimus-Repository](https://github.com/Onesimus-io/Onesimus/security/advisories/new), oder
 - per E-Mail an [contact@onesimus.io](mailto:contact@onesimus.io?subject=SECURITY) mit dem Betreff `SECURITY`.
 
 Nenne die betroffene Version oder den Commit, die Plattform, die Schritte zum Nachstellen und was ein
